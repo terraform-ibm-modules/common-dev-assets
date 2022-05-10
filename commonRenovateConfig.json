@@ -1,0 +1,76 @@
+{
+  "extends":[
+    "config:base",
+    ":semanticCommits",
+    ":disableDependencyDashboard"
+  ],
+  "cloneSubmodules": false,
+  "prConcurrentLimit": 1,
+  "automerge": true,
+  "force": {
+    "recreateClosed": true
+  },
+  "labels": ["renovate"],
+  "rangeStrategy": "pin",
+  "git-submodules": {
+    "enabled": true
+  },
+  "pre-commit": {
+    "enabled": true
+  },
+  "ignorePaths": [
+    "**/node_modules/**"
+  ],
+  "postUpdateOptions": ["gomodTidy", "gomodUpdateImportPaths"],
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["*"],
+      "semanticCommitType": "fix"
+    },
+    {
+      "matchPaths": ["examples/**"],
+      "semanticCommitType": "chore"
+    },
+    {
+      "matchManagers": ["git-submodules", "gomod", "pre-commit"],
+      "semanticCommitType": "chore"
+    },
+    {
+      "matchManagers": ["terraform"],
+      "matchDepTypes": ["required_version"],
+      "separateMinorPatch": true,
+      "rangeStrategy": "bump",
+      "patch": {
+        "enabled": false
+      },
+      "minor": {
+        "enabled": false
+      }
+    },
+    {
+      "matchManagers": ["terraform"],
+      "matchDepTypes": ["required_provider"],
+      "rangeStrategy": "bump",
+      "group": true,
+      "groupName": "required_provider",
+      "schedule": ["on the 1st through 5th day of the month"],
+      "prPriority": 9
+    },
+    {
+      "matchManagers": ["terraform"],
+      "matchDepTypes": ["module"],
+      "groupName": "terraform-module",
+      "prPriority": 10
+    },
+    {
+      "matchManagers": ["terragrunt"],
+      "matchDepTypes": ["gitTags"],
+      "groupName": "terraform-module",
+      "prPriority": 10
+    },
+    {
+      "matchPackageNames": ["ibm/detect-secrets"],
+      "versioning": "regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$"
+    }
+  ]
+}
