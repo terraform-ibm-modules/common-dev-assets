@@ -1,8 +1,8 @@
 #! /bin/bash
 
-# This script is designed to run as part of Travis CI on PRs opened by whitesource (renovate).
+# This script is designed to run as part of CI on PRs opened by renovate.
 # The script will run the pre-commit hook and if there are any doc changes detected, it will commit them to the PR
-# branch which will trigger a new run of the Travis pipeline.
+# branch which will trigger a new run of the pipeline.
 
 set -e
 
@@ -19,8 +19,11 @@ function git_push() {
   git commit -m "doc: committing files modified by the hook"
   git push origin "${TRAVIS_PULL_REQUEST_BRANCH}"
 }
-
-# Only run on PRs created by whitesource
+# When running in Github Actions Set the environment variables with the following syntax
+#   env:
+#      TRAVIS_PULL_REQUEST_BRANCH: ${{ github.head_ref }}
+#      TRAVIS_PULL_REQUEST: ${{ github.event.number }}
+# Only run on PRs created by renovate
 if [[ "${TRAVIS_PULL_REQUEST}" != "false" ]] && [[ "${TRAVIS_PULL_REQUEST_BRANCH}" =~ "renovate" ]]; then
   if ! pre-commit run --all-files; then
     echo "Pre-commit did not return 0 exit code. Checking if any files changes.."
