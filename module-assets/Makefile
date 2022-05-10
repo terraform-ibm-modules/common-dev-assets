@@ -147,6 +147,17 @@ doc-sweeper:
 	# Cleanup after (must use sudo as dir now owned by root)
 	sudo rm -rf /tmp/.ssh
 
+sem-release:
+	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
+	docker run -it -v $$(pwd):/mnt \
+		-v ~/.ssh:/root/.ssh \
+		-e GH_TOKEN \
+		-e CATALOG_TEKTON_WEBHOOK_URL \
+		-e CATALOG_TEKTON_WEBHOOK_TOKEN \
+		${DOCKER_REGISTRY}/$(IMAGE) \
+		bash -c "mv -t /mnt /tmp/node_modules /tmp/package-lock.json && \
+			npx semantic-release --no-ci"
+
 # Create entry in ~/.netrc for cm.globalcatalog.cloud.ibm.com using IAM bearer token
 netrc:
 	@if [ -z "$${TF_VAR_ibmcloud_api_key}" ]; then echo "Error: TF_VAR_ibmcloud_api_key is undefined"; exit 1; fi
