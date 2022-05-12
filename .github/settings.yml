@@ -10,7 +10,7 @@ repository:
   allow_merge_commit: false
   allow_rebase_merge: false
   delete_branch_on_merge: true
-  
+
 teams:
   - name: github-mergers # Use the slug name (!= display name) w/o organization !
     permission: push
@@ -18,7 +18,7 @@ teams:
     permission: push
   - name: github-admins
     permission: admin
- 
+
 branches:
   - name: main
     protection:
