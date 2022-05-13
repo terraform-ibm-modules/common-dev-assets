@@ -178,7 +178,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.36.10
+TERRAGRUNT_VERSION=v0.37.0
 BINARY=terragrunt
 FILE_NAME="terragrunt_${OS}_amd64"
 URL="https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}"
@@ -233,7 +233,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=aquasecurity/tfsec
-TFSEC_VERSION=v1.20.0
+TFSEC_VERSION=v1.21.0
 BINARY=tfsec
 FILE_NAME="tfsec-${OS}-amd64"
 URL="https://github.com/aquasecurity/tfsec/releases/download/${TFSEC_VERSION}"
@@ -252,7 +252,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v1.45.2
+GOLANGCI_LINT_VERSION=v1.46.1
 BINARY=golangci-lint
 FILE_NAME="golangci-lint-${GOLANGCI_LINT_VERSION//v/}-${OS}-amd64.tar.gz"
 URL="https://github.com/golangci/golangci-lint/releases/download/${GOLANGCI_LINT_VERSION}"
