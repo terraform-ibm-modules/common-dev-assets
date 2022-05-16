@@ -127,7 +127,7 @@ run-go-module-tests:
 		${DOCKER_REGISTRY}/$(IMAGE) \
 		bash -c "go test ./... -count=1 -v -timeout 5m"
 
-# TODO: Remove this command once all travis files have beeb migrated to use make pre-commit-sweeper (https://github.ibm.com/GoldenEye/issues/issues/1850)
+# TODO: Remove this command once all travis files have beeb migrated to use make pre-commit-sweeper
 doc-sweeper: pre-commit-sweeper
 
 pre-commit-sweeper:
