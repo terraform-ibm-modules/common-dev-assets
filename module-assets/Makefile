@@ -127,14 +127,17 @@ run-go-module-tests:
 		${DOCKER_REGISTRY}/$(IMAGE) \
 		bash -c "go test ./... -count=1 -v -timeout 5m"
 
-doc-sweeper:
-# Only used in Travis if needed in GH Actions just run ci/doc-sweeper.sh directly
+# TODO: Remove this command once all travis files have beeb migrated to use make pre-commit-sweeper
+doc-sweeper: pre-commit-sweeper
+
+pre-commit-sweeper:
 	@if [ -z "$${TF_VAR_ibmcloud_api_key}" ]; then echo "Error: TF_VAR_ibmcloud_api_key is undefined"; exit 1; fi
 	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
 	# Not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that.
 	cp -r ~/.ssh /tmp
 	docker run -it -v $$(pwd):/mnt \
 		-v /tmp/.ssh:/root/.ssh \
+		-e TRAVIS \
 		-e TRAVIS_PULL_REQUEST \
 		-e TRAVIS_PULL_REQUEST_BRANCH \
 		-e TF_VAR_ibmcloud_api_key \
@@ -143,7 +146,7 @@ doc-sweeper:
 		bash -c "chown -R root /root/.ssh && \
 			chgrp -R root /root/.ssh && \
 			make ghe-netrc && \
-			ci/doc-sweeper.sh"
+			ci/pre-commit-sweeper.sh"
 	# Cleanup after (must use sudo as dir now owned by root)
 	sudo rm -rf /tmp/.ssh
 
