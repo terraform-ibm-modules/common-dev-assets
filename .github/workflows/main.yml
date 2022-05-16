@@ -28,9 +28,9 @@ jobs:
           pip install pre-commit
           pre-commit install
 
-      # Update doc if its a renovate PR
-      - name: Update doc
-        run: module-assets/ci/doc-sweeper.sh
+      # Check for pre-commit updates if it is a renovate PR
+      - name: Pre-commit sweeper
+        run: module-assets/ci/pre-commit-sweeper.sh
 
       # run pre-commit against all files
       - name: Pre-commit
