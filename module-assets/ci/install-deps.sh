@@ -158,7 +158,7 @@ echo "COMPLETE"
 #######################################
 
  # renovate: datasource=github-releases depName=hashicorp/terraform
-TERRAFORM_VERSION=v1.1.9
+TERRAFORM_VERSION=v1.2.0
 # 'v' prefix required for renovate to query github.com for new release, but needs to be removed to pull from hashicorp.com
 TERRAFORM_VERSION="${TERRAFORM_VERSION:1}"
 BINARY=terraform
@@ -178,7 +178,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.37.0
+TERRAGRUNT_VERSION=v0.37.1
 BINARY=terragrunt
 FILE_NAME="terragrunt_${OS}_amd64"
 URL="https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}"
@@ -233,7 +233,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=aquasecurity/tfsec
-TFSEC_VERSION=v1.21.0
+TFSEC_VERSION=v1.21.1
 BINARY=tfsec
 FILE_NAME="tfsec-${OS}-amd64"
 URL="https://github.com/aquasecurity/tfsec/releases/download/${TFSEC_VERSION}"
@@ -252,7 +252,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v1.46.1
+GOLANGCI_LINT_VERSION=v1.46.2
 BINARY=golangci-lint
 FILE_NAME="golangci-lint-${GOLANGCI_LINT_VERSION//v/}-${OS}-amd64.tar.gz"
 URL="https://github.com/golangci/golangci-lint/releases/download/${GOLANGCI_LINT_VERSION}"
@@ -305,7 +305,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v3.8.2
+HELM_VERSION=v3.9.0
 BINARY=helm
 FILE_NAME="helm-${HELM_VERSION}-${OS}-amd64.tar.gz"
 URL="https://get.helm.sh"
