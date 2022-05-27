@@ -158,7 +158,7 @@ echo "COMPLETE"
 #######################################
 
  # renovate: datasource=github-releases depName=hashicorp/terraform
-TERRAFORM_VERSION=v1.2.0
+TERRAFORM_VERSION=v1.2.1
 # 'v' prefix required for renovate to query github.com for new release, but needs to be removed to pull from hashicorp.com
 TERRAFORM_VERSION="${TERRAFORM_VERSION:1}"
 BINARY=terraform
@@ -233,7 +233,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=aquasecurity/tfsec
-TFSEC_VERSION=v1.21.1
+TFSEC_VERSION=v1.21.2
 BINARY=tfsec
 FILE_NAME="tfsec-${OS}-amd64"
 URL="https://github.com/aquasecurity/tfsec/releases/download/${TFSEC_VERSION}"
@@ -323,7 +323,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.24.0
+KUBECTL_VERSION=v1.24.1
 BINARY=kubectl
 FILE_NAME="kubectl"
 URL="https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/${OS}/amd64"
