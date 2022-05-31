@@ -1,6 +1,5 @@
 # common-dev-assets
-![This repository contains code and assets that are used to support parts of terraform-ibm-modules development processes. It is not specifically designed to be consumed outside the terraform-ibm-modules project - althought it may be source of inspiration](https://img.shields.io/badge/-Internal%20to%20terraform%20ibm%20modules%20Project-lightgrey "This repository contains code and assets that are used to support parts of terraform-ibm-modules development processes. It is not specifically designed to be consumed outside the terraform-ibm-modules project - althought it may be source of inspiration")
-[![Build Status](https://github.com/terraform-ibm-modules/common-dev-assets/actions/workflows/main.yml/badge.svg)](https://github.com/terraform-ibm-modules/common-dev-assets/actions/workflows/main.yml)
+![This repository contains code and assets that are used to support parts of terraform-ibm-modules development processes. It is not specifically designed to be consumed outside the terraform-ibm-modules project - althought it may be source of inspiration](https://img.shields.io/badge/-Internal%20to%20terraform%20ibm%20modules%20Project-lightgrey "This repository contains code and assets that are used to support parts of terraform-ibm-modules development processes. It is not specifically designed to be consumed outside the terraform-ibm-modules project - althought it may be source of inspiration") [![Build Status](https://github.com/terraform-ibm-modules/common-dev-assets/actions/workflows/main.yml/badge.svg)](https://github.com/terraform-ibm-modules/common-dev-assets/actions/workflows/main.yml)
 
 Repo containing common CI assets.
 
@@ -16,4 +15,14 @@ To set up all necessary tools (including pre-commit hooks), from the root direct
 command:
 ```bash
 make
+```
+
+## Common Release Configuration
+The common release configuration can be found in [.releaserc.json](.releaserc.json)
+This shareable config can be configured in the [**semantic-release** configuration file](https://github.com/semantic-release/semantic-release/blob/master/docs/usage/configuration.md#configuration):
+
+```json
+{
+  "extends": "@terraform-ibm-modules/common-dev-assets"
+}
 ```
