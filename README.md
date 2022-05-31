@@ -17,7 +17,7 @@ command:
 make
 ```
 
-### Common Release Configuration
+## Common Release Configuration
 The common release configuration can be found in [.releaserc.json](.releaserc.json)
 This shareable config can be configured in the [**semantic-release** configuration file](https://github.com/semantic-release/semantic-release/blob/master/docs/usage/configuration.md#configuration):
 
