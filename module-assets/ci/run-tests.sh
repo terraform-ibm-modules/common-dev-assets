@@ -9,13 +9,31 @@
 
 set -e
 
-# In the case of a PR build, the environment variable TRAVIS_PULL_REQUEST will be set equal to the PR number on GitHub.
-# For other builds, it's set to the exact string "false".
-if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+# Determine if PR
+IS_PR=false
+if [ "${GITHUB_ACTIONS}" == "true" ]; then
+  # GITHUB_HEAD_REF: This property is only set when the event that triggers a workflow run is either pull_request or pull_request_target
+  if [ -n "${GITHUB_HEAD_REF}" ]; then
+    IS_PR=true
+    TARGET_BRANCH="${GITHUB_BASE_REF}"
+  fi
+elif [ "${TRAVIS}" == "true" ]; then
+  # TRAVIS_PULL_REQUEST: The pull request number if the current job is a pull request, “false” if it’s not a pull request.
+  if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
+    IS_PR=true
+    TARGET_BRANCH="${TRAVIS_BRANCH}"
+  fi
+else
+  echo "Could not determine CI runtime environment. Script only support travis or github actions."
+  exit 1
+fi
+
+if [ ${IS_PR} == true ]; then
 
   # Files that should not trigger tests
   declare -a skip_array=(".drawio"
                          ".github/settings.yml"
+                         ".github/workflows/main.yml"
                          ".gitignore"
                          ".gitmodules"
                          ".md"
@@ -35,7 +53,7 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
                          "catalogValidationValues.json.template")
 
   # Determine all files being changed in the PR, and add it to array
-  changed_files="$(git diff --name-only "${TRAVIS_BRANCH}..HEAD" --)"
+  changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
   mapfile -t file_array <<< "${changed_files}"
 
   # Check if any file in skip_array matches any of the files being updated in the PR
