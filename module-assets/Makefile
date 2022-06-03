@@ -71,16 +71,18 @@ pre-commit:
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
-		cp -r ~/.ssh /tmp; \
+		cp -r ~/.ssh /tmp && \
 		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
-		-v /tmp/.ssh:/root/.ssh \
-		-e TF_VAR_ibmcloud_api_key \
-		-e GH_TOKEN \
-		${DOCKER_REGISTRY}/$(IMAGE) \
-		bash -c "chown -R root /root/.ssh && \
-			chgrp -R root /root/.ssh && \
-			$${run_cmd}"; \
+			-v /tmp/.ssh:/root/.ssh \
+			-e TF_VAR_ibmcloud_api_key \
+			-e GH_TOKEN \
+			${DOCKER_REGISTRY}/$(IMAGE) \
+			bash -c "chown -R root /root/.ssh && \
+				chgrp -R root /root/.ssh && \
+				$${run_cmd}"; \
+		exitCode=$$?; \
 		sudo rm -rf /tmp/.ssh; \
+		exit $${exitCode}; \
 	fi
 
 # pre-commit for non-terraform repos
@@ -92,13 +94,15 @@ pre-commit-no-terraform:
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
-		cp -r ~/.ssh /tmp; \
+		cp -r ~/.ssh /tmp && \
 		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 			-v /tmp/.ssh:/root/.ssh \
 			${DOCKER_REGISTRY}/$(IMAGE) \
 			bash -c "chown -R root /root/.ssh && \
 				$${run_cmd}"; \
+		exitCode=$$?; \
 		sudo rm -rf /tmp/.ssh; \
+		exit $${exitCode}; \
 	fi
 
 # go mod tidy
@@ -118,7 +122,7 @@ run-tests:
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
-		cp -r ~/.ssh /tmp; \
+		cp -r ~/.ssh /tmp && \
 		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 			-v /tmp/.ssh:/root/.ssh \
 			-e IC_API_KEY="$${TF_VAR_ibmcloud_api_key}" \
@@ -126,13 +130,15 @@ run-tests:
 			-e GONOSUMDB \
 			-e FORCE_TEST_REGION \
 			-e GH_TOKEN \
-			--env-file <(env| grep 'TRAVIS_\|GH_TOKEN\|TF_VAR_' | cut -f1 -d=) \
+			--env-file <(env| grep 'TRAVIS\|GH_TOKEN\|TF_VAR_' | cut -f1 -d=) \
 			--env-file ${DOCKER_ENV} \
 			${DOCKER_REGISTRY}/$(IMAGE) \
 			bash -c "chown -R root /root/.ssh && \
 				chgrp -R root /root/.ssh && \
 				$${run_cmd}"; \
+		exitCode=$$?; \
 		sudo rm -rf /tmp/.ssh; \
+		exit $${exitCode}; \
 	fi
 
 # run tests for terraform repos locally (optionally set RUN env var to a regular expression that matches the test(s) name that you only want to run. e.g. `make run-tests-local RUN=TestRunApplyTest`)
@@ -171,7 +177,7 @@ pre-commit-sweeper:
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
-		cp -r ~/.ssh /tmp; \
+		cp -r ~/.ssh /tmp && \
 		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 			-v /tmp/.ssh:/root/.ssh \
 			-e TRAVIS \
@@ -182,8 +188,10 @@ pre-commit-sweeper:
 			${DOCKER_REGISTRY}/$(IMAGE) \
 			bash -c "chown -R root /root/.ssh && \
 				chgrp -R root /root/.ssh && \
-				m$${run_cmd}"; \
+				$${run_cmd}"; \
+		exitCode=$$?; \
 		sudo rm -rf /tmp/.ssh; \
+		exit $${exitCode}; \
 	fi
 
 sem-release:
