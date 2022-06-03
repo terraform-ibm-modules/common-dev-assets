@@ -146,7 +146,7 @@ echo "COMPLETE"
 #######################################
 
  # renovate: datasource=github-tags depName=IBM/detect-secrets versioning="regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$"
-DETECT_SECRETS_VERSION=0.13.1+ibm.48
+DETECT_SECRETS_VERSION=0.13.1+ibm.50
 PACKAGE=detect-secrets
 echo
 echo "-- Installing ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
