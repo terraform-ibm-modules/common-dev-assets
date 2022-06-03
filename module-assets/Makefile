@@ -26,6 +26,10 @@ ifndef RUN
 	RUN := ''
 endif
 
+ifndef CONTAINER_RUNTIME
+	CONTAINER_RUNTIME := 'docker'
+endif
+
 VERSION := $(shell git describe --tags 2> /dev/null || echo unknown)
 .DEFAULT_GOAL = dependency-pre-commit
 IMAGE := ${IMAGE_NAME}:stable
@@ -52,7 +56,7 @@ docker-pull:
 	docker pull "${DOCKER_REGISTRY}/$(IMAGE)"
 
 docker-run:
-	docker run -it -v $$(pwd):/mnt -v ~/.ssh:/root/.ssh ${DOCKER_REGISTRY}/$(IMAGE) bash
+	${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt -v ~/.ssh:/root/.ssh ${DOCKER_REGISTRY}/$(IMAGE) bash
 
 # pre-commit for repos with terraform code
 # Not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that.
@@ -68,7 +72,7 @@ pre-commit:
 		bash -c "$${run_cmd}"; \
 	else \
 		cp -r ~/.ssh /tmp; \
-		docker run -it -v $$(pwd):/mnt \
+		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 		-v /tmp/.ssh:/root/.ssh \
 		-e TF_VAR_ibmcloud_api_key \
 		-e GH_TOKEN \
@@ -89,7 +93,7 @@ pre-commit-no-terraform:
 		bash -c "$${run_cmd}"; \
 	else \
 		cp -r ~/.ssh /tmp; \
-		docker run -it -v $$(pwd):/mnt \
+		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 			-v /tmp/.ssh:/root/.ssh \
 			${DOCKER_REGISTRY}/$(IMAGE) \
 			bash -c "chown -R root /root/.ssh && \
@@ -115,7 +119,7 @@ run-tests:
 		bash -c "$${run_cmd}"; \
 	else \
 		cp -r ~/.ssh /tmp; \
-		docker run -it -v $$(pwd):/mnt \
+		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 			-v /tmp/.ssh:/root/.ssh \
 			-e IC_API_KEY="$${TF_VAR_ibmcloud_api_key}" \
 			-e GOPROXY \
@@ -144,7 +148,7 @@ run-go-module-tests:
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
-	docker run -it -v $$(pwd):/mnt \
+	${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 		-e GOPROXY \
 		-e GONOSUMDB \
 		-e GH_TOKEN \
@@ -168,7 +172,7 @@ pre-commit-sweeper:
 		bash -c "$${run_cmd}"; \
 	else \
 		cp -r ~/.ssh /tmp; \
-		docker run -it -v $$(pwd):/mnt \
+		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 			-v /tmp/.ssh:/root/.ssh \
 			-e TRAVIS \
 			-e TRAVIS_PULL_REQUEST \
@@ -190,7 +194,7 @@ sem-release:
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
-	docker run -it -v $$(pwd):/mnt \
+	${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 		-v ~/.ssh:/root/.ssh \
 		-e GH_TOKEN \
 		-e CATALOG_TEKTON_WEBHOOK_URL \
