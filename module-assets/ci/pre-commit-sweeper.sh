@@ -15,9 +15,11 @@ function git_config() {
 }
 
 function git_push() {
+  branch=$1
+
   git add .
   git commit -m "doc: committing files modified by the hook"
-  git push origin "${TRAVIS_PULL_REQUEST_BRANCH}"
+  git push origin "${branch}"
 }
 
 # Determine if PR
@@ -51,7 +53,7 @@ if [[ ${IS_PR} == true ]] && [[ "${BRANCH}" =~ "renovate" ]]; then
       # Checkout to PR branch
       git checkout "${BRANCH}"
       # Commit and push changes
-      git_push
+      git_push "${BRANCH}"
       echo "Changes pushed in a new commit, exiting with exit code 1 - new commit will trigger new pipeline run"
       exit 1 # Failing the pipeline here to ensure the PR cannot be merged before new pipeline runs on the commit we just pushed
     else
