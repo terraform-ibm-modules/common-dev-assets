@@ -32,7 +32,7 @@ if [ "${GITHUB_ACTIONS}" == "true" ]; then
     IS_PR=true
     BRANCH="${GITHUB_HEAD_REF}"
     USER="terraform-ibm-modules-ops"
-    EMAIL="GoldenEye.Development@ibm.com"
+    EMAIL="Terraform.IBM.Modules.Operations@ibm.com"
   fi
 elif [ "${TRAVIS}" == "true" ]; then
   # TRAVIS_PULL_REQUEST: The pull request number if the current job is a pull request, “false” if it’s not a pull request.
@@ -40,7 +40,7 @@ elif [ "${TRAVIS}" == "true" ]; then
     IS_PR=true
     BRANCH="${TRAVIS_PULL_REQUEST_BRANCH}"
     USER="GoldenEye-Development"
-    EMAIL="Terraform.IBM.Modules.Operations@ibm.com"
+    EMAIL="GoldenEye.Development@ibm.com"
   fi
 else
   echo "Could not determine CI runtime environment. Script only support travis or github actions."
