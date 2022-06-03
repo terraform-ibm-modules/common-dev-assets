@@ -105,7 +105,7 @@ go-mod-tidy:
 # Not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that.
 # After remove /tmp/.ssh (must use sudo as dir now owned by root)
 run-tests: SHELL:=/bin/bash
-run-tests: verify-artifactory-credentials-set
+run-tests:
 	@if [ -z "$${TF_VAR_ibmcloud_api_key}" ]; then echo "Error: TF_VAR_ibmcloud_api_key is undefined"; exit 1; fi
 	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
 	@run_cmd="make ghe-netrc && \
