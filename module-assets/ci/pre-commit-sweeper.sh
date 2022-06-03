@@ -7,9 +7,11 @@
 set -e
 
 function git_config() {
-  git_user="goldeneye.development@ibm.com"
-  git config --global user.email "${git_user}"
-  git config --global user.name "${git_user}"
+  user=$1
+  email=$2
+
+  git config --global user.email "${email}"
+  git config --global user.name "${user}"
   git config --replace-all remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
   git fetch
 }
@@ -29,12 +31,16 @@ if [ "${GITHUB_ACTIONS}" == "true" ]; then
   if [ -n "${GITHUB_HEAD_REF}" ]; then
     IS_PR=true
     BRANCH="${GITHUB_HEAD_REF}"
+    USER="terraform-ibm-modules-ops"
+    EMAIL="GoldenEye.Development@ibm.com"
   fi
 elif [ "${TRAVIS}" == "true" ]; then
   # TRAVIS_PULL_REQUEST: The pull request number if the current job is a pull request, “false” if it’s not a pull request.
   if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
     IS_PR=true
     BRANCH="${TRAVIS_PULL_REQUEST_BRANCH}"
+    USER="GoldenEye-Development"
+    EMAIL="Terraform.IBM.Modules.Operations@ibm.com"
   fi
 else
   echo "Could not determine CI runtime environment. Script only support travis or github actions."
@@ -49,7 +55,7 @@ if [[ ${IS_PR} == true ]] && [[ "${BRANCH}" =~ "renovate" ]]; then
     if ! git diff --exit-code; then
       echo "Detected file changes - configuring git to push changes to branch: ${BRANCH}"
       # Configure local git
-      git_config
+      git_config "${USER}" "${EMAIL}"
       # Checkout to PR branch
       git checkout "${BRANCH}"
       # Commit and push changes
