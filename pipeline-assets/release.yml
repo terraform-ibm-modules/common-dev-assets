@@ -56,7 +56,7 @@ jobs:
             echo "No Release Version Set. Skip tagging"
           else
             echo "Version: $SEMVER_VERSION"
-            git tag "v${SEMVER_VERSION}" "v${SEMVER_VERSION}" -f -s -m "Sign Tag"
-            export GIT_COMMITTER_DATE="$(git log -1 --format=%aD v${SEMVER_VERSION})"
-            git push origin "v${SEMVER_VERSION}" -f
+            git tag "${SEMVER_VERSION}" "${SEMVER_VERSION}" -f -s -m "Sign Tag"
+            export GIT_COMMITTER_DATE="$(git log -1 --format=%aD ${SEMVER_VERSION})"
+            git push origin "${SEMVER_VERSION}" -f
           fi
