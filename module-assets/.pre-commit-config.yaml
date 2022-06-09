@@ -4,7 +4,7 @@ repos:
   rev: v4.3.0
   hooks:
     - id: check-yaml
-      exclude: chart/
+      exclude: chart/|metadata.yaml
     - id: end-of-file-fixer
     - id: trailing-whitespace
     - id: check-merge-conflict
