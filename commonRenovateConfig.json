@@ -6,7 +6,7 @@
   ],
   "cloneSubmodules": false,
   "prConcurrentLimit": 1,
-  "automerge": true,
+  "automerge": false,
   "force": {
     "recreateClosed": true
   },
