@@ -52,7 +52,7 @@ repos:
   rev: v0.0.17
   hooks:
   - id: forbid-binary
-    exclude: .png|.jpg
+    exclude: .png|.jpg|ekm-client*.deb
   - id: shellcheck
   - id: go-fmt
 - repo: https://github.com/ibm/detect-secrets
