@@ -1,11 +1,13 @@
 name: Release
 
 on:
-  workflow_run:
-    workflows: [CI]
-    branches: [main]
-    types:
-      - completed
+  workflow_call:
+    inputs:
+      versionPrefix:
+        required: false
+        type: string
+        description: 'Optional prefix to add before version number'
+        default: ''
 
 jobs:
   Semantic_Release:
@@ -55,8 +57,8 @@ jobs:
           then
             echo "No Release Version Set. Skip tagging"
           else
-            echo "Version: $SEMVER_VERSION"
-            git tag "${SEMVER_VERSION}" "${SEMVER_VERSION}" -f -s -m "Sign Tag"
-            export GIT_COMMITTER_DATE="$(git log -1 --format=%aD ${SEMVER_VERSION})"
-            git push origin "${SEMVER_VERSION}" -f
+            echo "Version: ${{ inputs.versionPrefix }}${SEMVER_VERSION}"
+            git tag "${{ inputs.versionPrefix }}${SEMVER_VERSION}" "${{ inputs.versionPrefix }}${SEMVER_VERSION}" -f -s -m "Sign Tag"
+            export GIT_COMMITTER_DATE="$(git log -1 --format=%aD ${{ inputs.versionPrefix }}${SEMVER_VERSION})"
+            git push origin "${{ inputs.versionPrefix }}${SEMVER_VERSION}" -f
           fi

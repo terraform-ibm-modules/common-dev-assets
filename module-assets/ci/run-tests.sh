@@ -15,7 +15,7 @@ if [ "${GITHUB_ACTIONS}" == "true" ]; then
   # GITHUB_HEAD_REF: This property is only set when the event that triggers a workflow run is either pull_request or pull_request_target
   if [ -n "${GITHUB_HEAD_REF}" ]; then
     IS_PR=true
-    TARGET_BRANCH="${GITHUB_BASE_REF}"
+    TARGET_BRANCH="origin/${GITHUB_BASE_REF}"
   fi
 elif [ "${TRAVIS}" == "true" ]; then
   # TRAVIS_PULL_REQUEST: The pull request number if the current job is a pull request, “false” if it’s not a pull request.
