@@ -29,7 +29,6 @@ else
 fi
 
 if [ ${IS_PR} == true ]; then
-  git fetch --all
   # Files that should not trigger tests
   declare -a skip_array=(".drawio"
                          ".github/settings.yml"
