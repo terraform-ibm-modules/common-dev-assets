@@ -2,11 +2,6 @@ name: Terraform-Module-CI
 
 on:
   workflow_call:
-    secrets:
-      IBMCLOUD_API_KEY:
-        required: true
-      GH_TOKEN:
-        required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
