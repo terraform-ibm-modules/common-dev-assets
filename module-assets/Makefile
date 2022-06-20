@@ -2,12 +2,24 @@
 include common-dev-assets/module-assets/config.env
 export
 
-.PHONY: dependency-install-darwin-linux dependency-pre-commit
+# explicitly tell Make these commands not associated with files
+.PHONY: all dependency-install-darwin-linux dependency-pre-commit docker-pull docker-run pre-commit pre-commit-no-terraform go-mod-tidy run-tests run-tests-local run-go-module-tests pre-commit-sweeper sem-release netrc ghe-netrc
+
+#
+# simply expanded variables
+#
+
+IMAGE := ${IMAGE_NAME}:stable
 
 ifeq ($(OS),Windows_NT)     # is Windows_NT on XP, 2000, 7, Vista, 10...
     detected_OS := Windows
 else
     detected_OS := $(shell uname)  # same as "uname -s"
+endif
+
+.DEFAULT_GOAL = dependency-pre-commit
+ifneq (,$(filter $(detected_OS), Darwin Linux))
+	.DEFAULT_GOAL = all
 endif
 
 ifndef DOCKER_ENV
@@ -30,13 +42,9 @@ ifndef CONTAINER_RUNTIME
 	CONTAINER_RUNTIME := 'docker'
 endif
 
-VERSION := $(shell git describe --tags 2> /dev/null || echo unknown)
-.DEFAULT_GOAL = dependency-pre-commit
-IMAGE := ${IMAGE_NAME}:stable
-
-ifneq (,$(filter $(detected_OS), Darwin Linux))
-	.DEFAULT_GOAL = all
-endif
+#
+# install dependencies
+#
 
 all: dependency-install-darwin-linux dependency-pre-commit
 
@@ -49,17 +57,21 @@ dependency-pre-commit:
 	pre-commit install --hook-type commit-msg
 
 #
-# Docker
+# docker
 #
 
 docker-pull:
-	docker pull "${DOCKER_REGISTRY}/$(IMAGE)"
+	${CONTAINER_RUNTIME} pull "${DOCKER_REGISTRY}/$(IMAGE)"
 
 docker-run:
 	${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt -v ~/.ssh:/root/.ssh ${DOCKER_REGISTRY}/$(IMAGE) bash
 
+#
+# pre-commit
+#
+
 # pre-commit for repos with terraform code
-# Not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that.
+# (in container approach, not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that instead)
 pre-commit:
 	@if [ -z "$${TF_VAR_ibmcloud_api_key}" ]; then echo "Error: TF_VAR_ibmcloud_api_key is undefined"; exit 1; fi
 	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
@@ -67,7 +79,7 @@ pre-commit:
 			terraform init && \
 			terragrunt run-all init || echo 'Ignoring failure incase this is a non terragrunt project' && \
 			pre-commit run --all-files" && \
-	if [ "$${NO_CONTAINER}" == "true" ]; \
+	if [ "$${NO_CONTAINER}" = "true" ]; \
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
@@ -86,11 +98,10 @@ pre-commit:
 	fi
 
 # pre-commit for non-terraform repos
-# Not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that.
-# After remove /tmp/.ssh (must use sudo as dir now owned by root)
+# (in container approach, not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that instead)
 pre-commit-no-terraform:
 	@run_cmd="pre-commit run --all-files" && \
-	if [ "$${NO_CONTAINER}" == "true" ]; \
+	if [ "$${NO_CONTAINER}" = "true" ]; \
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
@@ -105,13 +116,43 @@ pre-commit-no-terraform:
 		exit $${exitCode}; \
 	fi
 
-# go mod tidy
-go-mod-tidy:
-	@cd ${GO_MOD_DIR}; go mod tidy -v ${GO_MOD_ARGS}
+# TODO: Remove this command once all travis files have beeb migrated to use make pre-commit-sweeper
+doc-sweeper: pre-commit-sweeper
 
-# run tests for terraform repos
-# Not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that.
-# After remove /tmp/.ssh (must use sudo as dir now owned by root)
+# run pre-commit checks against renovate PRs, and commit back any changes to the PR (e.g. doc updates, secrets baseline etc)
+# (in container approach, not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that instead)
+pre-commit-sweeper:
+	@if [ -z "$${TF_VAR_ibmcloud_api_key}" ]; then echo "Error: TF_VAR_ibmcloud_api_key is undefined"; exit 1; fi
+	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
+	@run_cmd="make ghe-netrc && \
+		ci/pre-commit-sweeper.sh" && \
+	if [ "$${NO_CONTAINER}" = "true" ]; \
+	then \
+		bash -c "$${run_cmd}"; \
+	else \
+		cp -r ~/.ssh /tmp && \
+		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
+			-v /tmp/.ssh:/root/.ssh \
+			-e TRAVIS \
+			-e TRAVIS_PULL_REQUEST \
+			-e TRAVIS_PULL_REQUEST_BRANCH \
+			-e TF_VAR_ibmcloud_api_key \
+			-e GH_TOKEN \
+			${DOCKER_REGISTRY}/$(IMAGE) \
+			bash -c "chown -R root /root/.ssh && \
+				chgrp -R root /root/.ssh && \
+				$${run_cmd}"; \
+		exitCode=$$?; \
+		sudo rm -rf /tmp/.ssh; \
+		exit $${exitCode}; \
+	fi
+
+#
+# tests
+#
+
+# run tests for terraform repos (pipeline execution only - not for local usage)
+# (in container approach, not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that instead)
 run-tests: SHELL:=/bin/bash
 run-tests:
 	@if [ -z "$${TF_VAR_ibmcloud_api_key}" ]; then echo "Error: TF_VAR_ibmcloud_api_key is undefined"; exit 1; fi
@@ -141,16 +182,17 @@ run-tests:
 		exit $${exitCode}; \
 	fi
 
-# run tests for terraform repos locally (optionally set RUN env var to a regular expression that matches the test(s) name that you only want to run. e.g. `make run-tests-local RUN=TestRunApplyTest`)
+# run tests for terraform repos locally
+# (optionally set RUN env var to a regular expression that matches the test(s) name that you only want to run. e.g. `make run-tests-local RUN=TestRunApplyTest`)
 run-tests-local:
 	@if [ -z "$${TF_VAR_ibmcloud_api_key}" ]; then echo "Error: TF_VAR_ibmcloud_api_key is undefined"; exit 1; fi
 	cd ${GO_TEST_DIR} && go test -run ${RUN} -count=1 -v -timeout 300m
 
-# run unit tests for golang
+# run unit tests for golang projects
 run-go-module-tests:
 	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
 	@run_cmd="go test ./... -count=1 -v -timeout 5m" && \
-	if [ "$${NO_CONTAINER}" == "true" ]; \
+	if [ "$${NO_CONTAINER}" = "true" ]; \
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
@@ -162,43 +204,19 @@ run-go-module-tests:
 		bash -c "$${run_cmd}"; \
 	fi
 
+# go mod tidy
+go-mod-tidy:
+	@cd ${GO_MOD_DIR}; go mod tidy -v ${GO_MOD_ARGS}
 
-# TODO: Remove this command once all travis files have beeb migrated to use make pre-commit-sweeper
-doc-sweeper: pre-commit-sweeper
-
-# Not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that.
-# After remove /tmp/.ssh (must use sudo as dir now owned by root)
-pre-commit-sweeper:
-	@if [ -z "$${TF_VAR_ibmcloud_api_key}" ]; then echo "Error: TF_VAR_ibmcloud_api_key is undefined"; exit 1; fi
-	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
-	@run_cmd="make ghe-netrc && \
-		ci/pre-commit-sweeper.sh" && \
-	if [ "$${NO_CONTAINER}" == "true" ]; \
-	then \
-		bash -c "$${run_cmd}"; \
-	else \
-		cp -r ~/.ssh /tmp && \
-		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
-			-v /tmp/.ssh:/root/.ssh \
-			-e TRAVIS \
-			-e TRAVIS_PULL_REQUEST \
-			-e TRAVIS_PULL_REQUEST_BRANCH \
-			-e TF_VAR_ibmcloud_api_key \
-			-e GH_TOKEN \
-			${DOCKER_REGISTRY}/$(IMAGE) \
-			bash -c "chown -R root /root/.ssh && \
-				chgrp -R root /root/.ssh && \
-				$${run_cmd}"; \
-		exitCode=$$?; \
-		sudo rm -rf /tmp/.ssh; \
-		exit $${exitCode}; \
-	fi
+#
+# release
+#
 
 sem-release:
 	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
 	@run_cmd="mv -t /mnt /tmp/node_modules /tmp/package-lock.json && \
 		npx semantic-release --no-ci" && \
-	if [ "$${NO_CONTAINER}" == "true" ]; \
+	if [ "$${NO_CONTAINER}" = "true" ]; \
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
@@ -211,6 +229,9 @@ sem-release:
 		bash -c "$${run_cmd}"; \
 	fi
 
+#
+# netrc
+#
 
 # Create entry in ~/.netrc for cm.globalcatalog.cloud.ibm.com using IAM bearer token
 netrc:
