@@ -35,7 +35,7 @@ jobs:
           # Setup environment since GHA does not run the containers entrypoint
           . /root/.bashrc
           . /root/.profile
-          make SHELL:=/bin/bash pre-commit-sweeper
+          make pre-commit-sweeper
 
       # run pre-commit against all files
       - name: Pre-commit
@@ -43,7 +43,7 @@ jobs:
           # Setup environment since GHA does not run the containers entrypoint
           . /root/.bashrc
           . /root/.profile
-          make SHELL:=/bin/bash pre-commit
+          make pre-commit
 
       # run unit tests
       - name: Unit Tests
@@ -51,4 +51,4 @@ jobs:
           # Setup environment since GHA does not run the containers entrypoint
           . /root/.bashrc
           . /root/.profile
-          make SHELL:=/bin/bash run-tests
+          make run-tests
