@@ -8,6 +8,7 @@
   "prConcurrentLimit": 1,
   "automerge": false,
   "force": {
+    "description": "Recreate PRs even if same ones were closed previously",
     "recreateClosed": true
   },
   "labels": ["renovate"],
@@ -24,51 +25,52 @@
   "postUpdateOptions": ["gomodTidy", "gomodUpdateImportPaths"],
   "packageRules": [
     {
+      "description": "Use fix as Semantic Commit prefix for all dependency updates except ones specified in rules below",
       "matchPackagePatterns": ["*"],
       "semanticCommitType": "fix"
     },
     {
+      "description": "Use chore as Semantic Commit prefix for all dependency updates in examples folder",
       "matchPaths": ["examples/**"],
       "semanticCommitType": "chore"
     },
     {
+      "description": "Use chore as Semantic Commit prefix for git submodule, go.mod and pre-commit updates",
       "matchManagers": ["git-submodules", "gomod", "pre-commit"],
       "semanticCommitType": "chore"
     },
     {
+      "description": "Disable updates of the terraform version so it stays at >= 1.0.0",
       "matchManagers": ["terraform"],
       "matchDepTypes": ["required_version"],
-      "separateMinorPatch": true,
-      "rangeStrategy": "bump",
-      "patch": {
-        "enabled": false
-      },
-      "minor": {
-        "enabled": false
-      }
+      "enabled": false
     },
     {
+      "description": "Only bump the terraform provider required versions every 4 months",
       "matchManagers": ["terraform"],
       "matchDepTypes": ["required_provider"],
       "rangeStrategy": "bump",
       "group": true,
       "groupName": "required_provider",
-      "schedule": ["on the 1st through 5th day of the month"],
+      "schedule": ["every 4 months on the 1st through 5th day of the month"],
       "prPriority": 9
     },
     {
+      "description": "Prioritise terraform module updates",
       "matchManagers": ["terraform"],
       "matchDepTypes": ["module"],
       "groupName": "terraform-module",
       "prPriority": 10
     },
     {
+      "description": "Prioritise terraform module updates for terragrunt",
       "matchManagers": ["terragrunt"],
       "matchDepTypes": ["gitTags"],
       "groupName": "terraform-module",
       "prPriority": 10
     },
     {
+      "description": "Custom regex required to bump IBM detect secrets",
       "matchPackageNames": ["ibm/detect-secrets"],
       "versioning": "regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$"
     }
