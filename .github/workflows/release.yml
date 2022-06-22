@@ -13,6 +13,12 @@ jobs:
   Semantic_Release:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container:
+      image: icr.io/goldeneye_images/goldeneye-ci-image:stable
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        NO_CONTAINER: "true" # set so any Makefile actions will not run in new container
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -20,11 +26,6 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
           submodules: true
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3.2.0
-
-      - run: npm ci
 
       - name: Import GPG key
         id: import-gpg
@@ -45,7 +46,12 @@ jobs:
           GIT_COMMITTER_NAME: ${{ steps.import-gpg.outputs.name }}
           GIT_COMMITTER_EMAIL: ${{ steps.import-gpg.outputs.email }}
         run: |
-          npx semantic-release
+          # Setup environment since GHA does not run the containers entrypoint
+          . /root/.bashrc
+          . /root/.profile
+          if [ ! -e "./package-lock.json" ]; then ln -s /tmp/package-lock.json package-lock.json; fi
+          if [ ! -d "./node_modules" ]; then ln -s /tmp/node_modules node_modules; fi
+          bash -c "npx semantic-release --no-ci";
 
       - id: versionNumber
         run: echo "::set-output name=version::$SEMVER_VERSION"
@@ -54,6 +60,9 @@ jobs:
         env:
           SEMVER_VERSION: ${{ steps.versionNumber.outputs.version }}
         run: |
+          # Setup environment since GHA does not run the containers entrypoint
+          . /root/.bashrc
+          . /root/.profile
           if [ -z "$SEMVER_VERSION" ]
           then
             echo "No Release Version Set. Skip tagging"
