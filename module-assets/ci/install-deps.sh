@@ -181,7 +181,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.37.4
+TERRAGRUNT_VERSION=v0.38.1
 BINARY=terragrunt
 FILE_NAME="terragrunt_${OS}_amd64"
 URL="https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}"
@@ -218,7 +218,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=terraform-linters/tflint
-TFLINT_VERSION=v0.37.0
+TFLINT_VERSION=v0.38.1
 BINARY=tflint
 FILE_NAME="tflint_${OS}_amd64.zip"
 URL="https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}"
@@ -326,7 +326,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.24.1
+KUBECTL_VERSION=v1.24.2
 BINARY=kubectl
 FILE_NAME="kubectl"
 URL="https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/${OS}/amd64"
