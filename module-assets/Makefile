@@ -73,7 +73,6 @@ docker-run:
 # pre-commit for repos with terraform code
 # (in container approach, not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that instead)
 pre-commit:
-	@if [ -z "$${TF_VAR_ibmcloud_api_key}" ]; then echo "Error: TF_VAR_ibmcloud_api_key is undefined"; exit 1; fi
 	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
 	@run_cmd="make ghe-netrc && \
 			terraform init && \
@@ -86,7 +85,6 @@ pre-commit:
 		cp -r ~/.ssh /tmp && \
 		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 			-v /tmp/.ssh:/root/.ssh \
-			-e TF_VAR_ibmcloud_api_key \
 			-e GH_TOKEN \
 			${DOCKER_REGISTRY}/$(IMAGE) \
 			bash -c "chown -R root /root/.ssh && \
@@ -122,7 +120,6 @@ doc-sweeper: pre-commit-sweeper
 # run pre-commit checks against renovate PRs, and commit back any changes to the PR (e.g. doc updates, secrets baseline etc)
 # (in container approach, not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that instead)
 pre-commit-sweeper:
-	@if [ -z "$${TF_VAR_ibmcloud_api_key}" ]; then echo "Error: TF_VAR_ibmcloud_api_key is undefined"; exit 1; fi
 	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
 	@run_cmd="make ghe-netrc && \
 		ci/pre-commit-sweeper.sh" && \
@@ -136,7 +133,6 @@ pre-commit-sweeper:
 			-e TRAVIS \
 			-e TRAVIS_PULL_REQUEST \
 			-e TRAVIS_PULL_REQUEST_BRANCH \
-			-e TF_VAR_ibmcloud_api_key \
 			-e GH_TOKEN \
 			${DOCKER_REGISTRY}/$(IMAGE) \
 			bash -c "chown -R root /root/.ssh && \
