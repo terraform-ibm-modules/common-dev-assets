@@ -1,8 +1,8 @@
 #! /bin/bash
 
-# This script is designed to run as a part of Travis CI through the semantic release automation
+# This script is designed to run as a part of CI through the semantic release automation
 # This script calls the webhook for the release pipeline in tekton with the parameters needed to onboard a release of a module to the catalog
-# To run, call this script using the 'exec' plugin in your .releaserc, and provide the repo name, catalogID, offeringID, and version as parameters
+# To run, call this script using the 'exec' plugin in your .releaserc, and provide the repo name, catalogID, offeringID, version, and example as parameters
 # The webhook URL and token associated with the webhook must be provided via environment variables
 
 repoName="$1"
