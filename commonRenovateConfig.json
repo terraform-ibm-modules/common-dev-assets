@@ -40,6 +40,11 @@
       "semanticCommitType": "chore"
     },
     {
+      "description": "Use ci as Semantic Commit prefix for GHA pipeline updates",
+      "matchPackageNames": ["terraform-ibm-modules/common-pipeline-assets"],
+      "semanticCommitType": "ci"
+    },
+    {
       "description": "Disable updates of the terraform version so it stays at >= 1.0.0",
       "matchManagers": ["terraform"],
       "matchDepTypes": ["required_version"],
