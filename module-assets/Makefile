@@ -186,7 +186,6 @@ run-tests-local:
 
 # run unit tests for golang projects
 run-go-module-tests:
-	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
 	@run_cmd="go test ./... -count=1 -v -timeout 5m" && \
 	if [ "$${NO_CONTAINER}" = "true" ]; \
 	then \
@@ -195,7 +194,6 @@ run-go-module-tests:
 	${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 		-e GOPROXY \
 		-e GONOSUMDB \
-		-e GH_TOKEN \
 		${DOCKER_REGISTRY}/$(IMAGE) \
 		bash -c "$${run_cmd}"; \
 	fi
