@@ -10,7 +10,9 @@ catalogID="$2"
 offeringID="$3"
 version="$4"
 target="$5"
-example="${6:-"none"}"
+example="${6:-none}"
+gitUrl="${7:-github.ibm.com}"
+gitOrg="${8:-GoldenEye}"
 
 if [ -z ${CATALOG_TEKTON_WEBHOOK_URL+x} ]; then echo "CATALOG_TEKTON_WEBHOOK_URL is unset"; else echo "CATALOG_TEKTON_WEBHOOK_URL is set"; fi
 if [ -z ${CATALOG_TEKTON_WEBHOOK_TOKEN+x} ]; then echo "CATALOG_TEKTON_WEBHOOK_TOKEN is unset"; else echo "CATALOG_TEKTON_WEBHOOK_TOKEN is set"; fi
@@ -20,9 +22,11 @@ echo "$catalogID"
 echo "$offeringID"
 echo "$version"
 echo "$example"
+echo "$gitUrl"
+echo "$gitOrg"
 
 echo "generating payload"
-payload=$(jq -c -n --arg repoName "$repoName" --arg catalogID "$catalogID" --arg offeringID "$offeringID" --arg version "$version" --arg target "$target" --arg example "$example" '{"repo-name": $repoName, "catalog-id": $catalogID, "offering-id": $offeringID, "version": $version, "target": $target, "example": $example}')
+payload=$(jq -c -n --arg repoName "$repoName" --arg catalogID "$catalogID" --arg offeringID "$offeringID" --arg version "$version" --arg target "$target" --arg example "$example" --arg gitUrl "$gitUrl" --arg gitOrg "$gitOrg" '{"repo-name": $repoName, "catalog-id": $catalogID, "offering-id": $offeringID, "version": $version, "target": $target, "example": $example, "git-url": $gitUrl, "git-org": $gitOrg}')
 echo "$payload"
 
 echo "kicking off tekton pipeline"
