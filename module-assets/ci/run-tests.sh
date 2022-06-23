@@ -33,7 +33,8 @@ if [ ${IS_PR} == true ]; then
   # Files that should not trigger tests
   declare -a skip_array=(".drawio"
                          ".github/settings.yml"
-                         ".github/workflows/main.yml"
+                         ".github/workflows/ci.yml"
+                         ".github/workflows/release.yml"
                          ".gitignore"
                          ".gitmodules"
                          ".md"
