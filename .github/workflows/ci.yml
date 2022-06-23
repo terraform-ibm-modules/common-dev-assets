@@ -1,4 +1,4 @@
-name: CI
+name: CI-Pipeline
 
 # Controls when the workflow will run
 on:
@@ -11,6 +11,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  NO_CONTAINER: "true"
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   CI_Pipeline:
@@ -21,6 +24,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          submodules: true
 
       # Setup tools
       - name: Setup tools
@@ -29,9 +35,11 @@ jobs:
           pre-commit install
 
       # Check for pre-commit updates if it is a renovate PR
-      - name: Pre-commit sweeper
-        run: module-assets/ci/pre-commit-sweeper.sh
+      - name: Renovate pre-commit sweeper
+        run: make pre-commit-sweeper
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       # run pre-commit against all files
       - name: Pre-commit
-        run: pre-commit run --all-files
+        run: make pre-commit-no-terraform
