@@ -3,7 +3,7 @@ include common-dev-assets/module-assets/config.env
 export
 
 # explicitly tell Make these commands not associated with files
-.PHONY: all dependency-install-darwin-linux dependency-pre-commit docker-pull docker-run pre-commit pre-commit-no-terraform go-mod-tidy run-tests run-tests-local run-go-module-tests pre-commit-sweeper sem-release netrc ghe-netrc
+.PHONY: all dependency-install-darwin-linux dependency-pre-commit docker-pull docker-run pre-commit pre-commit-no-terraform go-mod-tidy run-tests run-tests-local run-go-module-tests renovate-sweeper sem-release netrc ghe-netrc
 
 #
 # simply expanded variables
@@ -114,15 +114,15 @@ pre-commit-no-terraform:
 		exit $${exitCode}; \
 	fi
 
-# TODO: Remove this command once all travis files have beeb migrated to use make pre-commit-sweeper
-doc-sweeper: pre-commit-sweeper
+# TODO: Remove this command once all pipelines have been migrated to use make renovate-sweeper
+pre-commit-sweeper: renovate-sweeper
 
 # run pre-commit checks against renovate PRs, and commit back any changes to the PR (e.g. doc updates, secrets baseline etc)
 # (in container approach, not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that instead)
-pre-commit-sweeper:
+renovate-sweeper:
 	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
 	@run_cmd="make ghe-netrc && \
-		ci/pre-commit-sweeper.sh" && \
+		ci/renovate-sweeper.sh" && \
 	if [ "$${NO_CONTAINER}" = "true" ]; \
 	then \
 		bash -c "$${run_cmd}"; \
