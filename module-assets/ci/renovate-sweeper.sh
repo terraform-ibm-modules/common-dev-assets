@@ -56,7 +56,7 @@ fi
 
 # Only run on PRs created by renovate
 if [ ${IS_PR} == true ]; then
-  if [ "${BRANCH}" =~ "renovate" ]; then
+  if [[ "${BRANCH}" =~ "renovate" ]]; then
     if ! pre-commit run --all-files; then
       echo "Pre-commit did not return 0 exit code. Checking if any files changes.."
       # Check if hook modified any files
