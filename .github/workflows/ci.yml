@@ -33,7 +33,7 @@ jobs:
 
       # Check for pre-commit updates if it is a renovate PR
       - name: Renovate pre-commit sweeper
-        run: module-assets/ci/pre-commit-sweeper.sh
+        run: module-assets/ci/renovate-sweeper.sh
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
