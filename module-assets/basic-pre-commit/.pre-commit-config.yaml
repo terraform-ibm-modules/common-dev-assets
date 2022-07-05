@@ -22,10 +22,6 @@ repos:
     - id: terragrunt_fmt
     - id: terraform_tfsec
       files: '\.tf'
-    - id: terraform_checkov
-      args:
-        - --args=--skip-path=.scv
-        - --args=--skip-path=Dockerfile
 - repo: https://github.com/syntaqx/git-hooks
   rev: v0.0.17
   hooks:
