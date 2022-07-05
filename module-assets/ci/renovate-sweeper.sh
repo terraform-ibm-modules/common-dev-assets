@@ -20,7 +20,7 @@ function git_push() {
   branch=$1
 
   git add .
-  git commit -m "doc: committing files modified by the hook"
+  git commit -m "docs: committing files modified by the hook"
   git push origin "${branch}"
 }
 
