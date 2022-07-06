@@ -114,9 +114,6 @@ pre-commit-no-terraform:
 		exit $${exitCode}; \
 	fi
 
-# TODO: Remove this command once all pipelines have been migrated to use make renovate-sweeper
-pre-commit-sweeper: renovate-sweeper
-
 # run pre-commit checks against renovate PRs, and commit back any changes to the PR (e.g. doc updates, secrets baseline etc)
 # (in container approach, not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that instead)
 renovate-sweeper:
