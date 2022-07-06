@@ -56,7 +56,8 @@ if [ ${IS_PR} == true ]; then
                          "common-dev-assets"
                          "Makefile"
                          "renovate.json"
-                         "catalogValidationValues.json.template")
+                         "catalogValidationValues.json.template"
+                         ".one-pipeline.yaml")
 
   # Determine all files being changed in the PR, and add it to array
   changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
