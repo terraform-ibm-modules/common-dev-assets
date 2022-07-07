@@ -19,9 +19,22 @@ repos:
     - id: terraform_fmt
     - id: terraform_docs
       args: ['--args=--hide=providers']
+    - id: terraform_tflint
+      args:
+#        NOTE: This is a subset of the rules usually used
+        - --args=--enable-rule=terraform_deprecated_index
+        - --args=--enable-rule=terraform_comment_syntax
+        - --args=--enable-rule=terraform_naming_convention
+        - --args=--enable-rule=terraform_required_version
+        - --args=--enable-rule=terraform_required_providers
+        - --args=--enable-rule=terraform_unused_required_providers
     - id: terragrunt_fmt
     - id: terraform_tfsec
       files: '\.tf'
+    - id: terraform_checkov
+      args:
+        - --args=--skip-path=.scv
+        - --args=--skip-path=Dockerfile
 - repo: https://github.com/syntaqx/git-hooks
   rev: v0.0.17
   hooks:
