@@ -134,7 +134,7 @@ fi
 #######################################
 
  # renovate: datasource=github-tags depName=pre-commit/pre-commit
-PRE_COMMIT_VERSION=v2.19.0
+PRE_COMMIT_VERSION=v2.20.0
 PACKAGE=pre-commit
 echo
 echo "-- Installing ${PACKAGE} ${PRE_COMMIT_VERSION}..."
