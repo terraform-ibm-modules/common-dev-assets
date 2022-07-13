@@ -14,7 +14,7 @@
   ],
   "packageRules": [
     {
-      "description": "Disable updates antonbabenko/pre-commit-terraform until regression is fixed: https://github.com/antonbabenko/pre-commit-terraform/issues/413",
+      "description": "Disable updates of antonbabenko/pre-commit-terraform until regression is fixed: https://github.com/antonbabenko/pre-commit-terraform/issues/413",
       "matchPackageNames": ["antonbabenko/pre-commit-terraform"],
       "enabled": false
     }
