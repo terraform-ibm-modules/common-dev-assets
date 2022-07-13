@@ -20,7 +20,7 @@ repos:
       stages: [commit-msg]
       additional_dependencies: ['@commitlint/config-angular']
 - repo: https://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.73.0
+  rev: v1.74.0
   hooks:
     - id: terraform_fmt
     - id: terraform_validate
