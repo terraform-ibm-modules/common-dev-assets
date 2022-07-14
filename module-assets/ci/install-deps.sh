@@ -308,7 +308,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v3.9.0
+HELM_VERSION=v3.9.1
 BINARY=helm
 FILE_NAME="helm-${HELM_VERSION}-${OS}-amd64.tar.gz"
 URL="https://get.helm.sh"
@@ -326,7 +326,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.24.2
+KUBECTL_VERSION=v1.24.3
 BINARY=kubectl
 FILE_NAME="kubectl"
 URL="https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/${OS}/amd64"
