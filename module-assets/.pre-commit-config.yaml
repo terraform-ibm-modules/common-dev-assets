@@ -26,7 +26,8 @@ repos:
     - id: terraform_validate
       files: ^examples/
     - id: terraform_docs
-      args: ['--args=--hide=providers']
+        entry: python ci/terraformDocs.py
+        language: python
     - id: terraform_tflint
       args:
         - --args=--enable-rule=terraform_unused_declarations
