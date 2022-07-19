@@ -3,6 +3,7 @@ from pathlib import Path
 
 examples_markdown = "EXAMPLES.md"
 
+
 # Return title (first line) of README file
 def get_readme_title(readme_file):
     with open(readme_file, "r") as reader:
@@ -39,8 +40,8 @@ def prepare_example_lines(readme_titles, newlines):
 def create_examples_markdown(newlines):
     with open(examples_markdown, "w") as writer:
         if len(newlines) > 0:
-            for l in newlines:
-                writer.writelines(l)
+            for line in newlines:
+                writer.writelines(line)
 
 
 def run_terraform_docs():
