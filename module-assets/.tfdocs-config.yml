@@ -11,7 +11,7 @@ content: |-
     {{ .Resources }}
 
     {{ .Inputs }}
-    
+
     {{ .Outputs }}
 
 output:
