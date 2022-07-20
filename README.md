@@ -16,3 +16,4 @@ command:
 ```bash
 make
 ```
+test
