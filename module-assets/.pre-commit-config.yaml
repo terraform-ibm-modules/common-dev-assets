@@ -44,6 +44,7 @@ repos:
     - id: terragrunt_validate
     - id: terraform_tfsec
       files: '\.tf'
+      verbose: true
     - id: terraform_checkov
       args:
         - --args=--skip-path=.scv
