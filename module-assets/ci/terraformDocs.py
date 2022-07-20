@@ -8,7 +8,6 @@ examples_markdown = "EXAMPLES.md"
 def get_readme_title(readme_file):
     with open(readme_file, "r") as reader:
         line = reader.readline()
-        print(line)
         return line
 
 

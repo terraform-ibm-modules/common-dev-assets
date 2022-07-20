@@ -27,11 +27,6 @@ repos:
       files: ^examples/
     - id: terraform_docs
       args: ['--args=--hide=providers']
-    - id: terraform_docs
-      name: Add examples section to README
-      description: Add examples section to README
-      entry: python ci/terraformDocs.py
-      language: python
     - id: terraform_tflint
       args:
         - --args=--enable-rule=terraform_unused_declarations
@@ -100,6 +95,12 @@ repos:
       types: [go]
       language: golang
       pass_filenames: false
+    - id: add_examples
+      name: Add examples section to README
+      description: Add examples section to README
+      entry: python ci/terraformDocs.py
+      language: python
+      files: "README.md"
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
   rev: v0.1.17
