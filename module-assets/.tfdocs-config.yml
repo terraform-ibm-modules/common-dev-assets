@@ -4,20 +4,10 @@ content: |-
     ## Examples
     {{ include "EXAMPLES.md" }}
 
-    {{ .Requirements }}
-
-    {{ .Modules }}
-
-    {{ .Resources }}
-
-    {{ .Inputs }}
-
-    {{ .Outputs }}
-
 output:
   file: "README.md"
   mode: inject
   template: |-
-    <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+    <!-- BEGIN EXAMPLES HOOK -->
     {{ .Content }}
-    <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+    <!-- END EXAMPLES HOOK -->

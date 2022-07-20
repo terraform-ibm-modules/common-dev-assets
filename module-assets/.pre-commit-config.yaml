@@ -26,6 +26,10 @@ repos:
     - id: terraform_validate
       files: ^examples/
     - id: terraform_docs
+      args: ['--args=--hide=providers']
+    - id: terraform_docs
+      name: Add examples section to README
+      description: Add examples section to README
       entry: python ci/terraformDocs.py
       language: python
     - id: terraform_tflint

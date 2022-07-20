@@ -30,7 +30,9 @@ def prepare_example_lines(readme_titles, newlines):
     if len(readme_titles) > 0:
         for readme_title in readme_titles:
             for key, value in readme_title.items():
-                prepare_line = "- [" + value + "](" + key + ")\n"
+                prepare_line = (
+                    "- [" + value.strip() + "](" + key.replace("/README.md", "") + ")\n"
+                )
                 newlines.append(prepare_line)
     else:
         prepare_line = "- [Examples](examples)\n"
