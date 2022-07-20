@@ -46,7 +46,7 @@ def create_examples_markdown(newlines):
 
 
 def run_terraform_docs():
-    os.system("terraform-docs -c common-dev-assets/module-assets/.tfdocs-config.yml .")
+    os.system("terraform-docs -c common-dev-assets/module-assets/.tfdocs-config.yaml .")
 
 
 def remove_examples_markdown():
