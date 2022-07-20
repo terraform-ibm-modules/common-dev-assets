@@ -2,7 +2,7 @@ formatter: "markdown"
 
 content: |-
     ## Examples
-    
+
     {{ include "EXAMPLES.md" }}
 
 output:
