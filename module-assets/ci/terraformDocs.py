@@ -61,7 +61,6 @@ def main():
     create_examples_markdown(newlines)
     run_terraform_docs()
     remove_examples_markdown()
-    print()
 
 
 main()
