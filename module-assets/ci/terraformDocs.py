@@ -57,12 +57,13 @@ def remove_examples_markdown():
 
 
 def main():
-    newlines = []
-    readme_titles = get_readme_titles()
-    prepare_example_lines(readme_titles, newlines)
-    create_examples_markdown(newlines)
-    run_terraform_docs()
-    remove_examples_markdown()
+    if os.path.isdir("examples"):
+        newlines = []
+        readme_titles = get_readme_titles()
+        prepare_example_lines(readme_titles, newlines)
+        create_examples_markdown(newlines)
+        run_terraform_docs()
+        remove_examples_markdown()
 
 
 main()
