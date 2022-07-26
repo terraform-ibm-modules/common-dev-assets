@@ -125,11 +125,9 @@ pre-commit-no-terraform:
 # run pre-commit checks against renovate PRs, and commit back any changes to the PR (e.g. doc updates, secrets baseline etc)
 # (in container approach, not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that instead)
 renovate-sweeper:
-ifdef GHE
-ifndef GH_TOKEN
-	$(error Error: GH_TOKEN is undefined)
-endif
-endif
+    ifndef GH_TOKEN
+	   $(error Error: GH_TOKEN is undefined)
+    endif
 	@run_cmd="make ghe-netrc && \
 		ci/renovate-sweeper.sh" && \
 	if [ "$${NO_CONTAINER}" = "true" ]; \
@@ -161,6 +159,7 @@ endif
 run-tests: SHELL:=/bin/bash
 run-tests:
 	@if [ -z "$${TF_VAR_ibmcloud_api_key}" ]; then echo "Error: TF_VAR_ibmcloud_api_key is undefined"; exit 1; fi
+
 ifdef GHE
 ifndef GH_TOKEN
 	$(error Error: GH_TOKEN is undefined)
