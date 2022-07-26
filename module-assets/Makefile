@@ -160,9 +160,7 @@ endif
 # (in container approach, not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that instead)
 run-tests: SHELL:=/bin/bash
 run-tests:
-ifndef TF_VAR_ibmcloud_api_key
-    $(error Error: TF_VAR_ibmcloud_api_key is undefined)
-endif
+	@if [ -z "$${TF_VAR_ibmcloud_api_key}" ]; then echo "Error: TF_VAR_ibmcloud_api_key is undefined"; exit 1; fi
 ifdef GHE
 ifndef GH_TOKEN
 	$(error Error: GH_TOKEN is undefined)
@@ -197,9 +195,7 @@ endif
 # run tests for terraform repos locally
 # (optionally set RUN env var to a regular expression that matches the test(s) name that you only want to run. e.g. `make run-tests-local RUN=TestRunApplyTest`)
 run-tests-local:
-ifndef TF_VAR_ibmcloud_api_key
-    $(error Error: TF_VAR_ibmcloud_api_key is undefined)
-endif
+	@if [ -z "$${TF_VAR_ibmcloud_api_key}" ]; then echo "Error: TF_VAR_ibmcloud_api_key is undefined"; exit 1; fi
 	cd ${GO_TEST_DIR} && go test -run ${RUN} -count=1 -v -timeout 300m
 
 # run unit tests for golang projects
@@ -251,9 +247,7 @@ endif
 
 # Create entry in ~/.netrc for cm.globalcatalog.cloud.ibm.com using IAM bearer token
 netrc:
-ifndef TF_VAR_ibmcloud_api_key
-	$(error Error: TF_VAR_ibmcloud_api_key is undefined)
-endif
+	@if [ -z "$${TF_VAR_ibmcloud_api_key}" ]; then echo "Error: TF_VAR_ibmcloud_api_key is undefined"; exit 1; fi
 	ibmcloud login --no-region --apikey "$$TF_VAR_ibmcloud_api_key"
 	while true ; do \
 	    ibmcloud catalog netrc ; \
