@@ -42,6 +42,10 @@ ifndef CONTAINER_RUNTIME
 	CONTAINER_RUNTIME := 'docker'
 endif
 
+ifneq (,$(findstring github.ibm.com,$(shell git config --get remote.origin.url)))
+	GHE := 'true'
+endif
+
 #
 # install dependencies
 #
@@ -73,7 +77,11 @@ docker-run:
 # pre-commit for repos with terraform code
 # (in container approach, not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that instead)
 pre-commit:
-	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
+ifdef GHE
+ifndef GH_TOKEN
+	$(error Error: GH_TOKEN is undefined)
+endif
+endif
 	@run_cmd="make ghe-netrc && \
 			terraform init && \
 			terragrunt run-all init || echo 'Ignoring failure incase this is a non terragrunt project' && \
@@ -117,7 +125,9 @@ pre-commit-no-terraform:
 # run pre-commit checks against renovate PRs, and commit back any changes to the PR (e.g. doc updates, secrets baseline etc)
 # (in container approach, not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that instead)
 renovate-sweeper:
-	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
+    ifndef GH_TOKEN
+	   $(error Error: GH_TOKEN is undefined)
+    endif
 	@run_cmd="make ghe-netrc && \
 		ci/renovate-sweeper.sh" && \
 	if [ "$${NO_CONTAINER}" = "true" ]; \
@@ -149,7 +159,13 @@ renovate-sweeper:
 run-tests: SHELL:=/bin/bash
 run-tests:
 	@if [ -z "$${TF_VAR_ibmcloud_api_key}" ]; then echo "Error: TF_VAR_ibmcloud_api_key is undefined"; exit 1; fi
-	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
+
+ifdef GHE
+ifndef GH_TOKEN
+	$(error Error: GH_TOKEN is undefined)
+endif
+endif
+
 	@run_cmd="make ghe-netrc && \
 		ci/run-tests.sh" && \
 	if [ "$${NO_CONTAINER}" == "true" ]; \
@@ -204,7 +220,11 @@ go-mod-tidy:
 #
 
 sem-release:
-	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
+ifdef GHE
+ifndef GH_TOKEN
+	$(error Error: GH_TOKEN is undefined)
+endif
+endif
 	@run_cmd="mv -t /mnt /tmp/node_modules /tmp/package-lock.json && \
 		npx semantic-release --no-ci" && \
 	if [ "$${NO_CONTAINER}" = "true" ]; \
@@ -235,12 +255,19 @@ netrc:
 	done & \
 	sleep 5
 
+
 # Create entry in ~/.netrc for github.ibm.com using $GH_TOKEN
 ghe-netrc:
-	@if [ -z "$${GH_TOKEN}" ]; then echo "Error: GH_TOKEN is undefined"; exit 1; fi
+ifdef GHE
+ifndef GH_TOKEN
+	$(error Error: GH_TOKEN is undefined)
+endif
 	@touch ~/.netrc
 	@if ! grep -q "machine github.ibm.com" ~/.netrc; then \
 		echo -e "machine github.ibm.com\n  login $$GH_TOKEN" >> ~/.netrc; \
 	else \
 		echo "Found entry already exists in ~/.netrc for github.ibm.com. Taking no action."; \
 	fi
+else
+	@echo "Not in GHE skipping ghe-netrc modification"
+endif
