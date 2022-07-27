@@ -161,7 +161,7 @@ echo "COMPLETE"
 #######################################
 
  # renovate: datasource=github-releases depName=hashicorp/terraform
-TERRAFORM_VERSION=v1.2.5
+TERRAFORM_VERSION=v1.2.6
 # 'v' prefix required for renovate to query github.com for new release, but needs to be removed to pull from hashicorp.com
 TERRAFORM_VERSION="${TERRAFORM_VERSION:1}"
 BINARY=terraform
@@ -218,7 +218,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=terraform-linters/tflint
-TFLINT_VERSION=v0.38.1
+TFLINT_VERSION=v0.39.0
 BINARY=tflint
 FILE_NAME="tflint_${OS}_amd64.zip"
 URL="https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}"
