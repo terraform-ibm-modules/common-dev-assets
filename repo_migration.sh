@@ -1,6 +1,5 @@
 #!/bin/bash
-# This script formats the current repository to conform to the requirements for the common validation automation
-# This is based on https://github.com/terraform-ibm-modules/terraform-ibm-module-template
+# This script can be used to migrate the existing repositories to follow the same format as the repository template https://github.com/terraform-ibm-modules/terraform-ibm-module-template
 
 BASE_REPO_URL="https://github.com/terraform-ibm-modules/"
 BRANCH="main"
@@ -145,17 +144,38 @@ function local_init() {
   make
 }
 
-validate_prereqs
-check_correct_repo
-download_template
-add_git_settings
-add_git_submodule
-create_symbolic_links
-add_example
-add_tests
-local_init
-clean_up
+if [[ "$1" == "-r"  || "$1" == "-R" ]]
+then
+    echo "Attempting to remove migration"
+    rm .github/workflows/ci.yml
+    rm .github/workflows/release.yml
+    rmdir .github/workflows > /dev/null 2>&1
+    rm .github/settings.yml
+    rm Brewfile.lock.json
+    rmdir .github > /dev/null 2>&1
+    git rm -f  common-dev-assets
+    find . -name .gitmodules -maxdepth 1 -type f -empty -print -delete
+    git reset --hard HEAD
+elif [[ "$1" == "help" || "$1" == "-h" ]]
+then
+  echo "This script can be used to migrate the existing repositories to follow the same format as the repository template https://github.com/terraform-ibm-modules/terraform-ibm-module-template"
+  echo "Usage:"
+  echo "$0         run migration"
+  echo "$0 -r      attempt to remove the migration changes"
+  echo "$0 -h      show this help message"
+else
+  validate_prereqs
+  check_correct_repo
+  download_template
+  add_git_settings
+  add_git_submodule
+  create_symbolic_links
+  add_example
+  add_tests
+  local_init
+  clean_up
 
-echo "----------------------------------------------------------------"
-echo "Migration complete"
-echo "Execute 'pre-commit run --all-files' and resolve all errors before committing"
+  echo "----------------------------------------------------------------"
+  echo "Migration complete"
+  echo "Execute 'pre-commit run --all-files' and resolve all errors before committing"
+fi
