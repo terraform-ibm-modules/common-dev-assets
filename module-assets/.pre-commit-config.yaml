@@ -101,6 +101,7 @@ repos:
       entry: python ci/terraformDocs.py
       language: python
       files: "README.md"
+      pass_filenames: false
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
   rev: v0.1.17
