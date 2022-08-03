@@ -19,20 +19,23 @@ def get_readme_titles():
         if not (".terraform") in path:
             readme_title = get_readme_title(path)
             if readme_title:
-                data = {}
-                data[path] = readme_title
+                data = {"path": path, "title": readme_title}
                 readme_titles.append(data)
+    readme_titles.sort(key=lambda x: x["path"])
     return readme_titles
 
 
 def prepare_example_lines(readme_titles, newlines):
     if len(readme_titles) > 0:
         for readme_title in readme_titles:
-            for key, value in readme_title.items():
-                prepare_line = (
-                    "- [" + value.strip() + "](" + key.replace("/README.md", "") + ")\n"
-                )
-                newlines.append(prepare_line)
+            prepare_line = (
+                "- ["
+                + readme_title["title"].strip().replace("#", "")
+                + "]("
+                + readme_title["path"].replace("/README.md", "")
+                + ")\n"
+            )
+            newlines.append(prepare_line)
     else:
         prepare_line = "- [Examples](examples)\n"
         newlines.append(prepare_line)
