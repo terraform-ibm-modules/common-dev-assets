@@ -15,7 +15,7 @@ gitUrl="${7:-github.ibm.com}"
 gitOrg="${8:-GoldenEye}"
 # This is the prefix on the programatic name in the catalog
 prefix="${9:-goldeneye}"
-validate_using_catalog_targz="${10:-true}"
+use_catalog_source="${10:-true}"
 
 if [ -z ${CATALOG_TEKTON_WEBHOOK_URL+x} ]; then echo "CATALOG_TEKTON_WEBHOOK_URL is unset"; else echo "CATALOG_TEKTON_WEBHOOK_URL is set"; fi
 if [ -z ${CATALOG_TEKTON_WEBHOOK_TOKEN+x} ]; then echo "CATALOG_TEKTON_WEBHOOK_TOKEN is unset"; else echo "CATALOG_TEKTON_WEBHOOK_TOKEN is set"; fi
@@ -28,10 +28,10 @@ echo "$example"
 echo "$gitUrl"
 echo "$gitOrg"
 echo "$prefix"
-echo "$validate_using_catalog_targz"
+echo "$use_catalog_source"
 
 echo "generating payload"
-payload=$(jq -c -n --arg repoName "$repoName" --arg catalogID "$catalogID" --arg offeringID "$offeringID" --arg version "$version" --arg target "$target" --arg example "$example" --arg gitUrl "$gitUrl" --arg gitOrg "$gitOrg" --arg prefix "$prefix" '{"repo-name": $repoName, "catalog-id": $catalogID, "offering-id": $offeringID, "version": $version, "target": $target, "example": $example, "git-url": $gitUrl, "git-org": $gitOrg, "prefix": $prefix, "validate_using_catalog_targz": $validate_using_catalog_targz}')
+payload=$(jq -c -n --arg repoName "$repoName" --arg catalogID "$catalogID" --arg offeringID "$offeringID" --arg version "$version" --arg target "$target" --arg example "$example" --arg gitUrl "$gitUrl" --arg gitOrg "$gitOrg" --arg prefix "$prefix" '{"repo-name": $repoName, "catalog-id": $catalogID, "offering-id": $offeringID, "version": $version, "target": $target, "example": $example, "git-url": $gitUrl, "git-org": $gitOrg, "prefix": $prefix, "use_catalog_source": $use_catalog_source}')
 echo "$payload"
 
 echo "kicking off tekton pipeline"
