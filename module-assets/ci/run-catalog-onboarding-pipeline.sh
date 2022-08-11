@@ -31,7 +31,7 @@ echo "$prefix"
 echo "$use_catalog_source"
 
 echo "generating payload"
-payload=$(jq -c -n --arg repoName "$repoName" --arg catalogID "$catalogID" --arg offeringID "$offeringID" --arg version "$version" --arg target "$target" --arg example "$example" --arg gitUrl "$gitUrl" --arg gitOrg "$gitOrg" --arg prefix "$prefix" '{"repo-name": $repoName, "catalog-id": $catalogID, "offering-id": $offeringID, "version": $version, "target": $target, "example": $example, "git-url": $gitUrl, "git-org": $gitOrg, "prefix": $prefix, "use_catalog_source": $use_catalog_source}')
+payload=$(jq -c -n --arg repoName "$repoName" --arg catalogID "$catalogID" --arg offeringID "$offeringID" --arg version "$version" --arg target "$target" --arg example "$example" --arg gitUrl "$gitUrl" --arg gitOrg "$gitOrg" --arg prefix "$prefix" '{"repo-name": $repoName, "catalog-id": $catalogID, "offering-id": $offeringID, "version": $version, "target": $target, "example": $example, "git-url": $gitUrl, "git-org": $gitOrg, "prefix": $prefix, "use-catalog-source": $use_catalog_source}')
 echo "$payload"
 
 echo "kicking off tekton pipeline"
