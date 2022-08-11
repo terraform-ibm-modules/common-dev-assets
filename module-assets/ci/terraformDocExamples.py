@@ -59,8 +59,18 @@ def remove_examples_markdown():
         os.remove(examples_markdown)
 
 
+def is_examples_hook_exists():
+    exists = False
+    with open("README.md", "r") as reader:
+        lines = reader.readlines()
+        for line in lines:
+            if "BEGIN EXAMPLES HOOK" in line:
+                exists = True
+    return exists
+
+
 def main():
-    if os.path.isdir("examples"):
+    if os.path.isdir("examples") and is_examples_hook_exists():
         newlines = []
         readme_titles = get_readme_titles()
         prepare_example_lines(readme_titles, newlines)
