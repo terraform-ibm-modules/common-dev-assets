@@ -161,7 +161,7 @@ echo "COMPLETE"
 #######################################
 
  # renovate: datasource=github-releases depName=hashicorp/terraform
-TERRAFORM_VERSION=v1.2.6
+TERRAFORM_VERSION=v1.2.7
 # 'v' prefix required for renovate to query github.com for new release, but needs to be removed to pull from hashicorp.com
 TERRAFORM_VERSION="${TERRAFORM_VERSION:1}"
 BINARY=terraform
@@ -308,7 +308,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v3.9.2
+HELM_VERSION=v3.9.3
 BINARY=helm
 FILE_NAME="helm-${HELM_VERSION}-${OS}-amd64.tar.gz"
 URL="https://get.helm.sh"
