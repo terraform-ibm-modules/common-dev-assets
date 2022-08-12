@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
 
-terraform-config-inspect --json > module-metadata.json
+/usr/local/bin/terraform-config-inspect --json > module-metadata.json
