@@ -365,17 +365,22 @@ clean "${TMP_DIR}"
 # terraform config inspect
 #######################################
 
- # renovate: datasource=github-releases depName=IBM-Cloud/terraform-config-inspect
-TERRAFORM_CONFIG_INSPECT_VERSION=v1.0.0-beta0
-TERRAFORM_CONFIG_INSPECT_VERSION_NUMBER="${TERRAFORM_CONFIG_INSPECT_VERSION:1}"
+OC_OS=${OS}
+if [[ $OSTYPE == 'darwin'* ]]; then
+  OC_OS="darwin"
+fi
+
+# renovate: datasource=github-releases depName=IBM-Cloud/terraform-config-inspect
+TERRAFORM_CONFIG_INSPECT_VERSION=1.0.0-beta0
 BINARY=terraform-config-inspect
-FILE_NAME="terraform-config-inspect_${TERRAFORM_CONFIG_INSPECT_VERSION_NUMBER}_${OS}_amd64.zip"
-URL="https://github.com/IBM-Cloud/terraform-config-inspect/releases/download/${TERRAFORM_CONFIG_INSPECT_VERSION}"
-SUMFILE="terraform-config-inspect_${TERRAFORM_CONFIG_INSPECT_VERSION_NUMBER}_checksums.txt"
+FILE_NAME="terraform-config-inspect_${TERRAFORM_CONFIG_INSPECT_VERSION}_${OC_OS}_amd64.zip"
+URL="https://github.com/IBM-Cloud/terraform-config-inspect/releases/download/v${TERRAFORM_CONFIG_INSPECT_VERSION}"
+echo $URL
+SUMFILE="terraform-config-inspect_${TERRAFORM_CONFIG_INSPECT_VERSION}_checksums.txt"
+echo "SUMFILE " ${SUMFILE}
 TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
 
 download ${BINARY} ${TERRAFORM_CONFIG_INSPECT_VERSION} ${URL} ${FILE_NAME} "${SUMFILE}" "${TMP_DIR}"
 verify ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
 unzip "${TMP_DIR}/${FILE_NAME}" -d "${TMP_DIR}" > /dev/null
 copy_replace_binary ${BINARY} "${TMP_DIR}"
-clean "${TMP_DIR}"
