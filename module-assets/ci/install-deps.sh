@@ -370,7 +370,7 @@ if [[ $OSTYPE == 'darwin'* ]]; then
   OC_OS="darwin"
 fi
 
-# renovate: datasource=github-releases depName=IBM-Cloud/terraform-config-inspect
+ # renovate: datasource=github-releases depName=IBM-Cloud/terraform-config-inspect
 TERRAFORM_CONFIG_INSPECT_VERSION=1.0.0-beta0
 BINARY=terraform-config-inspect
 FILE_NAME="terraform-config-inspect_${TERRAFORM_CONFIG_INSPECT_VERSION}_${OC_OS}_amd64.zip"
@@ -384,3 +384,4 @@ download ${BINARY} ${TERRAFORM_CONFIG_INSPECT_VERSION} ${URL} ${FILE_NAME} "${SU
 verify ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
 unzip "${TMP_DIR}/${FILE_NAME}" -d "${TMP_DIR}" > /dev/null
 copy_replace_binary ${BINARY} "${TMP_DIR}"
+clean "${TMP_DIR}"
