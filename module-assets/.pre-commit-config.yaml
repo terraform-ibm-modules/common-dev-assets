@@ -64,7 +64,7 @@ repos:
   hooks:
   - id: detect-secrets
     args: ['--baseline', '.secrets.baseline', '--fail-on-unaudited', 'use-all-plugins']
-    exclude: go.sum
+    exclude: go.sum|module-metadata.json
 # flake8
 - repo: https://github.com/pycqa/flake8
   rev: 5.0.4
