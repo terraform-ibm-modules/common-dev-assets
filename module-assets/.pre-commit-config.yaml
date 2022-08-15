@@ -107,7 +107,7 @@ repos:
       files: "README.md"
       pass_filenames: false
     - id: terraform-config-inspect
-      name: Extracting high-level metadata about Terraform modules
+      name: Generate terraform module metadata
       description: Extracting high-level metadata about Terraform modules
       entry: ci/terraform-config-inspect.sh
       language: script
