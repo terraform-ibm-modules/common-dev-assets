@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import os
 from pathlib import Path
 
@@ -16,7 +18,7 @@ def get_readme_titles():
     readme_titles = []
     for readme_file in Path("examples").rglob("README.md"):
         path = str(readme_file)
-        if not (".terraform") in path:
+        if not ("/.") in path:
             readme_title = get_readme_title(path)
             if readme_title:
                 data = {"path": path, "title": readme_title}
@@ -59,8 +61,18 @@ def remove_examples_markdown():
         os.remove(examples_markdown)
 
 
+def is_examples_hook_exists():
+    exists = False
+    with open("README.md", "r") as reader:
+        lines = reader.readlines()
+        for line in lines:
+            if "BEGIN EXAMPLES HOOK" in line:
+                exists = True
+    return exists
+
+
 def main():
-    if os.path.isdir("examples"):
+    if os.path.isdir("examples") and is_examples_hook_exists():
         newlines = []
         readme_titles = get_readme_titles()
         prepare_example_lines(readme_titles, newlines)

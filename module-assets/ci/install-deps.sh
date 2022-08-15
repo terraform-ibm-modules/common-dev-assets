@@ -161,7 +161,7 @@ echo "COMPLETE"
 #######################################
 
  # renovate: datasource=github-releases depName=hashicorp/terraform
-TERRAFORM_VERSION=v1.2.6
+TERRAFORM_VERSION=v1.2.7
 # 'v' prefix required for renovate to query github.com for new release, but needs to be removed to pull from hashicorp.com
 TERRAFORM_VERSION="${TERRAFORM_VERSION:1}"
 BINARY=terraform
@@ -218,7 +218,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=terraform-linters/tflint
-TFLINT_VERSION=v0.39.2
+TFLINT_VERSION=v0.39.3
 BINARY=tflint
 FILE_NAME="tflint_${OS}_amd64.zip"
 URL="https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}"
@@ -308,7 +308,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v3.9.2
+HELM_VERSION=v3.9.3
 BINARY=helm
 FILE_NAME="helm-${HELM_VERSION}-${OS}-amd64.tar.gz"
 URL="https://get.helm.sh"
@@ -358,5 +358,24 @@ TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
 download ${BINARY} ${OC_VERSION} ${URL} ${FILE_NAME} "${SUMFILE}" "${TMP_DIR}"
 verify ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
 tar -xzf "${TMP_DIR}/${FILE_NAME}" -C "${TMP_DIR}"
+copy_replace_binary ${BINARY} "${TMP_DIR}"
+clean "${TMP_DIR}"
+
+#######################################
+# terraform config inspect
+#######################################
+
+ # renovate: datasource=github-releases depName=IBM-Cloud/terraform-config-inspect
+TERRAFORM_CONFIG_INSPECT_VERSION=v1.0.0-beta0
+TERRAFORM_CONFIG_INSPECT_VERSION_NUMBER="${TERRAFORM_CONFIG_INSPECT_VERSION:1}"
+BINARY=terraform-config-inspect
+FILE_NAME="terraform-config-inspect_${TERRAFORM_CONFIG_INSPECT_VERSION_NUMBER}_${OS}_amd64.zip"
+URL="https://github.com/IBM-Cloud/terraform-config-inspect/releases/download/${TERRAFORM_CONFIG_INSPECT_VERSION}"
+SUMFILE="terraform-config-inspect_${TERRAFORM_CONFIG_INSPECT_VERSION_NUMBER}_checksums.txt"
+TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
+
+download ${BINARY} ${TERRAFORM_CONFIG_INSPECT_VERSION} ${URL} ${FILE_NAME} "${SUMFILE}" "${TMP_DIR}"
+verify ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
+unzip "${TMP_DIR}/${FILE_NAME}" -d "${TMP_DIR}" > /dev/null
 copy_replace_binary ${BINARY} "${TMP_DIR}"
 clean "${TMP_DIR}"
