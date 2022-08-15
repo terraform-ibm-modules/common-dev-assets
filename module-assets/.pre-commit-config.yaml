@@ -9,6 +9,9 @@ repos:
     - id: trailing-whitespace
     - id: check-merge-conflict
     - id: detect-private-key
+    - id: mixed-line-ending
+      args: ['--fix=lf']
+      description: Forces to replace line ending by the UNIX 'lf' character.
 - repo: https://github.com/hadolint/hadolint
   rev: v2.10.0
   hooks:
