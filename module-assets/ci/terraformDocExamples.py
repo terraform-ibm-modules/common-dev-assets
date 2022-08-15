@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import os
 from pathlib import Path
 
@@ -16,7 +18,7 @@ def get_readme_titles():
     readme_titles = []
     for readme_file in Path("examples").rglob("README.md"):
         path = str(readme_file)
-        if not (".terraform") in path:
+        if not ("/.") in path:
             readme_title = get_readme_title(path)
             if readme_title:
                 data = {"path": path, "title": readme_title}
