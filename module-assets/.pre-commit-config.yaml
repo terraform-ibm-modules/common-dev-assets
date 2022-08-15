@@ -98,14 +98,14 @@ repos:
     - id: add_examples
       name: Add examples section to README
       description: Add examples section to README
-      entry: python ci/terraformDocExamples.py
+      entry: python3 ci/terraformDocExamples.py
       language: python
       files: "README.md"
       pass_filenames: false
     - id: terraform-config-inspect
       name: Extracting high-level metadata about Terraform modules
       description: Extracting high-level metadata about Terraform modules
-      entry: python ci/terraformConfigInspect.py
+      entry: python3 ci/terraformConfigInspect.py
       language: python
       pass_filenames: false
 # helm lint
