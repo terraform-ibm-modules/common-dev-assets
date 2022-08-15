@@ -48,6 +48,7 @@ repos:
       args:
         - --args=--skip-path=.scv
         - --args=--skip-path=Dockerfile
+        - --args=--skip-path=module-metadata.json
 - repo: https://github.com/syntaqx/git-hooks
   rev: v0.0.17
   hooks:
