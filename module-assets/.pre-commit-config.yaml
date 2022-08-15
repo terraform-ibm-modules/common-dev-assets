@@ -105,8 +105,8 @@ repos:
     - id: terraform-config-inspect
       name: Extracting high-level metadata about Terraform modules
       description: Extracting high-level metadata about Terraform modules
-      entry: bash ci/terraform-config-inspect.sh
-      language: golang
+      entry: python ci/terraformConfigInspect.py
+      language: python
       pass_filenames: false
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
