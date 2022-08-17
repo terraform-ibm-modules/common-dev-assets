@@ -15,6 +15,8 @@ gitUrl="${7:-github.ibm.com}"
 gitOrg="${8:-GoldenEye}"
 # This is the prefix on the programatic name in the catalog
 prefix="${9:-goldeneye}"
+publishApikeyOverride="${10:-none}"
+validationApikeyOverride="${11:-none}"
 
 if [ -z ${CATALOG_TEKTON_WEBHOOK_URL+x} ]; then echo "CATALOG_TEKTON_WEBHOOK_URL is unset"; else echo "CATALOG_TEKTON_WEBHOOK_URL is set"; fi
 if [ -z ${CATALOG_TEKTON_WEBHOOK_TOKEN+x} ]; then echo "CATALOG_TEKTON_WEBHOOK_TOKEN is unset"; else echo "CATALOG_TEKTON_WEBHOOK_TOKEN is set"; fi
@@ -28,9 +30,11 @@ echo "$gitUrl"
 echo "$gitOrg"
 echo "$prefix"
 
+if [ "${publishApikeyOverride}" != "none" ]; then echo "Catalog publish apikey override detected."; fi
+if [ "${validationApikeyOverride}" != "none" ]; then echo "Validation apikey override detected."; fi
+
 echo "generating payload"
-payload=$(jq -c -n --arg repoName "$repoName" --arg catalogID "$catalogID" --arg offeringID "$offeringID" --arg version "$version" --arg target "$target" --arg example "$example" --arg gitUrl "$gitUrl" --arg gitOrg "$gitOrg" --arg prefix "$prefix" '{"repo-name": $repoName, "catalog-id": $catalogID, "offering-id": $offeringID, "version": $version, "target": $target, "example": $example, "git-url": $gitUrl, "git-org": $gitOrg, "prefix": $prefix}')
-echo "$payload"
+payload=$(jq -c -n --arg repoName "$repoName" --arg catalogID "$catalogID" --arg offeringID "$offeringID" --arg version "$version" --arg target "$target" --arg example "$example" --arg gitUrl "$gitUrl" --arg gitOrg "$gitOrg" --arg prefix "$prefix" '{"repo-name": $repoName, "catalog-id": $catalogID, "offering-id": $offeringID, "version": $version, "target": $target, "example": $example, "git-url": $gitUrl, "git-org": $gitOrg, "prefix": $prefix, "ibmcloud-catalog-api-key-override": $publishApikeyOverride, "ibmcloud-validation-api-key-override": $validationApikeyOverride}')
 
 echo "kicking off tekton pipeline"
 curl -X POST \
