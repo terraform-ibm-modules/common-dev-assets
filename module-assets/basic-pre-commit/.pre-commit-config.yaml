@@ -40,7 +40,7 @@ repos:
   hooks:
   - id: go-fmt
 - repo: https://github.com/ibm/detect-secrets
-  rev: 0.13.1+ibm.50.dss
+  rev: 0.13.1+ibm.51.dss
   hooks:
   - id: detect-secrets
     args: ['--baseline', '.secrets.baseline', '--fail-on-unaudited', 'use-all-plugins']
