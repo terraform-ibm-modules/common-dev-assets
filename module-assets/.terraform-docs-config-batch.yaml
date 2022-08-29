@@ -1,0 +1,13 @@
+formatter: "markdown"
+
+content: |-
+    <!-- Update the link for the badge below -->
+    {{ include "test.md" }}
+
+output:
+  file: "README.md"
+  mode: inject
+  template: |-
+    <!-- BEGIN BADGES HOOK -->
+    {{ .Content }}
+    <!-- END BADGES HOOK -->

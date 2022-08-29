@@ -112,6 +112,13 @@ repos:
       entry: ci/terraform-config-inspect.sh
       language: script
       pass_filenames: false
+    - id: add_template_badges
+      name: Add badges section to README template
+      description: Add badges section to README template
+      entry: python3 ci/terraformDocBadges.py
+      language: python
+      pass_filenames: false
+      files: "readme-template-values.json"
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
   rev: v0.1.17
