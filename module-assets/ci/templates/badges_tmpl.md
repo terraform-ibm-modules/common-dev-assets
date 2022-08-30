@@ -1,5 +1,0 @@
-[status_badge_icon_ph](https://github.ibm.com/GoldenEye/documentation/blob/master/status.md)
-[![Build Status](build_status_badge_icon_ph)](build_status_badge_url_ph)
-[![semantic-release](semantic_release_badge_icon_ph)](semantic_release_badge_url_ph)
-[![pre-commit](pre_commit_badge_icon_ph)](pre_commit_badge_url_ph)
-[status_release_badge_icon_ph](https://github.ibm.com/GoldenEye/bootstrap-s3-backend-module/releases/latest)
