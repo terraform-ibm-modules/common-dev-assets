@@ -26,7 +26,7 @@ def main():
 
     if proc.returncode != 0:
         print(error)
-    elif project_name == "bootstrap-s3-backend-module":  # module-template
+    elif project_name == "module-template":  # module-template
         run_terraform_docs()
 
 
