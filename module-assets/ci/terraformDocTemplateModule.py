@@ -24,7 +24,16 @@ def run_terraform_docs():
         [
             "terraform-docs",
             "-c",
-            "common-dev-assets/module-assets/.terraform-docs-config-template-module.yaml",
+            "common-dev-assets/module-assets/ci/module-template-automation/.terraform-docs-config-template-module.yaml",
+            ".",
+        ],
+        check=True,
+    )
+    subprocess.run(
+        [
+            "terraform-docs",
+            "-c",
+            "common-dev-assets/module-assets/ci/module-template-automation/.terraform-docs-config-template-module-contribution.yaml",
             ".",
         ],
         check=True,
