@@ -45,7 +45,10 @@ def main():
 
     if proc.returncode != 0:
         print(error)
-    elif module_name == "module-template":  # module-template
+    elif (
+        module_name == "module-template"
+        or module_name == "terraform-ibm-module-template"
+    ):
         create_tf_input(module_name)
         run_terraform_docs()
         remove_tf_input(module_name)
