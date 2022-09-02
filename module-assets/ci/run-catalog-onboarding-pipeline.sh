@@ -194,7 +194,7 @@ for validation_dir in "${dir_array[@]}"; do
                        "destroy-on-failure": $destroyOnFailure
                      }')
 
-  echo "Kicking off tekton pipeline.."
+  echo "Kicking off tekton pipeline for ${validation_dir}.."
   curl -X POST \
   "$CATALOG_TEKTON_WEBHOOK_URL" \
   -H "Content-Type: application/json" \
