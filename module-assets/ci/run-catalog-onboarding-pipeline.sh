@@ -17,6 +17,7 @@ usage:	${PRG}
         CATALOG_VALIDATION_APIKEY  (If not set, offering will validated in GoldenEye dev account. Requires --use_valadation_apikey_override flag to be passed)
 
         Required arguments:
+        --repo_name=<repo-name>
         --catalog_id=<catalog-id>
         --offering_id=<offering-id>
         --version=<version>
@@ -60,7 +61,7 @@ USE_DEFAULT_TARGZ=false
 DESTROY_ON_FAILURE=false
 PUBLISH_APIKEY_OVERRIDE="none"
 VALIDATION_APIKEY_OVERRIDE="none"
-REPO_NAME=$(basename "$(git rev-parse --show-toplevel)")
+REPO_NAME=""
 
 # Loop through all args
 for arg in "$@"; do
@@ -89,6 +90,10 @@ for arg in "$@"; do
   else
     set +e
     found_match=false
+    if echo "${arg}" | grep -q -e --repo_name=; then
+      REPO_NAME=$(echo "${arg}" | awk -F= '{ print $2 }')
+      found_match=true
+    fi
     if echo "${arg}" | grep -q -e --catalog_id=; then
       CATALOG_ID=$(echo "${arg}" | awk -F= '{ print $2 }')
       found_match=true
@@ -133,8 +138,9 @@ for arg in "$@"; do
 done
 
 # Verify values have been passed for required args
-if [ "${CATALOG_ID}" = "" ] || [ "${OFFERING_ID}" = "" ] || [ "${VERSION}" = "" ] || [ "${TARGET}" = "" ]; then
+if [ "${CATALOG_ID}" = "" ] || [ "${OFFERING_ID}" = "" ] || [ "${VERSION}" = "" ] || [ "${TARGET}" = "" ] || [ "${REPO_NAME}" = "" ]; then
   echo "Missing catalog_id, offering_id, version, or target definitions"
+  echo "--repo_name=${REPO_NAME}"
   echo "--catalog_id=${CATALOG_ID}"
   echo "--offering_id=${OFFERING_ID}"
   echo "--version=${VERSION}"
