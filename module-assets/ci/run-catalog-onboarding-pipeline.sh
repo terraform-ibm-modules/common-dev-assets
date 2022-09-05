@@ -58,7 +58,10 @@ USE_DEFAULT_TARGZ=false
 DESTROY_ON_FAILURE=false
 PUBLISH_APIKEY_OVERRIDE="none"
 VALIDATION_APIKEY_OVERRIDE="none"
-REPO_NAME="${$(basename "$(git config --get remote.origin.url)")//.git/}"
+
+# Determine repo name
+REPO_NAME="$(basename "$(git config --get remote.origin.url)")"
+REPO_NAME="${REPO_NAME//.git/}"
 
 # Loop through all args
 for arg in "$@"; do
