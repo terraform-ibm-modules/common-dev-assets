@@ -60,7 +60,7 @@ PUBLISH_APIKEY_OVERRIDE="none"
 VALIDATION_APIKEY_OVERRIDE="none"
 
 # Determine repo name
-REPO_NAME="$(basename $(git config --get remote.origin.url))"
+REPO_NAME="$(basename "$(git config --get remote.origin.url)")"
 REPO_NAME="${REPO_NAME//.git/}"
 
 # Loop through all args
