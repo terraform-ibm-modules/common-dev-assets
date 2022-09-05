@@ -60,7 +60,7 @@ USE_DEFAULT_TARGZ=false
 DESTROY_ON_FAILURE=false
 PUBLISH_APIKEY_OVERRIDE="none"
 VALIDATION_APIKEY_OVERRIDE="none"
-REPO_NAME=$(basename "$(git rev-parse --show-toplevel)")
+REPO_NAME=$(basename "$(git config --get remote.origin.url)")
 
 # Loop through all args
 for arg in "$@"; do
