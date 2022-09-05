@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
+
 import os
+import shutil
 import subprocess
 from subprocess import PIPE, Popen
 
@@ -40,6 +42,12 @@ def run_terraform_docs():
     )
 
 
+def copy_examples():
+    shutil.copytree(
+        "ci/module-template-automation/examples", "examples", dirs_exist_ok=True
+    )
+
+
 def remove_tf_input(module_name):
     if os.path.exists("%s.tf" % (module_name)):
         os.remove("%s.tf" % (module_name))
@@ -61,6 +69,7 @@ def main():
         create_tf_input(module_name)
         run_terraform_docs()
         remove_tf_input(module_name)
+        copy_examples()
 
 
 main()
