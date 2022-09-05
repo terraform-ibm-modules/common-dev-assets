@@ -47,10 +47,10 @@ def remove_tf_input(module_name):
 
 def main():
     # get repository name
-    my_command = "basename `git rev-parse --show-toplevel`"
+    my_command = "basename `git config --get remote.origin.url`"
     proc = Popen(my_command, stdout=PIPE, stderr=PIPE, shell=True)
     output, error = proc.communicate()
-    module_name = output.decode("utf-8").strip()
+    module_name = output.decode("utf-8").strip().replace(".git", "")
 
     if proc.returncode != 0:
         print(error)
