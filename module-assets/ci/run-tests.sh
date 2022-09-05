@@ -58,7 +58,8 @@ if [ ${IS_PR} == true ]; then
                          "renovate.json"
                          "catalogValidationValues.json.template"
                          ".one-pipeline.yaml"
-                         "module-metadata.json")
+                         "module-metadata.json"
+                         "ibm_catalog.json")
 
   # Determine all files being changed in the PR, and add it to array
   changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
