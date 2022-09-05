@@ -30,7 +30,6 @@ usage:	${PRG}
         [--validation_dir_list=<validation-dir-list>]  (If not using ibm_catalog.json, then pass a comma seperated list of directories to validate)
         [--github_url=<github_url>]  (Defaults to github.ibm.com)
         [--github_org=<github-org>]  (Defaults to GoldenEye)
-        [--programmatic_name_prefix=<prefix>]  (If not used, no prefix will be added to programmatic name)
 "
 
 # Verify required environment variables are set
@@ -54,7 +53,6 @@ TARGET=""
 VALIDATION_DIR_LIST=""
 GITHUB_URL="github.ibm.com"
 GITHUB_ORG="GoldenEye"
-PROGRAMMATIC_NAME_PREFIX=""
 VALIDATION_JSON_FILENAME="ibm_catalog.json"
 USE_DEFAULT_TARGZ=false
 DESTROY_ON_FAILURE=false
@@ -117,10 +115,6 @@ for arg in "$@"; do
       GITHUB_ORG=$(echo "${arg}" | awk -F= '{ print $2 }')
       found_match=true
     fi
-    if echo "${arg}" | grep -q -e --programmatic_name_prefix=; then
-      PROGRAMMATIC_NAME_PREFIX=$(echo "${arg}" | awk -F= '{ print $2 }')
-      found_match=true
-    fi
     if [ ${found_match} = false ]; then
       if [ ${arg} != --help ]; then
         echo "Unknown command line argument:  ${arg}"
@@ -180,7 +174,6 @@ for validation_dir in "${dir_array[@]}"; do
                      --arg dir "${validation_dir}" \
                      --arg gitUrl "${GITHUB_URL}" \
                      --arg gitOrg "${GITHUB_ORG}" \
-                     --arg prefix "${PROGRAMMATIC_NAME_PREFIX}" \
                      --arg useDefaultTargz "${USE_DEFAULT_TARGZ}" \
                      --arg publishApikeyOverride "${PUBLISH_APIKEY_OVERRIDE}" \
                      --arg validationApikeyOverride "${VALIDATION_APIKEY_OVERRIDE}" \
@@ -193,7 +186,6 @@ for validation_dir in "${dir_array[@]}"; do
                        "validation-working-directory": $dir,
                        "git-url": $gitUrl,
                        "git-org": $gitOrg,
-                       "programmatic-name-prefix": $prefix,
                        "use-default-targz": $useDefaultTargz,
                        "external-catalog-api-key-override": $publishApikeyOverride,
                        "external-validation-api-key-override": $validationApikeyOverride,
