@@ -143,8 +143,8 @@ if [ "${TARGET}" != "ibm" ] && [ "${TARGET}" != "account" ] && [ "${TARGET}" != 
 fi
 
 # Verify github org value
-if [ "${GITHUB_ORG}" != "github.ibm.com" ] && [ "${GITHUB_ORG}" != "github.com" ]; then
-  echo "--github_org value must be github.ibm.com or github.com"
+if [ "${GITHUB_URL}" != "github.ibm.com" ] && [ "${GITHUB_URL}" != "github.com" ]; then
+  echo "--github_url value must be github.ibm.com or github.com"
   exit 1
 fi
 
