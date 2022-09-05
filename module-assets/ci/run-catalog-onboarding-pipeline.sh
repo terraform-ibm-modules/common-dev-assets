@@ -23,14 +23,13 @@ usage:	${PRG}
         --target=<target>  (ibm, account or public)
 
         Optional arguments:
-        [--destroy-on-failure]  (By default resources will not be destroyed on validation failure to allow to debug. Use this flag to always attempt a destroy)
+        [--destroy_on_failure]  (By default resources will not be destroyed on validation failure to allow to debug. Use this flag to always attempt a destroy)
         [--use_default_targz]  (Publish / validate using the default tar.gz. If not used catalog.tar.gz will be used)
         [--use_publish_apikey_override]  (Requires CATALOG_PUBLISH_APIKEY env var to be set)
         [--use_valadation_apikey_override]  (Requires CATALOG_VALIDATION_APIKEY env var to be set)
         [--validation_dir_list=<validation-dir-list>]  (If not using ibm_catalog.json, then pass a comma seperated list of directories to validate)
         [--github_url=<github_url>]  (Defaults to github.ibm.com)
         [--github_org=<github-org>]  (Defaults to GoldenEye)
-        [--programmatic_name_prefix=<prefix>]  (If not used, no prefix will be added to programmatic name)
 "
 
 # Verify required environment variables are set
@@ -54,7 +53,6 @@ TARGET=""
 VALIDATION_DIR_LIST=""
 GITHUB_URL="github.ibm.com"
 GITHUB_ORG="GoldenEye"
-PROGRAMMATIC_NAME_PREFIX=""
 VALIDATION_JSON_FILENAME="ibm_catalog.json"
 USE_DEFAULT_TARGZ=false
 DESTROY_ON_FAILURE=false
@@ -66,7 +64,7 @@ REPO_NAME=$(basename "$(git config --get remote.origin.url)")
 for arg in "$@"; do
   if [ ${arg} = --use_default_targz ]; then
     USE_DEFAULT_TARGZ=true
-  elif [ ${arg} = --destroy-on-failure ]; then
+  elif [ ${arg} = --destroy_on_failure ]; then
     DESTROY_ON_FAILURE=true
   elif [ ${arg} = --use_publish_apikey_override ]; then
     set +u
@@ -117,10 +115,6 @@ for arg in "$@"; do
       GITHUB_ORG=$(echo "${arg}" | awk -F= '{ print $2 }')
       found_match=true
     fi
-    if echo "${arg}" | grep -q -e --programmatic_name_prefix=; then
-      PROGRAMMATIC_NAME_PREFIX=$(echo "${arg}" | awk -F= '{ print $2 }')
-      found_match=true
-    fi
     if [ ${found_match} = false ]; then
       if [ ${arg} != --help ]; then
         echo "Unknown command line argument:  ${arg}"
@@ -145,6 +139,12 @@ fi
 # Verify target value is only ibm, account or public
 if [ "${TARGET}" != "ibm" ] && [ "${TARGET}" != "account" ] && [ "${TARGET}" != "public" ]; then
   echo "--target value must be ibm, account or public"
+  exit 1
+fi
+
+# Verify github org value
+if [ "${GITHUB_ORG}" != "github.ibm.com" ] && [ "${GITHUB_ORG}" != "github.com" ]; then
+  echo "--github_org value must be github.ibm.com or github.com"
   exit 1
 fi
 
@@ -174,7 +174,6 @@ for validation_dir in "${dir_array[@]}"; do
                      --arg dir "${validation_dir}" \
                      --arg gitUrl "${GITHUB_URL}" \
                      --arg gitOrg "${GITHUB_ORG}" \
-                     --arg prefix "${PROGRAMMATIC_NAME_PREFIX}" \
                      --arg useDefaultTargz "${USE_DEFAULT_TARGZ}" \
                      --arg publishApikeyOverride "${PUBLISH_APIKEY_OVERRIDE}" \
                      --arg validationApikeyOverride "${VALIDATION_APIKEY_OVERRIDE}" \
@@ -187,7 +186,6 @@ for validation_dir in "${dir_array[@]}"; do
                        "validation-working-directory": $dir,
                        "git-url": $gitUrl,
                        "git-org": $gitOrg,
-                       "programmatic-name-prefix": $prefix,
                        "use-default-targz": $useDefaultTargz,
                        "external-catalog-api-key-override": $publishApikeyOverride,
                        "external-validation-api-key-override": $validationApikeyOverride,
