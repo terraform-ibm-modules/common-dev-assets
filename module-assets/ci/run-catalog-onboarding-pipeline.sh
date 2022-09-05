@@ -23,7 +23,7 @@ usage:	${PRG}
         --target=<target>  (ibm, account or public)
 
         Optional arguments:
-        [--destroy-on-failure]  (By default resources will not be destroyed on validation failure to allow to debug. Use this flag to always attempt a destroy)
+        [--destroy_on_failure]  (By default resources will not be destroyed on validation failure to allow to debug. Use this flag to always attempt a destroy)
         [--use_default_targz]  (Publish / validate using the default tar.gz. If not used catalog.tar.gz will be used)
         [--use_publish_apikey_override]  (Requires CATALOG_PUBLISH_APIKEY env var to be set)
         [--use_valadation_apikey_override]  (Requires CATALOG_VALIDATION_APIKEY env var to be set)
@@ -66,7 +66,7 @@ REPO_NAME=$(basename "$(git config --get remote.origin.url)")
 for arg in "$@"; do
   if [ ${arg} = --use_default_targz ]; then
     USE_DEFAULT_TARGZ=true
-  elif [ ${arg} = --destroy-on-failure ]; then
+  elif [ ${arg} = --destroy_on_failure ]; then
     DESTROY_ON_FAILURE=true
   elif [ ${arg} = --use_publish_apikey_override ]; then
     set +u
@@ -145,6 +145,12 @@ fi
 # Verify target value is only ibm, account or public
 if [ "${TARGET}" != "ibm" ] && [ "${TARGET}" != "account" ] && [ "${TARGET}" != "public" ]; then
   echo "--target value must be ibm, account or public"
+  exit 1
+fi
+
+# Verify github org value
+if [ "${GITHUB_ORG}" != "github.ibm.com" ] && [ "${GITHUB_ORG}" != "github.com" ]; then
+  echo "--github_org value must be github.ibm.com or github.com"
   exit 1
 fi
 
