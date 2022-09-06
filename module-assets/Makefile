@@ -1,5 +1,6 @@
 # -*- mode:makefile; coding:utf-8 -*-
-include common-dev-assets/module-assets/config.env
+-include common-dev-assets/module-assets/config.env
+-include module-assets/config.env
 export
 
 # explicitly tell Make these commands not associated with files
