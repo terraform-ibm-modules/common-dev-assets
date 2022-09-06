@@ -1,5 +1,11 @@
 # -*- mode:makefile; coding:utf-8 -*-
+ifdef common-dev-assets/module-assets/config.env
 include common-dev-assets/module-assets/config.env
+else
+ifdef module-assets/config.env
+include module-assets/config.env
+endif
+endif
 export
 
 # explicitly tell Make these commands not associated with files
