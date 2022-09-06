@@ -58,7 +58,10 @@ USE_DEFAULT_TARGZ=false
 DESTROY_ON_FAILURE=false
 PUBLISH_APIKEY_OVERRIDE="none"
 VALIDATION_APIKEY_OVERRIDE="none"
-REPO_NAME=$(basename "$(git config --get remote.origin.url)")
+
+# Determine repo name
+REPO_NAME="$(basename "$(git config --get remote.origin.url)")"
+REPO_NAME="${REPO_NAME//.git/}"
 
 # Loop through all args
 for arg in "$@"; do
@@ -143,8 +146,8 @@ if [ "${TARGET}" != "ibm" ] && [ "${TARGET}" != "account" ] && [ "${TARGET}" != 
 fi
 
 # Verify github org value
-if [ "${GITHUB_ORG}" != "github.ibm.com" ] && [ "${GITHUB_ORG}" != "github.com" ]; then
-  echo "--github_org value must be github.ibm.com or github.com"
+if [ "${GITHUB_URL}" != "github.ibm.com" ] && [ "${GITHUB_URL}" != "github.com" ]; then
+  echo "--github_url value must be github.ibm.com or github.com"
   exit 1
 fi
 
