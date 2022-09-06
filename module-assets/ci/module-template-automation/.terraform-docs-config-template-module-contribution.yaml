@@ -1,0 +1,26 @@
+formatter: "markdown"
+
+content: |-
+    {{- $is_external:=false }}
+    {{- $is_internal:=false }}
+    {{- range .Module.Inputs }}
+        {{- if eq .Name "module-template" }}
+          {{- $is_internal = true }}
+        {{- else if eq .Name "terraform-ibm-module-template" }}
+          {{- $is_external = true }}
+        {{- end }}
+    {{- end }}
+    <!-- Leave this section as is so that your module has a link to local development environment set up steps for contributors to follow -->
+    ## Contributing
+
+    You can report issues and request features for this module in the {{ if $is_internal }}[goldeneye-issues](https://github.ibm.com/GoldenEye/issues){{- else if $is_external }}[terraform-ibm-issue-tracker](https://github.com/terraform-ibm-modules/terraform-ibm-issue-tracker/issues){{ end }} repo. See {{ if $is_internal }}[Report a Bug or Create Enhancement Request](https://github.ibm.com/GoldenEye/documentation/blob/master/issues.md){{- else if $is_external }}[Report an issue or request a feature](https://github.com/terraform-ibm-modules/.github/blob/main/.github/SUPPORT.md){{ end }}.
+
+    To set up your local development environment, see [Local development setup]{{ if $is_internal }}(https://github.ibm.com/GoldenEye/documentation/blob/master/local-dev-setup.md){{- else if $is_external }}(https://terraform-ibm-modules.github.io/documentation/#/local-dev-setup){{ end }} in the project documentation.
+
+output:
+  file: "README.md"
+  mode: inject
+  template: |-
+    <!-- BEGIN CONTRIBUTING HOOK -->
+    {{ .Content }}
+    <!-- END CONTRIBUTING HOOK -->
