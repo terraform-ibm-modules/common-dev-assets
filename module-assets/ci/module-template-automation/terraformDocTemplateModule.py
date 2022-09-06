@@ -65,10 +65,10 @@ def main():
         module_name == "module-template"
         or module_name == "terraform-ibm-module-template"
     ):
+        copy_examples()
         create_tf_input(module_name)
         run_terraform_docs()
         remove_tf_input(module_name)
-        copy_examples()
 
 
 main()
