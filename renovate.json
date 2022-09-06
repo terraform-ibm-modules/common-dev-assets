@@ -10,19 +10,6 @@
         "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION=(?<currentValue>.*)\\s"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
-    },
-    {
-      "fileMatch": ["^.github/workflows/.*.yml$"],
-      "matchStrings": ["\\s+image: (?<depName>.*?)(?::(?<currentValue>.*?))?@(?<currentDigest>sha256:[a-f0-9]+)\\s"],
-      "datasourceTemplate": "docker"
-    }
-  ],
-  "packageRules": [
-    {
-      "description": "Only bump the docker image sha once a week, otherwise it would create a new PR to bump it every day, which is overkill.",
-      "matchDatasources": ["docker"],
-      "schedule": ["before 1pm on Monday"],
-      "semanticCommitType": "ci"
     }
   ]
 }
