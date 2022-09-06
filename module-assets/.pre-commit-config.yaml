@@ -99,9 +99,9 @@ repos:
       types: [go]
       language: golang
       pass_filenames: false
-    - id: build_module_template_readme
-      name: Build module template README
-      description: Build module template README (template_module only)
+    - id: build_module_template
+      name: Build module template
+      description: Build module template (module template repos only)
       entry: python3 ci/module-template-automation/terraformDocTemplateModule.py
       language: python
       files: "README.md"
