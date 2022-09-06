@@ -36,18 +36,18 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           submodules: true
 
-      # Setup tools
-      - name: Setup tools
-        run: |
-          pip install pre-commit
-          pre-commit install
-
       # Check for pre-commit updates if it is a renovate PR
-      - name: Renovate pre-commit sweeper
-        run: module-assets/ci/renovate-sweeper.sh
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Renovate sweeper
+        run: |
+          # Setup environment since GHA does not run the containers entrypoint
+          . /root/.bashrc
+          . /root/.profile
+          make renovate-sweeper
 
       # run pre-commit against all files
       - name: Pre-commit
-        run: pre-commit run --all-files
+        run: |
+          # Setup environment since GHA does not run the containers entrypoint
+          . /root/.bashrc
+          . /root/.profile
+          make pre-commit
