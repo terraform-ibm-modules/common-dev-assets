@@ -112,6 +112,13 @@ repos:
       entry: ci/terraform-config-inspect.sh
       language: script
       pass_filenames: false
+    - id: build_module_template_readme
+      name: Build module template README
+      description: Build module template README (template_module only)
+      entry: python3 ci/module-template-automation/terraformDocTemplateModule.py
+      language: python
+      files: "README.md"
+      pass_filenames: false
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
   rev: v0.1.17
