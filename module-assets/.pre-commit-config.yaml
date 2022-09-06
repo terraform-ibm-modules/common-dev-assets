@@ -102,7 +102,7 @@ repos:
     - id: build_module_template
       name: Build module template
       description: Build module template (module template repos only)
-      entry: python3 ci/module-template-automation/terraformDocTemplateModule.py
+      entry: python3 ci/module-template-automation/moduleTemplateBuilder.py
       language: python
       files: "README.md"
       pass_filenames: false

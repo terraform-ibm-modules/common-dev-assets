@@ -10,6 +10,19 @@
         "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION=(?<currentValue>.*)\\s"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    },
+    {
+      "fileMatch": ["^.github/workflows/.*.yml$"],
+      "matchStrings": ["\\s+image: (?<depName>.*?)(?::(?<currentValue>.*?))?@(?<currentDigest>sha256:[a-f0-9]+)\\s"],
+      "datasourceTemplate": "docker"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Only bump the docker image sha once a week, meaning we will only release a new version of common-pipeline-assets once a week (timezone UTC). Without this schedule, it would create daily releases, which is overkill.",
+      "matchDatasources": ["docker"],
+      "schedule": ["before 1pm on Monday"],
+      "semanticCommitType": "fix"
     }
   ]
 }
