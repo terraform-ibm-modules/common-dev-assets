@@ -1,12 +1,13 @@
 # -*- mode:makefile; coding:utf-8 -*-
-ifdef common-dev-assets/module-assets/config.env
+CONFIG_ENV_PATH_1:= common-dev-assets/module-assets/config.env
+CONFIG_ENV_PATH_2:= module-assets/config.env
+ifneq ("$(wildcard $(CONFIG_ENV_PATH_1))","")
 include common-dev-assets/module-assets/config.env
 else
-ifdef module-assets/config.env
+ifneq ("$(wildcard $(CONFIG_ENV_PATH_2))","")
 include module-assets/config.env
 endif
 endif
-export
 
 # explicitly tell Make these commands not associated with files
 .PHONY: all dependency-install-darwin-linux dependency-pre-commit docker-pull docker-run pre-commit pre-commit-no-terraform go-mod-tidy run-tests run-tests-local run-go-module-tests renovate-sweeper sem-release netrc ghe-netrc
