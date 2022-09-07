@@ -9,6 +9,7 @@ ifneq ("$(wildcard $(COMMON_DEV_ASSETS_CONFIG_ENV))","")
 	include $(COMMON_DEV_ASSETS_CONFIG_ENV)
 endif
 endif
+export
 
 # explicitly tell Make these commands not associated with files
 .PHONY: all dependency-install-darwin-linux dependency-pre-commit docker-pull docker-run pre-commit pre-commit-no-terraform go-mod-tidy run-tests run-tests-local run-go-module-tests renovate-sweeper sem-release netrc ghe-netrc
