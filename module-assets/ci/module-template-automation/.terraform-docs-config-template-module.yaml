@@ -67,7 +67,7 @@ content: |-
 
     > For more information about creating a repository from a template, see the [GitHub docs](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
 
-    2.  Select {{ if $is_internal }}`modules`{{- else if $is_external }}`terraform-ibm-modules`{{ end }} as the owner.
+    2.  Select {{ if $is_internal }}`GoldenEye`{{- else if $is_external }}`terraform-ibm-modules`{{ end }} as the owner.
     3.  Enter a name for the module in format {{ if $is_internal }}`<NAME>-module`{{- else if $is_external }}`terraform-ibm-<NAME>`{{ end }}, where `<NAME>` reflects the type of infrastructure that the module manages.
 
     > Use hyphens as delimiters for names with multiple words (for example, {{ if $is_internal }}`VPC`-module {{- else if $is_external }}terraform-ibm-`activity-tracker`{{ end }}).
