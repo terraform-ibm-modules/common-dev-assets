@@ -1,5 +1,14 @@
 # -*- mode:makefile; coding:utf-8 -*-
-include common-dev-assets/module-assets/config.env
+
+CONFIG_ENV:= common-dev-assets/module-assets/config.env
+COMMON_DEV_ASSETS_CONFIG_ENV:= module-assets/config.env
+ifneq ("$(wildcard $(CONFIG_ENV))","")
+	include $(CONFIG_ENV)
+else
+ifneq ("$(wildcard $(COMMON_DEV_ASSETS_CONFIG_ENV))","")
+	include $(COMMON_DEV_ASSETS_CONFIG_ENV)
+endif
+endif
 export
 
 # explicitly tell Make these commands not associated with files
