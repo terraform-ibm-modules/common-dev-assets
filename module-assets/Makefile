@@ -2,10 +2,10 @@
 CONFIG_ENV_PATH_1:= common-dev-assets/module-assets/config.env
 CONFIG_ENV_PATH_2:= module-assets/config.env
 ifneq ("$(wildcard $(CONFIG_ENV_PATH_1))","")
-include common-dev-assets/module-assets/config.env
+	include common-dev-assets/module-assets/config.env
 else
 ifneq ("$(wildcard $(CONFIG_ENV_PATH_2))","")
-include module-assets/config.env
+	include module-assets/config.env
 endif
 endif
 
