@@ -41,9 +41,12 @@ def run_terraform_docs():
     )
 
 
-def copy_examples():
+def copy_common_code():
     shutil.copytree(
         "ci/module-template-automation/examples", "examples", dirs_exist_ok=True
+    )
+    shutil.copytree(
+        "ci/module-template-automation/common_code", "./", dirs_exist_ok=True
     )
 
 
@@ -65,7 +68,7 @@ def main():
         module_name == "module-template"
         or module_name == "terraform-ibm-module-template"
     ):
-        copy_examples()
+        copy_common_code()
         create_tf_input(module_name)
         run_terraform_docs()
         remove_tf_input(module_name)
