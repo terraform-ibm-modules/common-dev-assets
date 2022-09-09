@@ -26,7 +26,7 @@ elif [ "${TRAVIS}" == "true" ]; then
 elif [ -n "${PIPELINE_RUN_ID}" ]; then
   if [ "$(get_env pipeline_namespace)" == "pr" ]; then
     IS_PR=true
-    TARGET_BRANCH=$(get_env head-branch)
+    TARGET_BRANCH="origin/$(get_env base-branch)"
   fi
 else
   echo "Could not determine CI runtime environment. Script only support tekton, travis or github actions."
