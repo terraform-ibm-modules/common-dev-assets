@@ -7,7 +7,6 @@ from subprocess import PIPE, Popen
 
 
 def create_tf_input(module_name):
-    print(module_name)
     file = open("%s.tf" % (module_name), "w+")
     file.write(
         """

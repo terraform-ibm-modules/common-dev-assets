@@ -64,17 +64,12 @@ content: |-
     ### Create a repo from this repo template
 
     1.  Create a repository from this repository template by clicking `Use this template` in the upper right of the GitHub UI.
-
-    > For more information about creating a repository from a template, see the [GitHub docs](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
-
-    2.  Select {{ if $is_internal }}`GoldenEye`{{- else if $is_external }}`terraform-ibm-modules`{{ end }} as the owner.
-    3.  Enter a name for the module in format {{ if $is_internal }}`<NAME>-module`{{- else if $is_external }}`terraform-ibm-<NAME>`{{ end }}, where `<NAME>` reflects the type of infrastructure that the module manages.
-
-    > Use hyphens as delimiters for names with multiple words (for example, {{ if $is_internal }}`VPC`-module {{- else if $is_external }}terraform-ibm-`activity-tracker`{{ end }}).
-
-    4.  Provide a short description of the module.
-
-    > The description is displayed under the repository title on the [organization page]({{ if $is_internal }}https://github.ibm.com/GoldenEye{{- else if $is_external }}https://github.com/terraform-ibm-modules{{ end }}) and in the **About** section of the repository. Use the description to help users understand what your repo does by looking at the description.
+    &emsp;&emsp;&emsp;&emsp;<br>For more information about creating a repository from a template, see the [GitHub docs](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+    1.  Select {{ if $is_internal }}`GoldenEye`{{- else if $is_external }}`terraform-ibm-modules`{{ end }} as the owner.
+    1.  Enter a name for the module in format {{ if $is_internal }}`<NAME>-module`{{- else if $is_external }}`terraform-ibm-<NAME>`{{ end }}, where `<NAME>` reflects the type of infrastructure that the module manages.
+    &emsp;&emsp;&emsp;&emsp;<br>Use hyphens as delimiters for names with multiple words (for example, {{ if $is_internal }}`VPC`-module {{- else if $is_external }}terraform-ibm-`activity-tracker`{{ end }}).
+    1.  Provide a short description of the module.
+    &emsp;&emsp;&emsp;&emsp;<br>The description is displayed under the repository title on the [organization page]({{ if $is_internal }}https://github.ibm.com/GoldenEye{{- else if $is_external }}https://github.com/terraform-ibm-modules{{ end }}) and in the **About** section of the repository. Use the description to help users understand what your repo does by looking at the description.
 
     ### Clone the repo and set up your development environment
 
@@ -99,14 +94,14 @@ content: |-
     After you implement the logic for your module and create examples and tests, update this readme file in your repository by following these steps:
 
     1.  Update the title heading and add a description about your module.
-    2.  Update the badge links.
-    3.  Remove all the content in this H2 heading section.
-    4.  Complete the [Usage](#usage), [Required IAM access policies](#required-iam-access-policies), and [Examples](#examples) sections. The [Requirements](#requirements) section is populated by a pre-commit hook.
+    1.  Update the badge links.
+    1.  Remove all the content in this H2 heading section.
+    1.  Complete the [Usage](#usage), [Required IAM access policies](#required-iam-access-policies), and [Examples](#examples) sections. The [Requirements](#requirements) section is populated by a pre-commit hook.
 
     ### Commit your code and submit your module for review
 
     1.  Before you commit any code, review {{ if $is_internal }}[Contributing to Project GoldenEye](https://github.ibm.com/GoldenEye/documentation/blob/master/contributing.md){{- else if $is_external }}[Contributing to the IBM Cloud Terraform modules project](https://terraform-ibm-modules.github.io/documentation/#/contribute-module){{ end }} in the project documentation.
-    2.  Create a pull request for review.
+    1.  Create a pull request for review.
 
     ### Post-merge steps
 
@@ -114,9 +109,9 @@ content: |-
 
     1.  Create a PR to enable the upgrade test by removing the `t.Skip` line in `tests/pr_test.go`.
     {{- if $is_internal }}
-    2.  Add your new module to the [module list](https://github.ibm.com/GoldenEye/documentation/blob/master/modules-list.md).
-    3.  Post a request in the [#project-goldeneye](https://ibm-cloudplatform.slack.com/archives/C02SDGCJAB1) Slack channel to have your module added to the continuous testing pipeline. For more information about the steps, see [Adding a new module to Goldeneye Continuous Testing pipeline](https://github.ibm.com/GoldenEye/operations/blob/master/continuous-testing/README.md).
-    4.  Post a request in the [#project-goldeneye](https://ibm-cloudplatform.slack.com/archives/C02SDGCJAB1) Slack channel to have your module published to the IBM Cloud catalog. For more information about the steps, see [Add a module to the IBM Cloud catalog](https://github.ibm.com/GoldenEye/documentation/blob/master/catalog.md).
+    1.  Add your new module to the [module list](https://github.ibm.com/GoldenEye/documentation/blob/master/modules-list.md).
+    1.  Post a request in the [#project-goldeneye](https://ibm-cloudplatform.slack.com/archives/C02SDGCJAB1) Slack channel to have your module added to the continuous testing pipeline. For more information about the steps, see [Adding a new module to Goldeneye Continuous Testing pipeline](https://github.ibm.com/GoldenEye/operations/blob/master/continuous-testing/README.md).
+    1.  Post a request in the [#project-goldeneye](https://ibm-cloudplatform.slack.com/archives/C02SDGCJAB1) Slack channel to have your module published to the IBM Cloud catalog. For more information about the steps, see [Add a module to the IBM Cloud catalog](https://github.ibm.com/GoldenEye/documentation/blob/master/catalog.md).
     {{- end }}
 
     <!-- Remove the content in this previous H2 heading -->
@@ -165,34 +160,7 @@ content: |-
     -->
     {{- end }}
 
-    ## Required IAM access policies
-
-    <!-- PERMISSIONS REQUIRED TO RUN MODULE
-    If this module requires permissions, uncomment the following block and update
-    the sample permissions, following the format.
-    Replace the sample Account and Cloud service names and roles with the
-    information in the console at
-    Manage > Access (IAM) > Access groups > Access policies.
-    -->
-
-    <!--
-    You need the following permissions to run this module.
-
-    - Account Management
-        - **Sample Account Service** service
-            - `Editor` platform access
-            - `Manager` service access
-        - IAM Services
-            - **Sample Cloud Service** service
-                - `Administrator` platform access
-    -->
-
-    <!-- NO PERMISSIONS FOR MODULE
-    If no permissions are required for the module, uncomment the following
-    statement instead the previous block.
-    -->
-
-    <!-- No permissions are needed to run this module.-->
+    {{include "ci/module-template-automation/required_iam_access_policies.md"}}
 
 output:
   file: "README.md"
