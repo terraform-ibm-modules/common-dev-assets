@@ -1,0 +1,19 @@
+formatter: "markdown"
+
+content: |-
+    {{- $module_url:="" }}
+    {{- range .Module.Inputs }}
+        {{- if eq .Name "tf_inputs_temp_file" }}
+          {{ .Description }}
+          {{- $module_url = .Description }}
+        {{- end }}
+    {{- end }}
+    module {{ $module_url }}
+
+output:
+  file: "tests/go.mod"
+  mode: inject
+  template: |-
+    // START MODULE NAME HOOK
+    {{ .Content }}
+    // END MODULE NAME HOOK

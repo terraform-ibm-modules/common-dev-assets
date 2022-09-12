@@ -120,6 +120,12 @@ repos:
       entry: ci/terraform-config-inspect.sh
       language: script
       pass_filenames: false
+    - id: go-mod-module-repository
+      name: Add module repository to go.mod
+      description: Adding module repository to go.mod file
+      entry: python3 ci/terraformDocGoMod.py
+      language: python
+      pass_filenames: false
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
   rev: v0.1.17
