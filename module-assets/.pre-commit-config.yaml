@@ -125,6 +125,7 @@ repos:
       description: Adding module repository to go.mod file
       entry: python3 ci/terraformDocGoMod.py
       language: python
+      files: "tests/go.mod"
       pass_filenames: false
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
