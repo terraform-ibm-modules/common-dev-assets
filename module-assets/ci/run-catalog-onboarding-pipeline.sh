@@ -214,5 +214,7 @@ for validation_dir in "${dir_array[@]}"; do
   -d "$payload"
   echo
 
-  sleep 5
+  # TODO: Reduce sleep time when catalog team and retries to handle 409 conflicts which occur during parallel pipeline runs
+  echo "Sleeping for 120 secs.."
+  sleep 120
 done
