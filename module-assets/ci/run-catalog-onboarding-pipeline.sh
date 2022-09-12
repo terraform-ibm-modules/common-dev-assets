@@ -212,6 +212,7 @@ for validation_dir in "${dir_array[@]}"; do
   -H "Content-Type: application/json" \
   -H "token: ${CATALOG_TEKTON_WEBHOOK_TOKEN}" \
   -d "$payload"
+  echo
 
   sleep 5
 done
