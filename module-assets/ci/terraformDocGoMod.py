@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import sys
 from pathlib import Path
 from subprocess import PIPE, Popen
 
@@ -33,7 +34,7 @@ def get_module_url():
 
     if proc.returncode != 0:
         print(error)
-        return
+        sys.exit()
     else:
         return module_url
 
