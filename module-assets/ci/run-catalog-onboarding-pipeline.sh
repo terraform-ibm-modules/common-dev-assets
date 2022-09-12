@@ -58,6 +58,7 @@ USE_DEFAULT_TARGZ=false
 DESTROY_ON_FAILURE=false
 PUBLISH_APIKEY_OVERRIDE="none"
 VALIDATION_APIKEY_OVERRIDE="none"
+FLAVOR_LABEL=""
 
 # Determine repo name
 REPO_NAME="$(basename "$(git config --get remote.origin.url)")"
@@ -168,6 +169,12 @@ fi
 
 # Loop through tf directories to run validation on and kick off one pipeline instance per directory
 for validation_dir in "${dir_array[@]}"; do
+
+  # Fetch the flavor label name if ibm_catalog.json is being used
+  if [ "${VALIDATION_DIR_LIST}" == "" ]; then
+    FLAVOR_LABEL=$(jq -r --arg workDir "${validation_dir}" '.flavors | .[] | select(.working_directory==$workDir) | .label' ${VALIDATION_JSON_FILENAME})
+  fi
+
   echo "Generating payload for ${validation_dir} .."
   payload=$(jq -c -n --arg repoName "${REPO_NAME}" \
                      --arg catalogID "${CATALOG_ID}" \
@@ -181,6 +188,7 @@ for validation_dir in "${dir_array[@]}"; do
                      --arg publishApikeyOverride "${PUBLISH_APIKEY_OVERRIDE}" \
                      --arg validationApikeyOverride "${VALIDATION_APIKEY_OVERRIDE}" \
                      --arg destroyOnFailure "${DESTROY_ON_FAILURE}" \
+                     --arg flavorLabel "${FLAVOR_LABEL}" \
                      '{"repo-name": $repoName,
                        "catalog-id": $catalogID,
                        "offering-id": $offeringID,
@@ -192,7 +200,8 @@ for validation_dir in "${dir_array[@]}"; do
                        "use-default-targz": $useDefaultTargz,
                        "external-catalog-api-key-override": $publishApikeyOverride,
                        "external-validation-api-key-override": $validationApikeyOverride,
-                       "destroy-on-failure": $destroyOnFailure
+                       "destroy-on-failure": $destroyOnFailure,
+                       "flavor": $flavorLabel
                      }')
 
   echo "Kicking off tekton pipeline for ${validation_dir}.."
