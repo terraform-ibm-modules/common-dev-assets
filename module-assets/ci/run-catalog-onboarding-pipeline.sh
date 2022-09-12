@@ -175,6 +175,7 @@ for validation_dir in "${dir_array[@]}"; do
     FLAVOR_LABEL=$(jq -r --arg workDir "${validation_dir}" '.flavors | .[] | select(.working_directory==$workDir) | .label' ${VALIDATION_JSON_FILENAME})
   fi
 
+  echo
   echo "Generating payload for ${validation_dir} .."
   payload=$(jq -c -n --arg repoName "${REPO_NAME}" \
                      --arg catalogID "${CATALOG_ID}" \
@@ -204,6 +205,7 @@ for validation_dir in "${dir_array[@]}"; do
                        "flavor": $flavorLabel
                      }')
 
+  echo
   echo "Kicking off tekton pipeline for ${validation_dir}.."
   curl -X POST \
   "$CATALOG_TEKTON_WEBHOOK_URL" \
