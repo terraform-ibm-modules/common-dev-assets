@@ -30,8 +30,8 @@ func TestRunDefaultExample(t *testing.T) {
 func TestRunUpgradeExample(t *testing.T) {
 	t.Parallel()
 
-	// TODO: Remove this line after the first merge to master branch is complete to enable upgrade test
-	t.Skip("Skipping upgrade test until initial code is in master branch")
+	// TODO: Remove this line after the first merge to primary branch is complete to enable upgrade test
+	t.Skip("Skipping upgrade test until initial code is in primary branch")
 
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:       t,
