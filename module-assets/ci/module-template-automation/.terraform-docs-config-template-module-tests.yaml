@@ -12,7 +12,7 @@ content: |-
     {{- end }}
     # Tests
 
-    For information about how to create and run tests, see [Validation tests]({{ if $is_internal }}https://github.ibm.com/GoldenEye/documentation/blob/master/tests.md{{- else if $is_external }}https://terraform-ibm-modules.github.io/documentation/#/tests{{ end }} in the project documentation.
+    For information about how to create and run tests, see [Validation tests]({{ if $is_internal }}https://github.ibm.com/GoldenEye/documentation/blob/master/tests.md{{- else if $is_external }}https://terraform-ibm-modules.github.io/documentation/#/tests{{ end }}) in the project documentation.
 
     <!-- Add any more steps that are specific to testing this module and that are not in the docs. -->
 
