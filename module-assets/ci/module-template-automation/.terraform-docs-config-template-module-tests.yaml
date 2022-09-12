@@ -1,21 +1,25 @@
 formatter: "markdown"
 
 content: |-
-    {{- $module_url:="" }}
+    {{- $is_external:=false }}
+    {{- $is_internal:=false }}
     {{- range .Module.Inputs }}
         {{- if eq .Name "module-template" }}
-          {{- $module_url = .Description }}
+          {{- $is_internal = true }}
         {{- else if eq .Name "terraform-ibm-module-template" }}
-          {{- $module_url = .Description }}
+          {{- $is_external = true }}
         {{- end }}
     {{- end }}
-    // TODO: Update the module name here to match the GIT repo in which this file belongs to (remove the comment once done)
-    module {{ $module_url }}
+    # Tests
+
+    For information about how to create and run tests, see [Validation tests]({{ if $is_internal }}https://github.ibm.com/GoldenEye/documentation/blob/master/tests.md{{- else if $is_external }}https://terraform-ibm-modules.github.io/documentation/#/tests{{ end }} in the project documentation.
+
+    <!-- Add any more steps that are specific to testing this module and that are not in the docs. -->
 
 output:
-  file: "tests/go.mod"
+  file: "tests/README.md"
   mode: inject
   template: |-
-    // START MODULE NAME HOOK
+    <!-- BEGIN TESTS HOOK -->
     {{ .Content }}
-    // END MODULE NAME HOOK
+    <!-- END TESTS HOOK -->
