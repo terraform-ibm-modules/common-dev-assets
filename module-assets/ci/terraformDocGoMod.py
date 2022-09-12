@@ -34,7 +34,7 @@ def get_module_url():
 
     if proc.returncode != 0:
         print(error)
-        sys.exit()
+        sys.exit(1)
     else:
         return module_url
 
