@@ -214,7 +214,9 @@ for validation_dir in "${dir_array[@]}"; do
   -d "$payload"
   echo
 
-  # TODO: Reduce sleep time when catalog team add retries to handle 409 conflicts which occur during parallel pipeline runs
-  echo "Sleeping for 120 secs.."
-  sleep 120
+  if [ "${validation_dir}" != "${dir_array[-1]}" ]; then
+    # Sleep for 5 mins to prevent 409 doc conflict when pipeline tries to update same document
+    echo "Sleeping for 5 mins.."
+    sleep 300
+  fi
 done
