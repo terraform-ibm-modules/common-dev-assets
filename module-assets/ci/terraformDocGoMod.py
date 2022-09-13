@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import re
 import sys
 from pathlib import Path
 from subprocess import PIPE, Popen
@@ -9,11 +10,18 @@ from subprocess import PIPE, Popen
 def set_go_mod(path, module_url):
     with open(path, "r") as file:
         lines = file.readlines()
-    if lines:
-        first_line = lines[0]
+    if len(lines) > 0:
         expected_line = "module " + module_url
-        if first_line.strip() != expected_line:
-            lines[0] = expected_line + "\n"
+        replace_module = False
+        for index, line in enumerate(lines):
+            regex = re.search(pattern="module.*?github.*?", string=line)
+            if regex:
+                regex_result = regex.group(0).strip()
+                if regex_result != expected_line:
+                    replace_module = True
+                    break
+        if replace_module:
+            lines[index] = expected_line + "\n"
             with open(path, "w") as writer:
                 writer.writelines(lines)
 
