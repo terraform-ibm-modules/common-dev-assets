@@ -214,5 +214,9 @@ for validation_dir in "${dir_array[@]}"; do
   -d "$payload"
   echo
 
-  sleep 5
+  if [ "${validation_dir}" != "${dir_array[-1]}" ]; then
+    # Sleep for 5 mins to prevent 409 doc conflict when pipeline tries to update same document
+    echo "Sleeping for 5 mins.."
+    sleep 300
+  fi
 done
