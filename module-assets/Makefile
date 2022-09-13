@@ -77,7 +77,11 @@ docker-pull:
 	${CONTAINER_RUNTIME} pull "${DOCKER_REGISTRY}/$(IMAGE)"
 
 docker-run:
-	${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt -v ~/.ssh:/root/.ssh ${DOCKER_REGISTRY}/$(IMAGE) bash
+	${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
+		-v ~/.ssh:/root/.ssh \
+		-v ~/.netrc:/root/.netrc \
+		-v ~/.gitconfig:/root/.gitconfig \
+		${DOCKER_REGISTRY}/$(IMAGE) bash
 
 #
 # pre-commit
