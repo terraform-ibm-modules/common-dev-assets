@@ -13,7 +13,7 @@ def set_go_mod(path, module_url):
         first_line = lines[0]
         expected_line = "module " + module_url
         if first_line.strip() != expected_line:
-            lines.insert(0, expected_line + "\n")
+            lines[0] = expected_line + "\n"
             with open(path, "w") as writer:
                 writer.writelines(lines)
 
