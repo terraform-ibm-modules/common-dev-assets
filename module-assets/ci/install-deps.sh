@@ -326,7 +326,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.25.0
+KUBECTL_VERSION=v1.25.1
 BINARY=kubectl
 FILE_NAME="kubectl"
 URL="https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/${OS}/amd64"
