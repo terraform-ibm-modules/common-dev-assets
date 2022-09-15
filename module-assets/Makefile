@@ -212,7 +212,7 @@ run-tests-local:
 
 # run unit tests for golang projects
 run-go-module-tests:
-	@run_cmd="go test $(go list ./... | grep -v /common-dev-assets/) -count=1 -v -timeout 5m" && \
+	@run_cmd="go test \$$(go list ./... | grep -v /common-dev-assets/) -count=1 -v -timeout 5m" && \
 	if [ "$${NO_CONTAINER}" = "true" ]; \
 	then \
 		bash -c "$${run_cmd}"; \
