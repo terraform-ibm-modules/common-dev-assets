@@ -47,6 +47,15 @@ def run_terraform_docs():
         ],
         check=True,
     )
+    subprocess.run(
+        [
+            "terraform-docs",
+            "-c",
+            "common-dev-assets/module-assets/ci/module-template-automation/.terraform-docs-config-template-module-updating-code.yaml",
+            ".",
+        ],
+        check=True,
+    )
 
 
 def copy_common_code():
