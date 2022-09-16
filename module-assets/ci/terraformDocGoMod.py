@@ -40,8 +40,8 @@ def get_module_url():
 
     # urlparse can not be used for git urls
     if full_url.startswith("http"):
-        o = urlparse(full_url)
-        module_url = o.hostname + o.path
+        output = urlparse(full_url)
+        module_url = output.hostname + output.path
     else:
         module_url = full_url.replace(".git", "").replace("git@", "").replace(":", "/")
 
