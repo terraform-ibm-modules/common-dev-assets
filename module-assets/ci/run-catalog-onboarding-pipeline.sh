@@ -59,6 +59,9 @@ DESTROY_ON_FAILURE=false
 PUBLISH_APIKEY_OVERRIDE="none"
 VALIDATION_APIKEY_OVERRIDE="none"
 FLAVOR_LABEL=""
+# If either of these files are detected, pass them to catalog pipeline
+PREVALIDATION_SCRIPT="pre-validation.sh"
+POSTVALIDATION_SCRIPT="post-validation.sh"
 
 # Determine repo name
 REPO_NAME="$(basename "$(git config --get remote.origin.url)")"
@@ -170,6 +173,16 @@ fi
 # Loop through tf directories to run validation on and kick off one pipeline instance per directory
 for validation_dir in "${dir_array[@]}"; do
 
+  # Determine if pre/post validation script exist
+  prevalidation=""
+  if [ -f "${validation_dir}/${PREVALIDATION_SCRIPT}" ]; then
+    prevalidation="${validation_dir}/${PREVALIDATION_SCRIPT}"
+  fi
+  postvalidation=""
+  if [ -f "${validation_dir}/${POSTVALIDATION_SCRIPT}" ]; then
+      postvalidation="${validation_dir}/${POSTVALIDATION_SCRIPT}"
+  fi
+
   # Fetch the flavor label name if ibm_catalog.json is being used
   if [ "${VALIDATION_DIR_LIST}" == "" ]; then
     FLAVOR_LABEL=$(jq -r --arg workDir "${validation_dir}" '.flavors | .[] | select(.working_directory==$workDir) | .label' ${VALIDATION_JSON_FILENAME})
@@ -190,6 +203,8 @@ for validation_dir in "${dir_array[@]}"; do
                      --arg validationApikeyOverride "${VALIDATION_APIKEY_OVERRIDE}" \
                      --arg destroyOnFailure "${DESTROY_ON_FAILURE}" \
                      --arg flavorLabel "${FLAVOR_LABEL}" \
+                     --arg prevalidation "${prevalidation}" \
+                     --arg postvalidation "${postvalidation}" \
                      '{"repo-name": $repoName,
                        "catalog-id": $catalogID,
                        "offering-id": $offeringID,
@@ -202,7 +217,9 @@ for validation_dir in "${dir_array[@]}"; do
                        "external-catalog-api-key-override": $publishApikeyOverride,
                        "external-validation-api-key-override": $validationApikeyOverride,
                        "destroy-on-failure": $destroyOnFailure,
-                       "flavor": $flavorLabel
+                       "flavor": $flavorLabel,
+                       "prevalidation-script: $prevalidation,
+                       "postvalidation-script: $postvalidation
                      }')
 
   echo
@@ -214,7 +231,8 @@ for validation_dir in "${dir_array[@]}"; do
   -d "$payload"
   echo
 
-  if [ "${validation_dir}" != "${dir_array[-1]}" ]; then
+  # Using syntax ${#a[@]} here to get last element of array so code is compatible on older bash (v4.0 or earlier) - see https://unix.stackexchange.com/a/198788
+  if [ "${validation_dir}" != "${dir_array[${#dir_array[@]}-1]}" ]; then
     # Sleep for 5 mins to prevent 409 doc conflict when pipeline tries to update same document
     echo "Sleeping for 5 mins.."
     sleep 300
