@@ -1,15 +1,15 @@
-## Updating template module content
-Most of the code for `template module` is stored in [common-dev-assets](https://github.com/terraform-ibm-modules/common-dev-assets). Therefore, to make any code changes to `template module`, files inside this root must be updated.
+# Updating the module template readme file content
+Most of the code for the readme file in the `module-template` or `terraform-ibm-module-template` repo is stored in [common-dev-assets](https://github.com/terraform-ibm-modules/common-dev-assets). To make changes to the readme file, update the files in this directory.
 
-If you would like to modify any markdown files then the code changes should be added to:
-- [Modifying main README file](.terraform-docs-config-template-module.yaml)
-- [Modifying contributing section of main README file](.terraform-docs-config-template-module-contribution.yaml)
-- [Modifying tests README file](.terraform-docs-config-template-module-tests.yaml)
+To modify the Markdown content, change the following files:
+- To modify most content in the main readme file, update [.terraform-docs-config-template-module.yaml](.terraform-docs-config-template-module.yaml).
+- To modify the contributing section of of the main readme file, update [.terraform-docs-config-template-module-contribution.yaml](.terraform-docs-config-template-module-contribution.yaml).
+- To modify the readme file in the `tests` directory, update [.terraform-docs-config-template-module-tests.yaml](.terraform-docs-config-template-module-tests.yaml).
 
-To update `examples` the code inside [examples](examples) should be changed.
+To update the default examples for the module template, update the code in the [examples](examples) directory in this rep.
 
-To update `tests` the code inside [tests](tests) should be changed.
+To update the default tests, update the files in the [tests](tests) directory in this repo.
 
-[build_module_template](../../.pre-commit-config.yaml) pre-commit hook is used to build up the content for this module. The hook executes the following actions:
-- copies code, examples and tests from `common-dev-assets` into `template module` module
-- creates markdown (README) files
+The [build_module_template](../../.pre-commit-config.yaml) pre-commit hook assembles the content for the module template repo. The hook runs the following actions:
+- Copies the code, examples, and tests from this `common-dev-assets` repo to the `module-template` or `terraform-ibm-module-template` repo.
+- Creates the readme files in the `module-template` or `terraform-ibm-module-template` repo.
