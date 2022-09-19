@@ -366,7 +366,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=IBM-Cloud/terraform-config-inspect
-TERRAFORM_CONFIG_INSPECT_VERSION=v1.0.0-beta0
+TERRAFORM_CONFIG_INSPECT_VERSION=v1.0.0-beta1
 TERRAFORM_CONFIG_INSPECT_VERSION_NUMBER="${TERRAFORM_CONFIG_INSPECT_VERSION:1}"
 BINARY=terraform-config-inspect
 FILE_NAME="terraform-config-inspect_${TERRAFORM_CONFIG_INSPECT_VERSION_NUMBER}_${OS}_amd64.zip"
