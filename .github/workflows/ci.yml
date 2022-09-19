@@ -20,7 +20,7 @@ jobs:
       run:
         shell: bash
     container:
-      image: icr.io/goldeneye_images/goldeneye-ci-image@sha256:bbbd923786e4e66019cf16f62e10efc257b6951a4e6b19bdca43a6d0379eedaf
+      image: icr.io/goldeneye_images/goldeneye-ci-image@sha256:3a8ab4ac54966f1fe1d6d180c703cd18e1818937642ab5b8f148b06f1309cd98
       env:
         TF_VAR_ibmcloud_api_key: ${{ secrets.IBMCLOUD_API_KEY }}
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
