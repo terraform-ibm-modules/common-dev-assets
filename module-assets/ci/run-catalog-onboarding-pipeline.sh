@@ -218,8 +218,8 @@ for validation_dir in "${dir_array[@]}"; do
                        "external-validation-api-key-override": $validationApikeyOverride,
                        "destroy-on-failure": $destroyOnFailure,
                        "flavor": $flavorLabel,
-                       "prevalidation-script: $prevalidation,
-                       "postvalidation-script: $postvalidation
+                       "prevalidation-script": $prevalidation,
+                       "postvalidation-script": $postvalidation
                      }')
 
   echo
