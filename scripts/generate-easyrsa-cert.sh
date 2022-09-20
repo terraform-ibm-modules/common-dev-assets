@@ -34,11 +34,11 @@ generate_client_cert() {
 
 # Cert Path:
 locate_certs() {
-    echo "VPN client public key is generated at path: ""$PWD""/pki/issued/client1.vpn.ibm.com.crt"
-    echo "VPN client private key is generated at path: ""$PWD""/pki/private/client1.vpn.ibm.com.key"
-    echo "Certificate File: ""$PWD""/pki/issued/vpn-server.vpn.ibm.com.crt"
-    echo "Certificate certificate's private key: ""$PWD""/pki/private/vpn-server.vpn.ibm.com.key"
-    echo "Intermediate certificate File: ""$PWD""/pki/ca.crt"
+    echo "VPN client public key is generated at path: $PWD/pki/issued/client1.vpn.ibm.com.crt"
+    echo "VPN client private key is generated at path: $PWD/pki/private/client1.vpn.ibm.com.key"
+    echo "Certificate File: $PWD/pki/issued/vpn-server.vpn.ibm.com.crt"
+    echo "Certificate certificate's private key: $PWD/pki/private/vpn-server.vpn.ibm.com.key"
+    echo "Intermediate certificate File: $PWD/pki/ca.crt"
 }
 
 init() {
