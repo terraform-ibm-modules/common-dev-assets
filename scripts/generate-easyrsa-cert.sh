@@ -4,6 +4,11 @@
 
 REF_PATH=$1
 
+# Git Clone
+clone_easyrsa_repo() {
+    git clone https://github.com/OpenVPN/easy-rsa.git
+}
+
 # Create a new PKI and CA:
 create_pki_and_ca() {
     echo | ./"${REF_PATH}"/easy-rsa/easyrsa3/easyrsa init-pki
@@ -31,6 +36,7 @@ locate_certs() {
 }
 
 init() {
+    clone_easyrsa_repo
     create_pki_and_ca
     generate_server_cert
     generate_client_cert
