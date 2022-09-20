@@ -2,6 +2,13 @@
 
 set -e
 
+# This script generates the following certs:
+#     1. Private certificate for the client
+#     2. Public certificate for the client
+#     3. Private certificate for the server
+#     4. Public certificate for the server
+#     5. Intermediate certificate
+# These certs are used in the client to site VPN authentication
 # Docs: https://cloud.ibm.com/docs/vpc?topic=vpc-client-to-site-authentication
 
 # Git Clone
