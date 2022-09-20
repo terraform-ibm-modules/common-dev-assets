@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 # Docs: https://cloud.ibm.com/docs/vpc?topic=vpc-client-to-site-authentication
 
 REF_PATH=$1
