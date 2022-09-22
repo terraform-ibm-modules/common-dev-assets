@@ -15,10 +15,10 @@ def set_go_mod(path, module_url):
         expected_line = "module " + module_url
         replace_module = False
         for index, line in enumerate(lines):
-            regex = re.search(pattern="module.*?github.*?", string=line)
+            regex = re.search(r"module.*?github.*?", line)
             if regex:
-                regex_result = regex.group(0).strip()
-                if regex_result != expected_line:
+                regex_result = regex.string.strip()
+                if regex_result.lower() != expected_line.lower():
                     replace_module = True
                     break
         if replace_module:
