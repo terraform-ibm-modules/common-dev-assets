@@ -43,9 +43,9 @@ def get_module_url():
         output = urlparse(full_url)
         module_url = output.hostname + output.path
     else:
-        module_url = full_url.replace(".git", "").replace("git@", "").replace(":", "/")
+        module_url = full_url.replace("git@", "").replace(":", "/")
 
-    return module_url
+    return module_url.replace(".git", "")
 
 
 def main():
