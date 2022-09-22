@@ -3,18 +3,15 @@
 import glob
 import json
 import os
-import shutil
+import sys
+from pathlib import Path
 
 
-def run_metadata_generator(file_path):
+def run_metadata_generator(file_path, terrraform_provider):
     os.system(
-        "terraform-config-inspect --json > %s --metadata terraform-provider-ibm/metadata/provider_metadata.json"
-        % (file_path)
+        "terraform-config-inspect --json > %s --metadata %s --filter-variables"
+        % (file_path, terrraform_provider)
     )
-
-
-def clone_terraform_provider_ibm():
-    os.system("git clone  https://github.com/IBM-Cloud/terraform-provider-ibm.git")
 
 
 def open_file(file):
@@ -42,8 +39,9 @@ def remove_file(path):
         os.remove(path)
 
 
-def remove_folder(path):
-    shutil.rmtree(path)
+def get_terraform_provider():
+    for terraform_provider in Path(".terraform").rglob("provider_metadata.json"):
+        return terraform_provider
 
 
 def main():
@@ -51,26 +49,26 @@ def main():
         metadata_path_original = "module-metadata.json"
         metadata_path_temp = "module-metadata_temp.json"
 
-        if os.path.isdir("terraform-provider-ibm"):
-            remove_folder("terraform-provider-ibm")
+        terraform_provider = get_terraform_provider()
+        if terraform_provider:
+            run_metadata_generator(metadata_path_temp, terraform_provider)
 
-        clone_terraform_provider_ibm()
-        run_metadata_generator(metadata_path_temp)
+            # if module-metadata already exists then compare with a new data, otherwise save new data into module-metadata
+            if os.path.exists(metadata_path_original):
+                metadata_old_json = open_file(metadata_path_original)
+                metadata_new_json = open_file(metadata_path_temp)
 
-        # if module-metadata already exists then compare with a new data, otherwise save new data into module-metadata
-        if os.path.exists(metadata_path_original):
-            metadata_old_json = open_file(metadata_path_original)
-            metadata_new_json = open_file(metadata_path_temp)
-
-            # if objects are not equal then create module-metada with new content
-            if ordered(metadata_old_json) != ordered(metadata_new_json):
+                # if objects are not equal then create module-metada with new content
+                if ordered(metadata_old_json) != ordered(metadata_new_json):
+                    write_object(metadata_new_json, metadata_path_original)
+            else:
+                metadata_new_json = open_file(metadata_path_temp)
                 write_object(metadata_new_json, metadata_path_original)
-        else:
-            metadata_new_json = open_file(metadata_path_temp)
-            write_object(metadata_new_json, metadata_path_original)
 
-        remove_file(metadata_path_temp)
-        remove_folder("terraform-provider-ibm")
+            remove_file(metadata_path_temp)
+        else:
+            print("Error: Terraform provider does not exists.")
+            sys.exit(1)
 
 
 main()
