@@ -160,8 +160,8 @@ echo "COMPLETE"
 # terraform
 #######################################
 
- # renovate: datasource=github-releases depName=hashicorp/terraform
-TERRAFORM_VERSION=v1.3.0
+ # Locking into v1.2.9 until https://github.ibm.com/GoldenEye/issues/issues/2858 is complete
+TERRAFORM_VERSION=v1.2.9
 # 'v' prefix required for renovate to query github.com for new release, but needs to be removed to pull from hashicorp.com
 TERRAFORM_VERSION="${TERRAFORM_VERSION:1}"
 BINARY=terraform
