@@ -44,6 +44,7 @@ repos:
         - --args=--enable-rule=terraform_required_providers
         - --args=--enable-rule=terraform_unused_required_providers
         - --args=--enable-rule=terraform_standard_module_structure
+      exclude: dynamic_values/
     - id: terragrunt_fmt
     - id: terragrunt_validate
     - id: terraform_tfsec
