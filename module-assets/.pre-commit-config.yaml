@@ -44,7 +44,7 @@ repos:
         - --args=--enable-rule=terraform_required_providers
         - --args=--enable-rule=terraform_unused_required_providers
         - --args=--enable-rule=terraform_standard_module_structure
-      exclude: dynamic_values/
+      exclude: dynamic_values/ # Do not run tflint in dynamic_folders directory (temp solution for SLZ modules). Internal issue created to track better solution.
     - id: terragrunt_fmt
     - id: terragrunt_validate
     - id: terraform_tfsec
