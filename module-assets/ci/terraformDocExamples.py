@@ -13,12 +13,21 @@ def get_readme_title(readme_file):
         return line
 
 
-# Return titles of all README files inside examples folder
+# check if folder contains any tf file
+def has_tf_files(path):
+    if any(File.endswith(".tf") for File in os.listdir(path)):
+        return True
+    else:
+        return False
+
+
+# Return titles of all README files inside examples folder.
 def get_readme_titles():
     readme_titles = []
     for readme_file in Path("examples").rglob("README.md"):
         path = str(readme_file)
-        if not ("/.") in path:
+        # ignore README file if it has dot(.) in a path or the parent path does not contain any tf file
+        if not ("/.") in path and has_tf_files(readme_file.parent):
             readme_title = get_readme_title(path)
             if readme_title:
                 data = {"path": path, "title": readme_title}
