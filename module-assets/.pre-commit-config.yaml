@@ -24,7 +24,7 @@ repos:
       stages: [commit-msg]
       additional_dependencies: ['@commitlint/config-angular']
 - repo: https://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.75.0
+  rev: v1.76.0
   hooks:
     - id: terraform_fmt
     - id: terraform_validate
@@ -87,7 +87,7 @@ repos:
     args: ["--profile", "black", "--filter-files"]
 # black
 - repo: https://github.com/ambv/black
-  rev: 22.8.0
+  rev: 22.10.0
   hooks:
   - id: black
     args: # arguments to configure black
