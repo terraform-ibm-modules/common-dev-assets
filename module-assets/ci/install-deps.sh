@@ -308,7 +308,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v3.10.0
+HELM_VERSION=v3.10.1
 BINARY=helm
 FILE_NAME="helm-${HELM_VERSION}-${OS}-amd64.tar.gz"
 URL="https://get.helm.sh"
