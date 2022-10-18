@@ -146,7 +146,7 @@ echo "COMPLETE"
 #######################################
 
  # renovate: datasource=github-tags depName=ibm/detect-secrets versioning="regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$"
-DETECT_SECRETS_VERSION=0.13.1+ibm.52.dss
+DETECT_SECRETS_VERSION=0.13.1+ibm.53.dss
 # '.dss' suffix required for renovate to query git tags, but needs to be removed to install with pip
 DETECT_SECRETS_VERSION="$(echo ${DETECT_SECRETS_VERSION} | rev | cut -c5- | rev)"
 
@@ -181,7 +181,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.39.1
+TERRAGRUNT_VERSION=v0.39.2
 BINARY=terragrunt
 FILE_NAME="terragrunt_${OS}_amd64"
 URL="https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}"
@@ -308,7 +308,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v3.10.0
+HELM_VERSION=v3.10.1
 BINARY=helm
 FILE_NAME="helm-${HELM_VERSION}-${OS}-amd64.tar.gz"
 URL="https://get.helm.sh"
@@ -326,7 +326,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.25.2
+KUBECTL_VERSION=v1.25.3
 BINARY=kubectl
 FILE_NAME="kubectl"
 URL="https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/${OS}/amd64"
