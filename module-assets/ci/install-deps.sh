@@ -218,7 +218,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=terraform-linters/tflint
-TFLINT_VERSION=v0.41.0
+TFLINT_VERSION=v0.42.0
 BINARY=tflint
 FILE_NAME="tflint_${OS}_amd64.zip"
 URL="https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}"
@@ -255,7 +255,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v1.50.0
+GOLANGCI_LINT_VERSION=v1.50.1
 BINARY=golangci-lint
 FILE_NAME="golangci-lint-${GOLANGCI_LINT_VERSION//v/}-${OS}-amd64.tar.gz"
 URL="https://github.com/golangci/golangci-lint/releases/download/${GOLANGCI_LINT_VERSION}"
