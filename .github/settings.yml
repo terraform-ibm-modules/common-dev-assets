@@ -6,3 +6,9 @@
 # the settings of this repository are updated immediately.
 
 _extends: repo-settings
+
+# unique to this repo
+required_status_checks:
+  strict: true
+  contexts:
+    - "CI_Pipeline"
