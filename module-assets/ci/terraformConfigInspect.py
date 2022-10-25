@@ -40,7 +40,7 @@ def main():
         else:
             print("Error: Terraform provider does not exists.")
             sys.exit(1)
-        
+
         # Delete .terraform folder if it did not exist before
         if not tf_folder_already_exists:
             remove_terraform_folder()
