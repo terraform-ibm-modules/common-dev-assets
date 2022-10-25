@@ -89,7 +89,7 @@ function create_symbolic_links() {
       fi
     done
 
-    ln -s common-dev-assets/module-assets/basic-pre-commit/.pre-commit-config.yaml .pre-commit-config.yaml
+    ln -s common-dev-assets/module-assets/.pre-commit-config.yaml .pre-commit-config.yaml
     git add .pre-commit-config.yaml
     ln -s common-dev-assets/module-assets/ci ci
     git add ci
