@@ -7,11 +7,7 @@ from pathlib import Path
 
 
 def terraform_init():
-    os.system("terraform init")
-
-
-def remove_terraform_folder():
-    os.system("rm -fr .terraform")
+    os.system("terraform init -upgrade")
 
 
 def get_terraform_provider():
@@ -28,9 +24,8 @@ def run_metadata_generator(file_path, terrraform_provider):
 
 def main():
     if glob.glob("*.tf"):
-        tf_folder_already_exists = os.path.isdir(".terraform")
-        if not tf_folder_already_exists:
-            terraform_init()
+
+        terraform_init()
 
         terraform_provider = get_terraform_provider()
 
@@ -40,10 +35,6 @@ def main():
         else:
             print("Error: Terraform provider does not exists.")
             sys.exit(1)
-
-        # Delete .terraform folder if it did not exist before
-        if not tf_folder_already_exists:
-            remove_terraform_folder()
 
 
 main()
