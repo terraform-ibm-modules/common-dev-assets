@@ -71,7 +71,7 @@ content: |-
     1.  Enter a name for the module in format {{ if $is_internal }}`<NAME>-module`{{- else if $is_external }}`terraform-ibm-<NAME>`{{ end }}, where `<NAME>` reflects the type of infrastructure that the module manages.
     &emsp;&emsp;&emsp;&emsp;<br>Use hyphens as delimiters for names with multiple words (for example, {{ if $is_internal }}`VPC`-module {{- else if $is_external }}terraform-ibm-`activity-tracker`{{ end }}).
     1.  Provide a short description of the module.
-    &emsp;&emsp;&emsp;&emsp;<br>The description is displayed under the repository title on the [organization page]({{ if $is_internal }}https://github.ibm.com/GoldenEye{{- else if $is_external }}https://github.com/terraform-ibm-modules{{ end }}) and in the **About** section of the repository. Use the description to help users understand what your repo does by looking at the description.
+    &emsp;&emsp;&emsp;&emsp;<br>The description is displayed under the repository name on the [organization page]({{ if $is_internal }}https://github.ibm.com/GoldenEye{{- else if $is_external }}https://github.com/terraform-ibm-modules{{ end }}) and in the **About** section of the repository. Use the description to help users understand the purpose of your module. For more information, see [module names and descriptions](implementation-guidelines.md#module-names-and-descriptions).
 
     ### Clone the repo and set up your development environment
 
@@ -82,6 +82,13 @@ content: |-
 
     Post a request in the [#project-goldeneye](https://ibm-cloudplatform.slack.com/archives/C02SDGCJAB1) Slack channel to have your repo added to Travis. For more information, see [Setting up Travis for a new repo](https://github.ibm.com/GoldenEye/documentation/blob/master/travis-setup.md) in the GoldenEye docs.
     {{- end }}
+
+    ### Update the repo name and description in source control
+
+    To help make sure that the repo name and description are not changed except through pull requests, add the repo name and description to the settings file.
+
+    1.  Open the [settings.yml](.github/settings.yml) file.
+    1.  Set the repo `name` and `description` fields with what you specified when you [created the repo](#create-a-repo-from-this-repo-template).
 
     ### Update the Terraform files
 
