@@ -30,7 +30,7 @@ def get_terraform_provider():
 
 def run_metadata_generator(file_path, terrraform_provider):
     os.system(
-        "terraform-config-inspect --json > %s --metadata %s --filter-variables"
+        "terraform-config-inspect --json > %s --metadata %s"
         % (file_path, terrraform_provider)
     )
 
