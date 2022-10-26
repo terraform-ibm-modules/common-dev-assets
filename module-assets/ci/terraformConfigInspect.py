@@ -44,7 +44,7 @@ def main():
         if error_code != 0:
             terraform_init_upgrade()
 
-        #  get IBM terraform provider
+        # get IBM terraform provider
         terraform_provider = get_terraform_provider()
 
         # run metadata generator tool
