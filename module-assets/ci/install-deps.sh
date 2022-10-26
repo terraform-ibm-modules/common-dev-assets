@@ -146,7 +146,7 @@ echo "COMPLETE"
 #######################################
 
  # renovate: datasource=github-tags depName=ibm/detect-secrets versioning="regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$"
-DETECT_SECRETS_VERSION=0.13.1+ibm.54.dss
+DETECT_SECRETS_VERSION=0.13.1+ibm.55.dss
 # '.dss' suffix required for renovate to query git tags, but needs to be removed to install with pip
 DETECT_SECRETS_VERSION="$(echo ${DETECT_SECRETS_VERSION} | rev | cut -c5- | rev)"
 
@@ -218,7 +218,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=terraform-linters/tflint
-TFLINT_VERSION=v0.42.1
+TFLINT_VERSION=v0.42.2
 BINARY=tflint
 FILE_NAME="tflint_${OS}_amd64.zip"
 URL="https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}"
@@ -236,7 +236,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=aquasecurity/tfsec
-TFSEC_VERSION=v1.28.0
+TFSEC_VERSION=v1.28.1
 BINARY=tfsec
 FILE_NAME="tfsec-${OS}-amd64"
 URL="https://github.com/aquasecurity/tfsec/releases/download/${TFSEC_VERSION}"
