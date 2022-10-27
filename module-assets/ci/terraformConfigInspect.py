@@ -28,11 +28,15 @@ def get_terraform_provider():
         return terraform_provider
 
 
-def run_metadata_generator(file_path, terrraform_provider):
-    os.system(
-        "terraform-config-inspect --json > %s --metadata %s"
-        % (file_path, terrraform_provider)
-    )
+def run_metadata_generator(file_path, terraform_provider):
+    if terraform_provider:
+        os.system(
+            "terraform-config-inspect --json > %s --metadata %s"
+            % (file_path, terraform_provider)
+        )
+    else:
+        if terraform_provider:
+            os.system("terraform-config-inspect --json > %s" % (file_path))
 
 
 def main():
@@ -48,12 +52,8 @@ def main():
         terraform_provider = get_terraform_provider()
 
         # run metadata generator tool
-        if terraform_provider:
-            metadata_name = "module-metadata.json"
-            run_metadata_generator(metadata_name, terraform_provider)
-        else:
-            print("Error: Terraform provider does not exists.")
-            sys.exit(1)
+        metadata_name = "module-metadata.json"
+        run_metadata_generator(metadata_name, terraform_provider)
 
 
 main()
