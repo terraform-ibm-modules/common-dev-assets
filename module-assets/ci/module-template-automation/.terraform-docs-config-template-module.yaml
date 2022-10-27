@@ -85,10 +85,12 @@ content: |-
 
     ### Update the repo name and description in source control
 
-    To help make sure that the repo name and description are not changed except through pull requests, add the repo name and description to the settings file.
+    To help make sure that the repo name and description are not changed except through pull requests, they are defined in the `settings.yml` file.
+
+    Check to make sure that values are uncommented and correct:
 
     1.  Open the [settings.yml](.github/settings.yml) file.
-    1.  Set the repo `name` and `description` fields with what you specified when you [created the repo](#create-a-repo-from-this-repo-template).
+    1.  If not already updated, uncomment the `name` and `description` properties and set the values to what you specified when you requested the repo, as in the following example.
 
     ### Update the Terraform files
 
