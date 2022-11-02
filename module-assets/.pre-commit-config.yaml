@@ -1,5 +1,13 @@
 default_stages: [commit]
 repos:
+- repo: local
+  hooks:
+    - id: submodule-version-check
+      name: submodule-version-check
+      description: Check local version of common-dev-assets submodule
+      entry: ci/submoduleVersionCheck.sh
+      language: script
+      pass_filenames: false
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.3.0
   hooks:
