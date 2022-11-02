@@ -39,9 +39,7 @@ function main() {
                 exit 1
             fi
         fi
-
         rm -fr ../test
-
     fi
 }
 
