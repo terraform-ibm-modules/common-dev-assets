@@ -19,7 +19,7 @@ function get_submodule_version() {
 function main() {
     # execute only if repo has submodules
     if [ -e "/.gitmodules" ]
-        then
+    then
         create_temp_submodule_folder
 
         # current local submodule version
