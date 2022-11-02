@@ -2,12 +2,12 @@
 set -e
 
 function create_temp_submodule_folder() {
-    rm -fr ../test
-    mkdir ../test
-    cp .gitmodules ../test
-    cp -R .github ../test
-    cp -R .git ../test
-    cd ../test
+    rm -fr ../submoduleVersionCheck_temp
+    mkdir ../submoduleVersionCheck_temp
+    cp .gitmodules ../submoduleVersionCheck_temp
+    cp -R .github ../submoduleVersionCheck_temp
+    cp -R .git ../submoduleVersionCheck_temp
+    cd ../submoduleVersionCheck_temp
 }
 
 function get_submodule_version() {
@@ -39,7 +39,7 @@ function main() {
                 exit 1
             fi
         fi
-        rm -fr ../test
+        rm -fr ../submoduleVersionCheck_temp
     fi
 }
 
