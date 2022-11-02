@@ -4,7 +4,7 @@ repos:
   hooks:
     - id: submodule-version-check
       name: submodule-version-check
-      description: Check local version of common-dev-assets submodule
+      description: Check local commit ID of common-dev-assets submodule
       entry: ci/submoduleVersionCheck.sh
       language: script
       pass_filenames: false
