@@ -2,12 +2,17 @@
 set -e
 
 function create_temp_submodule_folder() {
-    rm -fr ../submoduleVersionCheck_temp
-    mkdir ../submoduleVersionCheck_temp
-    cp .gitmodules ../submoduleVersionCheck_temp
-    cp -R .github ../submoduleVersionCheck_temp
-    cp -R .git ../submoduleVersionCheck_temp
-    cd ../submoduleVersionCheck_temp
+    path="$1"
+    rm -fr "${path}"
+    mkdir "${path}"
+    cp .gitmodules "${path}"
+    cp -R .github "${path}"
+    cp -R .git "${path}"
+}
+
+function remove_temp_submodule_folder() {
+    cd ..
+    rm -fr "${temp_dir}"
 }
 
 function get_submodule_version() {
@@ -18,9 +23,11 @@ function get_submodule_version() {
 
 function main() {
     # execute only if repo has submodules
-    if [ -e "/.gitmodules" ]
+    if [ -e ".gitmodules" ]
     then
-        create_temp_submodule_folder
+        temp_dir="submodule_version_check_temp"
+        create_temp_submodule_folder "${temp_dir}"
+        cd "${temp_dir}"
 
         # current local submodule version
         submodule_version_current=$(get_submodule_version)
@@ -36,10 +43,11 @@ function main() {
 
             if [ "${submodule_version_current}" != "${submodule_version_remote}" ]; then
                 printf "\nDetected local common-dev-assets git submodule commit ID is older than the one in primary branch. Run the following command to sync with primary branch: git submodule update --rebase"
+                remove_temp_submodule_folder
                 exit 1
             fi
         fi
-        rm -fr ../submoduleVersionCheck_temp
+        remove_temp_submodule_folder
     fi
 }
 
