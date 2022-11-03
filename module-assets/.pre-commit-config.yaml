@@ -2,9 +2,9 @@ default_stages: [commit]
 repos:
 - repo: local
   hooks:
-    - id: submodule-version-check
-      name: submodule-version-check
-      description: Check local commit ID of common-dev-assets submodule
+    - id: git-submodule-version-check
+      name: git-submodule-version-check
+      description: Hook that will fail if local common-dev-assets git submodule is older than the one currently on primary branch
       entry: ci/submoduleVersionCheck.sh
       language: script
       pass_filenames: false
