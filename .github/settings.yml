@@ -14,11 +14,11 @@ required_status_checks:
     - "CI_Pipeline"
 
 repository:
-# See https://terraform-ibm-modules.github.io/documentation/#/implementation-guidelines?id=module-names-and-descriptions
+  # See https://terraform-ibm-modules.github.io/documentation/#/implementation-guidelines?id=module-names-and-descriptions
 
-# By changing this field, you rename the repository.
-name: "common-dev-assets"
+  # By changing this field, you rename the repository.
+  name: "common-dev-assets"
 
-# The description is displayed under the repository name on the
-# organization page and in the 'About' section of the repository.
-description: "Provides common development and CI assets that support the modules in this GitHub organization"
+  # The description is displayed under the repository name on the
+  # organization page and in the 'About' section of the repository.
+  description: "Provides common development and CI assets that support the modules in this GitHub organization"
