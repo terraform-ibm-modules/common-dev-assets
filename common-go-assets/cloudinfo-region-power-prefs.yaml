@@ -1,7 +1,7 @@
 ---
 - name: syd04
   useForTest: true
-  testPriority: 1
+  testPriority: 9
 - name: syd05
   useForTest: true
   testPriority: 2
@@ -25,7 +25,7 @@
   testPriority: 8
 - name: tok04
   useForTest: true
-  testPriority: 9
+  testPriority: 1
 - name: wdc06
   useForTest: true
   testPriority: 10
