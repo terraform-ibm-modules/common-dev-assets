@@ -147,13 +147,10 @@ echo "COMPLETE"
 
  # renovate: datasource=github-tags depName=ibm/detect-secrets versioning="regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$"
 DETECT_SECRETS_VERSION=0.13.1+ibm.55.dss
-# '.dss' suffix required for renovate to query git tags, but needs to be removed to install with pip
-DETECT_SECRETS_VERSION="$(echo ${DETECT_SECRETS_VERSION} | rev | cut -c5- | rev)"
-
 PACKAGE=detect-secrets
 echo
 echo "-- Installing ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
-${PYTHON} -m pip install -q --upgrade "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}.dss#egg=detect-secrets"
+${PYTHON} -m pip install -q --upgrade "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets"
 echo "COMPLETE"
 
 #######################################
