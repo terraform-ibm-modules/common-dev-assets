@@ -1,5 +1,13 @@
 default_stages: [commit]
 repos:
+- repo: local
+  hooks:
+    - id: git-submodule-version-check
+      name: git-submodule-version-check
+      description: Hook that will fail if local common-dev-assets git submodule is older than the one currently on primary branch
+      entry: ci/submoduleVersionCheck.sh
+      language: script
+      pass_filenames: false
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.3.0
   hooks:
