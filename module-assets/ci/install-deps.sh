@@ -136,7 +136,7 @@ fi
  # renovate: datasource=github-tags depName=pre-commit/pre-commit
 PRE_COMMIT_VERSION=v2.20.0
 set +e
-INSTALLED_PRE_COMMIT_VERSION="$(pip show pre-commit | grep Version: | cut -d' ' -f2)"
+INSTALLED_PRE_COMMIT_VERSION="$(${PYTHON} -m pip show pre-commit | grep Version: | cut -d' ' -f2)"
 set -e
 if [[ "$PRE_COMMIT_VERSION" != "v$INSTALLED_PRE_COMMIT_VERSION" ]]; then
   PACKAGE=pre-commit
@@ -157,7 +157,7 @@ fi
  # renovate: datasource=github-tags depName=ibm/detect-secrets versioning="regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$"
 DETECT_SECRETS_VERSION=0.13.1+ibm.55.dss
 set +e
-INSTALLED_DECTECT_SECRETS="$(pip show detect-secrets | grep Version: | cut -d' ' -f2)"
+INSTALLED_DECTECT_SECRETS="$(${PYTHON} -m pip show detect-secrets | grep Version: | cut -d' ' -f2)"
 set -e
 if [[ "$DETECT_SECRETS_VERSION" != "$INSTALLED_DECTECT_SECRETS" ]]; then
   PACKAGE=detect-secrets
@@ -291,7 +291,7 @@ fi
  # renovate: datasource=github-releases depName=aquasecurity/tfsec
 TFSEC_VERSION=v1.28.1
 set +e
-INSTALLED_TFSEC_VERSION="$(tfsec --version | head -1 | cut -d' ' -f3)"
+INSTALLED_TFSEC_VERSION="$(tfsec --version)"
 set -e
 if [[ "$TFSEC_VERSION" != "$INSTALLED_TFSEC_VERSION" ]]; then
   BINARY=tfsec
@@ -430,7 +430,7 @@ fi
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
 KUBECTL_VERSION=v1.25.3
 set +e
-INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml 2> /dev/null | grep "gitVersion" | cut -d' ' -f4)"
+INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml --client | grep "gitVersion" | cut -d' ' -f4)"
 set -e
 if [[ "$KUBECTL_VERSION" != "$INSTALLED_KUBECTL_VERSION" ]]; then
   BINARY=kubectl
@@ -462,7 +462,7 @@ fi
 # OC cli version must be maintained manually, as there is no supported renovate datasource to find newer versions.
 OC_VERSION=4.9.18
 set +e
-INSTALLED_OC_VERSION="$(oc version 2> /dev/null | grep "Client Version:" | cut -d' ' -f3)"
+INSTALLED_OC_VERSION="$(oc version --client | grep "Client Version:" | cut -d' ' -f3)"
 set -e
 if [[ "$OC_VERSION" != "$INSTALLED_OC_VERSION" ]]; then
   BINARY=oc
