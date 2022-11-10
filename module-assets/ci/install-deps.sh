@@ -373,7 +373,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=hadolint/hadolint
-HADOLINT_VERSION=v2.11.0
+HADOLINT_VERSION=v2.12.0
 set +e
 INSTALLED_HADOLINT_VERSION="$(hadolint --version | head -1 | cut -d' ' -f4)"
 set -e
