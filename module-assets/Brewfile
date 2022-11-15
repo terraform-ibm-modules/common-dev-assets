@@ -1,4 +1,1 @@
-tap "homebrew/bundle"
-tap "homebrew/cask"
-tap "homebrew/core"
-brew "checkov"
+# Delete this file once the Brewfile symlink is remove from all repos

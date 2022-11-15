@@ -63,7 +63,6 @@ all: dependency-install-darwin-linux dependency-pre-commit
 
 dependency-install-darwin-linux:
 	./ci/install-deps.sh
-	brew bundle install
 
 dependency-pre-commit:
 	pre-commit install

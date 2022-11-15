@@ -23,7 +23,7 @@ function confirm() {
 
 function validate_prereqs(){
   echo "Validating pre reqs..."
-  REQS=("git" "brew" "python3" "go" "curl" "unzip" )
+  REQS=("git" "python3" "go" "curl" "unzip" )
 
   # Iterate the string array using for loop
   for val in "${REQS[@]}"; do
