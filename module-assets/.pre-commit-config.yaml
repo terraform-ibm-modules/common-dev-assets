@@ -57,11 +57,16 @@ repos:
     - id: terragrunt_validate
     - id: terraform_tfsec
       files: '\.tf'
-    - id: terraform_checkov
+# checkov (does not require checkov to be installed locally to run)
+- repo: https://github.com/bridgecrewio/checkov.git
+  rev: 2.2.63
+  hooks:
+    - id: checkov
       args:
-        - --args=--skip-path=.scv
-        - --args=--skip-path=Dockerfile
-        - --args=--skip-path=module-metadata.json
+        - --skip-path=.scv
+        - --skip-path=Dockerfile
+        - --skip-path=module-metadata.json
+        - --skip-framework=github_actions
 - repo: https://github.com/syntaqx/git-hooks
   rev: v0.0.17
   hooks:
