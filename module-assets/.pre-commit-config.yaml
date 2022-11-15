@@ -66,8 +66,7 @@ repos:
         - --skip-path=.scv
         - --skip-path=Dockerfile
         - --skip-path=module-metadata.json
-        - --skip-check=CKV_GHA*
-        - --skip-check=CKV2_GHA*
+        - --skip-framework=github_actions
 - repo: https://github.com/syntaqx/git-hooks
   rev: v0.0.17
   hooks:
