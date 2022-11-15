@@ -1,4 +1,1 @@
-tap "homebrew/bundle"
-tap "homebrew/cask"
-tap "homebrew/core"
-brew "checkov"
+# Delete this file once https://github.ibm.com/GoldenEye/issues/issues/3271 is complete
