@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-# For use within Tekton pipeline
-# shellcheck disable=SC1090
-source ~/.bashrc
-source ~/.profile
 
 if [[ "$PIPELINE_DEBUG" == 1 ]]; then
   trap env EXIT
