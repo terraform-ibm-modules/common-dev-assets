@@ -1,9 +1,14 @@
 #!/bin/bash
 
-set -o errexit
-set -o pipefail
-set -o nounset
-#set -o xtrace
+set -e
+
+# Place binaries in /usr/local/bin unless $CUSTOM_DIRECTORY defined
+if [[ -z "${CUSTOM_DIRECTORY}" ]]; then
+  DIRECTORY="/usr/local/bin"
+else
+  DIRECTORY="${CUSTOM_DIRECTORY}"
+  mkdir -p "${DIRECTORY}"
+fi
 
 # Determine OS type
 if [[ $OSTYPE == 'darwin'* ]]; then
@@ -60,23 +65,22 @@ function verify_alternative {
 
 }
 
-# Function to copy and replace binary in /usr/local/bin
+# Function to copy and replace binary in $DIRECTORY
 function copy_replace_binary {
 
   binary=$1
   tmp_dir=$2
-  dir=/usr/local/bin
 
-  echo "Placing ${binary} binary in ${dir} and making executable.."
+  echo "Placing ${binary} binary in ${DIRECTORY} and making executable.."
   arg=""
-  if ! [ -w "${dir}" ]; then
-    echo "No write permission to $dir. Attempting to run with sudo..."
+  if ! [ -w "${DIRECTORY}" ]; then
+    echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
     arg=sudo
   fi
   # Need to delete if exists already in case it is a symlink which cannot be overwritten using cp -r
-  ${arg} rm -f "${dir}/${binary}"
-  ${arg} cp -r "${tmp_dir}/${binary}" "${dir}"
-  ${arg} chmod +x "${dir}/${binary}"
+  ${arg} rm -f "${DIRECTORY}/${binary}"
+  ${arg} cp -r "${tmp_dir}/${binary}" "${DIRECTORY}"
+  ${arg} chmod +x "${DIRECTORY}/${binary}"
 
 }
 
