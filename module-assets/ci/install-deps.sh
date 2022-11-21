@@ -1,6 +1,7 @@
 #!/bin/bash
 
-set -e
+set -o errexit
+set -o pipefail
 
 # Place binaries in /usr/local/bin unless $CUSTOM_DIRECTORY defined
 if [[ -z "${CUSTOM_DIRECTORY}" ]]; then
@@ -27,8 +28,7 @@ function download {
   sumfile=$5
   tmp_dir=$6
 
-  echo
-  echo "-- Downloading ${binary} ${version}..."
+  echo "Downloading ${binary} ${version}..."
   curl --retry 3 -fLsS "${url}/${file}" --output "${tmp_dir}/${file}"
 
   if [ "${sumfile}" != "" ]; then
@@ -92,7 +92,7 @@ function clean {
   echo "Deleting tmp dir: ${tmp_dir}"
   rm -rf "${tmp_dir}"
   echo "COMPLETE"
-
+  echo
 }
 
 #######################################
@@ -139,11 +139,11 @@ fi
 
  # renovate: datasource=github-tags depName=pre-commit/pre-commit
 PRE_COMMIT_VERSION=v2.20.0
+PACKAGE=pre-commit
 set +e
 INSTALLED_PRE_COMMIT_VERSION="$(${PYTHON} -m pip show pre-commit | grep Version: | cut -d' ' -f2)"
 set -e
 if [[ "$PRE_COMMIT_VERSION" != "v$INSTALLED_PRE_COMMIT_VERSION" ]]; then
-  PACKAGE=pre-commit
 
   echo
   echo "-- Installing ${PACKAGE} ${PRE_COMMIT_VERSION}..."
@@ -151,7 +151,7 @@ if [[ "$PRE_COMMIT_VERSION" != "v$INSTALLED_PRE_COMMIT_VERSION" ]]; then
   ${PYTHON} -m pip install -q --upgrade ${PACKAGE}==${PRE_COMMIT_VERSION}
   echo "COMPLETE"
 else
- echo "Pre-commit ${PRE_COMMIT_VERSION} already installed skipping install"
+ echo "${PACKAGE} ${PRE_COMMIT_VERSION} already installed - skipping install"
 fi
 
 #######################################
@@ -160,11 +160,11 @@ fi
 
  # renovate: datasource=github-tags depName=ibm/detect-secrets versioning="regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$"
 DETECT_SECRETS_VERSION=0.13.1+ibm.55.dss
+PACKAGE=detect-secrets
 set +e
 INSTALLED_DECTECT_SECRETS="$(${PYTHON} -m pip show detect-secrets | grep Version: | cut -d' ' -f2)"
 set -e
 if [[ "$DETECT_SECRETS_VERSION" != "$INSTALLED_DECTECT_SECRETS" ]]; then
-  PACKAGE=detect-secrets
 
   echo
   echo "-- Installing ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
@@ -172,7 +172,7 @@ if [[ "$DETECT_SECRETS_VERSION" != "$INSTALLED_DECTECT_SECRETS" ]]; then
   ${PYTHON} -m pip install -q --upgrade "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets"
   echo "COMPLETE"
 else
- echo "Detect secrets ${DETECT_SECRETS_VERSION} already installed skipping install"
+ echo "${PACKAGE} ${DETECT_SECRETS_VERSION} already installed - skipping install"
 fi
 
 #######################################
@@ -181,13 +181,13 @@ fi
 
 # Locking into v1.2.9 until https://github.ibm.com/GoldenEye/issues/issues/2858 is complete
 TERRAFORM_VERSION=v1.2.9
+BINARY=terraform
 set +e
 INSTALLED_TERRAFORM_VERSION="$(terraform --version | head -1 | cut -d' ' -f2)"
 set -e
 if [[ "$TERRAFORM_VERSION" != "$INSTALLED_TERRAFORM_VERSION" ]]; then
   # 'v' prefix required for renovate to query github.com for new release, but needs to be removed to pull from hashicorp.com
   TERRAFORM_VERSION="${TERRAFORM_VERSION:1}"
-  BINARY=terraform
   FILE_NAME="terraform_${TERRAFORM_VERSION}_${OS}_amd64.zip"
   URL="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}"
   SUMFILE="terraform_${TERRAFORM_VERSION}_SHA256SUMS"
@@ -202,7 +202,7 @@ if [[ "$TERRAFORM_VERSION" != "$INSTALLED_TERRAFORM_VERSION" ]]; then
   copy_replace_binary ${BINARY} "${TMP_DIR}"
   clean "${TMP_DIR}"
 else
-  echo "Terraform ${TERRAFORM_VERSION} already installed skipping install"
+  echo "${BINARY} ${TERRAFORM_VERSION} already installed - skipping install"
 fi
 
 #######################################
@@ -211,11 +211,11 @@ fi
 
  # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
 TERRAGRUNT_VERSION=v0.40.2
+BINARY=terragrunt
 set +e
 INSTALLED_TERRAGRUNT_VERSION="$(terragrunt --version | head -1 | cut -d' ' -f3)"
 set -e
 if [[ "$TERRAGRUNT_VERSION" != "$INSTALLED_TERRAGRUNT_VERSION" ]]; then
-  BINARY=terragrunt
   FILE_NAME="terragrunt_${OS}_amd64"
   URL="https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}"
   SUMFILE=SHA256SUMS
@@ -231,7 +231,7 @@ if [[ "$TERRAGRUNT_VERSION" != "$INSTALLED_TERRAGRUNT_VERSION" ]]; then
   copy_replace_binary ${BINARY} "${TMP_DIR}"
   clean "${TMP_DIR}"
 else
-  echo "Terragrunt ${TERRAGRUNT_VERSION} already installed skipping install"
+  echo "${BINARY} ${TERRAGRUNT_VERSION} already installed - skipping install"
 fi
 #######################################
 # terraform-docs
@@ -239,11 +239,11 @@ fi
 
  # renovate: datasource=github-releases depName=terraform-docs/terraform-docs
 TERRAFORM_DOCS_VERSION=v0.16.0
+BINARY=terraform-docs
 set +e
 INSTALLED_TERRADOCS_VERSION="$(terraform-docs --version | head -1 | cut -d' ' -f3)"
 set -e
 if [[ "$TERRAFORM_DOCS_VERSION" != "$INSTALLED_TERRADOCS_VERSION" ]]; then
-  BINARY=terraform-docs
   FILE_NAME="terraform-docs-${TERRAFORM_DOCS_VERSION}-${OS}-amd64.tar.gz"
   URL="https://terraform-docs.io/dl/${TERRAFORM_DOCS_VERSION}"
   SUMFILE="terraform-docs-${TERRAFORM_DOCS_VERSION}.sha256sum"
@@ -258,19 +258,19 @@ if [[ "$TERRAFORM_DOCS_VERSION" != "$INSTALLED_TERRADOCS_VERSION" ]]; then
   copy_replace_binary ${BINARY} "${TMP_DIR}"
   clean "${TMP_DIR}"
 else
-  echo "Terradocs ${TERRAFORM_DOCS_VERSION} already installed skipping install"
+  echo "${BINARY} ${TERRAFORM_DOCS_VERSION} already installed - skipping install"
 fi
 
 #######################################
 # tflint
 #######################################
  # renovate: datasource=github-releases depName=terraform-linters/tflint
-TFLINT_VERSION=v0.43.0
+TFLINT_VERSION=v0.42.2
+BINARY=tflint
 set +e
 INSTALLED_TFLINT_VERSION="$(tflint --version | grep "TFLint version " |cut -d' ' -f3)"
 set -e
 if [[ "$TFLINT_VERSION" != "v$INSTALLED_TFLINT_VERSION" ]]; then
-  BINARY=tflint
   FILE_NAME="tflint_${OS}_amd64.zip"
   URL="https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}"
   SUMFILE="checksums.txt"
@@ -285,7 +285,7 @@ if [[ "$TFLINT_VERSION" != "v$INSTALLED_TFLINT_VERSION" ]]; then
   copy_replace_binary ${BINARY} "${TMP_DIR}"
   clean "${TMP_DIR}"
 else
-  echo "Tflint ${TFLINT_VERSION} already installed skipping install"
+  echo "${BINARY} ${TFLINT_VERSION} already installed - skipping install"
 fi
 
 #######################################
@@ -294,11 +294,11 @@ fi
 
  # renovate: datasource=github-releases depName=aquasecurity/tfsec
 TFSEC_VERSION=v1.28.1
+BINARY=tfsec
 set +e
 INSTALLED_TFSEC_VERSION="$(tfsec --version)"
 set -e
 if [[ "$TFSEC_VERSION" != "$INSTALLED_TFSEC_VERSION" ]]; then
-  BINARY=tfsec
   FILE_NAME="tfsec-${OS}-amd64"
   URL="https://github.com/aquasecurity/tfsec/releases/download/${TFSEC_VERSION}"
   SUMFILE="tfsec_checksums.txt"
@@ -314,7 +314,7 @@ if [[ "$TFSEC_VERSION" != "$INSTALLED_TFSEC_VERSION" ]]; then
   copy_replace_binary ${BINARY} "${TMP_DIR}"
   clean "${TMP_DIR}"
 else
-  echo "Tfsec ${TFSEC_VERSION} already installed skipping install"
+  echo "${BINARY} ${TFSEC_VERSION} already installed - skipping install"
 fi
 
 #######################################
@@ -323,11 +323,11 @@ fi
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
 GOLANGCI_LINT_VERSION=v1.50.1
+BINARY=golangci-lint
 set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"
 set -e
 if [[ "$GOLANGCI_LINT_VERSION" != "v$INSTALLED_GOLANGCI_LINT_VERSION" ]]; then
-  BINARY=golangci-lint
   FILE_NAME="golangci-lint-${GOLANGCI_LINT_VERSION//v/}-${OS}-amd64.tar.gz"
   URL="https://github.com/golangci/golangci-lint/releases/download/${GOLANGCI_LINT_VERSION}"
   SUMFILE="${BINARY}-${GOLANGCI_LINT_VERSION//v/}-checksums.txt"
@@ -342,7 +342,7 @@ if [[ "$GOLANGCI_LINT_VERSION" != "v$INSTALLED_GOLANGCI_LINT_VERSION" ]]; then
   copy_replace_binary ${BINARY} "${TMP_DIR}/golangci-lint-${GOLANGCI_LINT_VERSION//v/}-${OS}-amd64"
   clean "${TMP_DIR}"
 else
-  echo "golangci-lint ${GOLANGCI_LINT_VERSION} already installed skipping install"
+  echo "${BINARY} ${GOLANGCI_LINT_VERSION} already installed - skipping install"
 fi
 
 #######################################
@@ -351,11 +351,11 @@ fi
 
  # renovate: datasource=github-releases depName=koalaman/shellcheck
 SHELLCHECK_VERSION=v0.8.0
+BINARY=shellcheck
 set +e
 INSTALLED_SHELLCHECK_VERSION="$(shellcheck --version | grep "version:" | cut -d' ' -f2)"
 set -e
 if [[ "$SHELLCHECK_VERSION" != "v$INSTALLED_SHELLCHECK_VERSION" ]]; then
-  BINARY=shellcheck
   FILE_NAME="shellcheck-${SHELLCHECK_VERSION}.${OS}.x86_64.tar.xz"
   URL="https://github.com/koalaman/shellcheck/releases/download/${SHELLCHECK_VERSION}"
   SUMFILE=""
@@ -369,7 +369,7 @@ if [[ "$SHELLCHECK_VERSION" != "v$INSTALLED_SHELLCHECK_VERSION" ]]; then
   copy_replace_binary ${BINARY} "${TMP_DIR}/${BINARY}-${SHELLCHECK_VERSION}"
   clean "${TMP_DIR}"
 else
-  echo "Shellcheck ${SHELLCHECK_VERSION} already installed skipping install"
+  echo "${BINARY} ${SHELLCHECK_VERSION} already installed - skipping install"
 fi
 
 #######################################
@@ -378,11 +378,11 @@ fi
 
  # renovate: datasource=github-releases depName=hadolint/hadolint
 HADOLINT_VERSION=v2.12.0
+BINARY=hadolint
 set +e
 INSTALLED_HADOLINT_VERSION="$(hadolint --version | head -1 | cut -d' ' -f4)"
 set -e
 if [[ "$HADOLINT_VERSION" != "v$INSTALLED_HADOLINT_VERSION" ]]; then
-  BINARY=hadolint
   FILE_NAME="hadolint-${OS}-x86_64"
   URL="https://github.com/hadolint/hadolint/releases/download/${HADOLINT_VERSION}"
   SUMFILE=""
@@ -397,7 +397,7 @@ if [[ "$HADOLINT_VERSION" != "v$INSTALLED_HADOLINT_VERSION" ]]; then
   copy_replace_binary ${BINARY} "${TMP_DIR}"
   clean "${TMP_DIR}"
 else
-  echo "Hadolint ${HADOLINT_VERSION} already installed skipping install"
+  echo "${BINARY} ${HADOLINT_VERSION} already installed - skipping install"
 fi
 
 #######################################
@@ -406,11 +406,11 @@ fi
 
  # renovate: datasource=github-releases depName=helm/helm
 HELM_VERSION=v3.10.2
+BINARY=helm
 set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"
 set -e
 if [[ "$HELM_VERSION" != "$INSTALLED_HELM_VERSION" ]]; then
-  BINARY=helm
   FILE_NAME="helm-${HELM_VERSION}-${OS}-amd64.tar.gz"
   URL="https://get.helm.sh"
   SUMFILE="helm-${HELM_VERSION}-${OS}-amd64.tar.gz.sha256"
@@ -425,7 +425,7 @@ if [[ "$HELM_VERSION" != "$INSTALLED_HELM_VERSION" ]]; then
   copy_replace_binary ${BINARY} "${TMP_DIR}/${OS}-amd64"
   clean "${TMP_DIR}"
 else
-  echo "Helm ${HELM_VERSION} already installed skipping install"
+  echo "${BINARY} ${HELM_VERSION} already installed - skipping install"
 fi
 #######################################
 # kubectl
@@ -433,11 +433,11 @@ fi
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
 KUBECTL_VERSION=v1.25.4
+BINARY=kubectl
 set +e
 INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml --client | grep "gitVersion" | cut -d' ' -f4)"
 set -e
 if [[ "$KUBECTL_VERSION" != "$INSTALLED_KUBECTL_VERSION" ]]; then
-  BINARY=kubectl
   FILE_NAME="kubectl"
   URL="https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/${OS}/amd64"
   SUMFILE="kubectl.sha256"
@@ -451,7 +451,7 @@ if [[ "$KUBECTL_VERSION" != "$INSTALLED_KUBECTL_VERSION" ]]; then
   copy_replace_binary ${BINARY} "${TMP_DIR}"
   clean "${TMP_DIR}"
 else
-  echo "Kubectl ${KUBECTL_VERSION} already installed skipping install"
+  echo "${BINARY} ${KUBECTL_VERSION} already installed - skipping install"
 fi
 
 #######################################
@@ -464,12 +464,12 @@ if [[ $OSTYPE == 'darwin'* ]]; then
 fi
 
 # OC cli version must be maintained manually, as there is no supported renovate datasource to find newer versions.
-OC_VERSION=4.9.18
+OC_VERSION=4.11.9
+BINARY=oc
 set +e
 INSTALLED_OC_VERSION="$(oc version --client | grep "Client Version:" | cut -d' ' -f3)"
 set -e
 if [[ "$OC_VERSION" != "$INSTALLED_OC_VERSION" ]]; then
-  BINARY=oc
   FILE_NAME="openshift-client-${OC_OS}-${OC_VERSION}.tar.gz"
   URL="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/${OC_VERSION}"
   SUMFILE="sha256sum.txt"
@@ -484,7 +484,7 @@ if [[ "$OC_VERSION" != "$INSTALLED_OC_VERSION" ]]; then
   copy_replace_binary ${BINARY} "${TMP_DIR}"
   clean "${TMP_DIR}"
 else
-  echo "oc cli ${OC_VERSION} already installed skipping install"
+  echo "${BINARY} cli ${OC_VERSION} already installed - skipping install"
 fi
 #######################################
 # terraform config inspect
@@ -508,3 +508,36 @@ verify ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
 unzip "${TMP_DIR}/${FILE_NAME}" -d "${TMP_DIR}" > /dev/null
 copy_replace_binary ${BINARY} "${TMP_DIR}"
 clean "${TMP_DIR}"
+
+#######################################
+# jq
+#######################################
+
+JQ_OS=${OS}
+if [[ $OSTYPE == 'darwin'* ]]; then
+  JQ_OS="osx-amd"
+fi
+
+ # renovate: datasource=github-releases depName=stedolan/jq
+JQ_VERSION=1.6
+BINARY=jq
+set +e
+INSTALLED_JQ_VERSION="$(jq --version | cut -c4-)"
+set -e
+if [[ "$JQ_VERSION" != "$INSTALLED_JQ_VERSION" ]]; then
+  FILE_NAME="jq-${JQ_OS}64"
+  URL="https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}"
+  SUMFILE=""
+  TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
+
+  echo
+  echo "-- Installing ${BINARY} ${JQ_VERSION}..."
+
+  download ${BINARY} ${JQ_VERSION} ${URL} ${FILE_NAME} "${SUMFILE}" "${TMP_DIR}"
+  # rename binary to jq
+  mv "${TMP_DIR}/${FILE_NAME}" "${TMP_DIR}/${BINARY}"
+  copy_replace_binary ${BINARY} "${TMP_DIR}"
+  clean "${TMP_DIR}"
+else
+  echo "${BINARY} ${JQ_VERSION} already installed - skipping install"
+fi
