@@ -77,6 +77,7 @@ docker-pull:
 
 docker-run:
 	${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
+	        --platform linux/amd64 \
 		-v ~/.ssh:/root/.ssh \
 		-v ~/.netrc:/root/.netrc \
 		-v ~/.gitconfig:/root/.gitconfig \
