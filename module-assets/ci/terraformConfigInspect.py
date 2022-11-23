@@ -2,6 +2,7 @@
 
 import glob
 import os
+import shutil
 import sys
 from pathlib import Path
 from subprocess import PIPE, Popen
@@ -38,8 +39,18 @@ def run_metadata_generator(file_path, terraform_provider):
         os.system("terraform-config-inspect --json > %s" % (file_path))
 
 
+def remove_tf_IBM_provider():
+    dirpath = Path(".terraform/providers/registry.terraform.io/ibm-cloud")
+    if dirpath.exists() and dirpath.is_dir():
+        shutil.rmtree(dirpath)
+
+
 def main():
     if glob.glob("*.tf"):
+
+        # remove IBM provider. Must be removed so we make sure that local terraform cache has the latest version only
+        remove_tf_IBM_provider()
+
         # always run terraform init
         error_code = terraform_init()
 
