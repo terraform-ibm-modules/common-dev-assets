@@ -59,6 +59,8 @@ repos:
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
+  # Need to use custom renovate rule in renovate.json so renovate only bumps the checkov version based on GIT releases (See https://github.ibm.com/GoldenEye/issues/issues/3348)
+  # renovate: datasource=github-releases depName=bridgecrewio/checkov
   rev: 2.2.99
   hooks:
     - id: checkov
