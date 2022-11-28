@@ -32,7 +32,7 @@ repos:
       stages: [commit-msg]
       additional_dependencies: ['@commitlint/config-angular']
 - repo: https://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.76.0
+  rev: v1.77.0
   hooks:
     - id: terraform_fmt
     - id: terraform_validate
@@ -59,7 +59,7 @@ repos:
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 2.2.95
+  rev: 2.2.99
   hooks:
     - id: checkov
       args:
