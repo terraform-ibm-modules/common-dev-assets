@@ -58,8 +58,7 @@
       "rangeStrategy": "bump",
       "group": true,
       "groupName": "required_provider",
-      "schedule": ["every 4 months on the 1st through 5th day of the month"],
-      "prPriority": 9
+      "prPriority": 11
     },
     {
       "description": "Prioritise terraform module updates",
