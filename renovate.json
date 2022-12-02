@@ -15,11 +15,18 @@
       "fileMatch": ["^.github/workflows/.*.yml$"],
       "matchStrings": ["\\s+image: (?<depName>.*?)(?::(?<currentValue>.*?))?@(?<currentDigest>sha256:[a-f0-9]+)\\s"],
       "datasourceTemplate": "docker"
+    },
+    {
+      "fileMatch": ["^module-assets/.pre-commit-config.yaml$"],
+      "matchStrings": [
+        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?rev: (?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
   ],
   "packageRules": [
     {
-      "description": "Ignore updates to checkov until https://github.ibm.com/GoldenEye/issues/issues/3348 is fixed",
+      "description": "Ignore updates to checkov pre-commit and use above custom rule (workaround for https://github.ibm.com/GoldenEye/issues/issues/3348)",
       "matchPackageNames": ["bridgecrewio/checkov"],
       "enabled": false
     }

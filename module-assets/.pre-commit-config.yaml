@@ -3,7 +3,7 @@ repos:
 - repo: local
   hooks:
     - id: git-submodule-version-check
-      name: git-submodule-version-check
+      name: Check git submodule up to date
       description: Hook that will fail if local common-dev-assets git submodule is older than the one currently on primary branch
       entry: ci/submoduleVersionCheck.sh
       language: script
@@ -59,6 +59,8 @@ repos:
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
+  # Need to use custom renovate rule in renovate.json so renovate only bumps the checkov version based on GIT releases (See https://github.ibm.com/GoldenEye/issues/issues/3348)
+  # renovate: datasource=github-releases depName=bridgecrewio/checkov
   rev: 2.2.99
   hooks:
     - id: checkov
