@@ -52,13 +52,14 @@
       "enabled": false
     },
     {
-      "description": "Only bump the terraform provider required versions every 4 months",
+      "description": "Disable terraform provider updates by default. To enable, set enable to true below and renovate will priortise bumping this. We only need to bump this version to consume required bug fixes and/or new provider features.",
+      "enabled": false
       "matchManagers": ["terraform"],
       "matchDepTypes": ["required_provider"],
       "rangeStrategy": "bump",
       "group": true,
       "groupName": "required_provider",
-      "prPriority": 11
+      "prPriority": 100
     },
     {
       "description": "Prioritise terraform module updates",
