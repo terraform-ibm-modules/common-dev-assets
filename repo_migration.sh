@@ -79,7 +79,7 @@ function add_git_submodule() {
 # Create Symbolic links
 function create_symbolic_links() {
     echo "Creating symbolic links"
-    for file in ".pre-commit-config.yaml" "Makefile" "ci" "Brewfile"; do
+    for file in ".pre-commit-config.yaml" "Makefile" "ci"; do
       if [ -f "${file}" ]
       then
         if [[ "yes" == $(confirm "Replace ${file} [y/N]? (Required for migration)") ]]
@@ -95,8 +95,6 @@ function create_symbolic_links() {
     git add ci
     ln -s common-dev-assets/module-assets/Makefile Makefile
     git add Makefile
-    ln -s common-dev-assets/module-assets/Brewfile Brewfile
-    git add Brewfile
 
 }
 
@@ -151,7 +149,6 @@ then
     rm .github/workflows/release.yml
     rmdir .github/workflows > /dev/null 2>&1
     rm .github/settings.yml
-    rm Brewfile.lock.json
     rmdir .github > /dev/null 2>&1
     git rm -f  common-dev-assets
     find . -name .gitmodules -maxdepth 1 -type f -empty -print -delete
