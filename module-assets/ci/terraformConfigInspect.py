@@ -8,13 +8,6 @@ from pathlib import Path
 from subprocess import PIPE, Popen
 
 
-def terraform_init():
-    tf_init_command = "terraform init"
-    proc = Popen(tf_init_command, stdout=PIPE, stderr=PIPE, shell=True)
-    proc.communicate()
-    return proc.returncode
-
-
 def terraform_init_upgrade():
     tf_init_upgrade_command = "terraform init --upgrade"
     proc = Popen(tf_init_upgrade_command, stdout=PIPE, stderr=PIPE, shell=True)
@@ -51,12 +44,8 @@ def main():
         # remove IBM provider. Must be removed so we make sure that local terraform cache has the latest version only
         remove_tf_IBM_provider()
 
-        # always run terraform init
-        error_code = terraform_init()
-
-        # if error then try terraform init upgrade
-        if error_code != 0:
-            terraform_init_upgrade()
+        # always run terraform init upgrade
+        terraform_init_upgrade()
 
         # get IBM terraform provider
         terraform_provider = get_terraform_provider()
