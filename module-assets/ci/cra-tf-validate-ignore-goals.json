@@ -83,6 +83,12 @@
             "description:": "Check whether OpenShift version is up-to-date",
             "ignore_reason": "CRA bug. Tracked in https://github.ibm.com/oneibmcloud/CD-CRA/issues/1645",
             "is_valid": false
+        },
+        {
+            "scc_goal_id": "3000802",
+            "description:": "Check whether Kubernetes Service is accessible only by using private endpoints",
+            "ignore_reason": "CRA bug. Tracked in https://github.ibm.com/oneibmcloud/CD-CRA/issues/1656",
+            "is_valid": false
         }
     ]
 }
