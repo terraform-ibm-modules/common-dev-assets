@@ -432,7 +432,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.25.4
+KUBECTL_VERSION=v1.25.5
 BINARY=kubectl
 set +e
 INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml --client | grep "gitVersion" | cut -d' ' -f4)"
