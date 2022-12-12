@@ -1,8 +1,11 @@
-# BYOK for backups is available only in us-south and eu-de.
+# BYOK for backups is available only in US regions us-south and us-east, and eu-de.
 ---
 - name: eu-de
   useForTest: true
   testPriority: 1
+- name: us-east
+  useForTest: true
+  testPriority: 2
 - name: us-south
   useForTest: true
   testPriority: 3
