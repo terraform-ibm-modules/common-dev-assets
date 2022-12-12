@@ -1,11 +1,10 @@
 # BYOK for backups is available only in US regions us-south and us-east, and eu-de.
+# However, to ensure that backups are available if a region failure occurs, you must use a key from us-south or eu-de.
+# Doc: https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect&interface=ui#key-byok
 ---
 - name: eu-de
   useForTest: true
   testPriority: 1
-- name: us-east
-  useForTest: true
-  testPriority: 2
 - name: us-south
   useForTest: true
-  testPriority: 3
+  testPriority: 2
