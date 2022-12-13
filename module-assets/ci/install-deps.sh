@@ -350,7 +350,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=koalaman/shellcheck
-SHELLCHECK_VERSION=v0.8.0
+SHELLCHECK_VERSION=v0.9.0
 BINARY=shellcheck
 set +e
 INSTALLED_SHELLCHECK_VERSION="$(shellcheck --version | grep "version:" | cut -d' ' -f2)"
