@@ -1,4 +1,5 @@
 # Supported ICD regions
+# List got from https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/database#location
 ---
 - name: eu-de
   useForTest: true
