@@ -15,23 +15,22 @@ content: |-
     {{- if $is_internal }}
     <!-- UPDATE BADGES:
     1. Make sure that the badge link for the current status of the module is correct. For the status options, see https://github.ibm.com/GoldenEye/documentation/blob/master/status.md.
-    2. Update the "Build Status" badge to point to the travis pipeline for the module. Replace "module-template" in two places.
-    3. Update the "latest release" badge to point to the new module. Replace "module-template" in two places.
+    2. Update the "latest release" badge to point to the new module. Replace "module-template" in two places.
     -->
 
     [![Incubating (Not yet consumable)](https://img.shields.io/badge/status-Incubating%20(Not%20yet%20consumable)-red)](https://github.ibm.com/GoldenEye/documentation/blob/master/status.md)
-    [![Build status](https://travis.ibm.com/GoldenEye/module-template.svg?token=3Ry6sEDNvWajQPuZHgTZ&branch=master)](https://travis.ibm.com/GoldenEye/module-template)
-    [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+    [![CI](https://img.shields.io/badge/CI-Toolchain%20Tekton%20Pipeline-3662FF?logo=ibm)](https://cloud.ibm.com/devops/toolchains/c3916535-165a-4275-9b1f-c58575839951?env_id=ibm:yp:us-south)
     [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
     [![latest release](https://shields-server.m03l6u0cqkx.eu-de.codeengine.appdomain.cloud/github/v/release/GoldenEye/module-template?logo=GitHub)](https://github.ibm.com/GoldenEye/module-template/releases/latest)
     {{- else if $is_external }}
     <!-- UPDATE BADGE: Update the link for the following badge-->
     [![Incubating (Not yet consumable)](https://img.shields.io/badge/status-Incubating%20(Not%20yet%20consumable)-red)](https://terraform-ibm-modules.github.io/documentation/#/badge-status)
     [![Build status](https://github.com/terraform-ibm-modules/terraform-ibm-module-template/actions/workflows/ci.yml/badge.svg)](https://github.com/terraform-ibm-modules/terraform-ibm-module-template/actions/workflows/ci.yml)
-    [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
     [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
     [![latest release](https://img.shields.io/github/v/release/terraform-ibm-modules/terraform-ibm-module-template?logo=GitHub&sort=semver)](https://github.com/terraform-ibm-modules/terraform-ibm-module-template/releases/latest)
     {{- end }}
+    [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
+    [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
     <!-- Remove the content in this H2 heading after completing the steps -->
 
@@ -78,9 +77,9 @@ content: |-
     Locally clone the new repository and set up your development environment by completing the tasks in [Local development setup]({{ if $is_internal }}https://github.ibm.com/GoldenEye/documentation/blob/master/local-dev-setup.md{{- else if $is_external }}https://terraform-ibm-modules.github.io/documentation/#/local-dev-setup{{ end }}) in the project documentation.
 
     {{- if $is_internal }}
-    ### Set up Travis
+    ### Set up PR / CI pipeline
 
-    Post a request in the [#project-goldeneye](https://ibm-cloudplatform.slack.com/archives/C02SDGCJAB1) Slack channel to have your repo added to Travis. For more information, see [Setting up Travis for a new repo](https://github.ibm.com/GoldenEye/documentation/blob/master/travis-setup.md) in the GoldenEye docs.
+    Follow the steps in [Onboarding a new Terraform module repo](https://github.ibm.com/GoldenEye/documentation/blob/master/ci-pipeline-setup.md#onboarding-a-new-terraform-module-repo) to set up the PR / CI pipeline for the repo.
     {{- end }}
 
     ### Update the repo name and description in source control
@@ -122,7 +121,6 @@ content: |-
     {{- if $is_internal }}
     1.  Add your new module to the [module list](https://github.ibm.com/GoldenEye/documentation/blob/master/modules-list.md).
     1.  Post a request in the [#project-goldeneye](https://ibm-cloudplatform.slack.com/archives/C02SDGCJAB1) Slack channel to have your module added to the continuous testing pipeline. For more information about the steps, see [Adding a new module to Goldeneye Continuous Testing pipeline](https://github.ibm.com/GoldenEye/operations/blob/master/continuous-testing/README.md).
-    1.  Post a request in the [#project-goldeneye](https://ibm-cloudplatform.slack.com/archives/C02SDGCJAB1) Slack channel to have your module published to the IBM Cloud catalog. For more information about the steps, see [Add a module to the IBM Cloud catalog](https://github.ibm.com/GoldenEye/documentation/blob/master/catalog.md).
     {{- end }}
 
     <!-- Remove the content in this previous H2 heading -->
