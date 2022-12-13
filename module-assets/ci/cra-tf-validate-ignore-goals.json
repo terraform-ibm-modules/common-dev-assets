@@ -46,7 +46,13 @@
             "scc_goal_id": "3000902",
             "description:": "Check whether OpenShift clusters are accessible only by using private endpoints",
             "ignore_reason": "This is a valid issue - tracking in https://github.ibm.com/GoldenEye/issues/issues/174",
-            "is_valid": false
+            "is_valid": true
+        },
+        {
+            "scc_goal_id": "3000802",
+            "description:": "Check whether Kubernetes Service is accessible only by using private endpoints",
+            "ignore_reason": "This is a valid issue (same as 3000902) - tracking in https://github.ibm.com/GoldenEye/issues/issues/174",
+            "is_valid": true
         },
         {
             "scc_goal_id": "3000805",
@@ -82,12 +88,6 @@
             "scc_goal_id": "3000907",
             "description:": "Check whether OpenShift version is up-to-date",
             "ignore_reason": "CRA bug. Tracked in https://github.ibm.com/oneibmcloud/CD-CRA/issues/1645",
-            "is_valid": false
-        },
-        {
-            "scc_goal_id": "3000802",
-            "description:": "Check whether Kubernetes Service is accessible only by using private endpoints",
-            "ignore_reason": "CRA bug. Tracked in https://github.ibm.com/oneibmcloud/CD-CRA/issues/1656",
             "is_valid": false
         }
     ]
