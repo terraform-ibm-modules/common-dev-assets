@@ -83,12 +83,6 @@
             "description:": "Check whether Identity and Access Management (IAM) is enabled with audit logging",
             "ignore_reason": "Tracking in https://github.ibm.com/GoldenEye/issues/issues/2944",
             "is_valid": true
-        },
-        {
-            "scc_goal_id": "3000907",
-            "description:": "Check whether OpenShift version is up-to-date",
-            "ignore_reason": "CRA bug. Tracked in https://github.ibm.com/oneibmcloud/CD-CRA/issues/1645",
-            "is_valid": false
         }
     ]
 }
