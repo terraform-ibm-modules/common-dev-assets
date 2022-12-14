@@ -95,9 +95,9 @@ REPO_NAME="${REPO_NAME//.git/}"
 
 # Loop through all args
 for arg in "$@"; do
-  if [ ${arg} = --destroy_on_failure ]; then
+  if [ "${arg}" = --destroy_on_failure ]; then
     DESTROY_ON_FAILURE=true
-  elif [ ${arg} = --use_publish_apikey_override ]; then
+  elif [ "${arg}" = --use_publish_apikey_override ]; then
     set +u
     if [ -z "${CATALOG_PUBLISH_APIKEY}" ]; then
       echo "CATALOG_PUBLISH_APIKEY environment variable must be set when using --use_publish_apikey_override flag"
@@ -106,7 +106,7 @@ for arg in "$@"; do
       PUBLISH_APIKEY_OVERRIDE="${CATALOG_PUBLISH_APIKEY}"
     fi
     set -u
-  elif [ ${arg} = --use_valadation_apikey_override ]; then
+  elif [ "${arg}" = --use_valadation_apikey_override ]; then
     set +u
     if [ -z "${CATALOG_VALIDATION_APIKEY}" ]; then
       echo "CATALOG_VALIDATION_APIKEY environment variable must be set when using --use_valadation_apikey_override flag"
@@ -131,7 +131,7 @@ for arg in "$@"; do
       found_match=true
     fi
     if [ ${found_match} = false ]; then
-      if [ ${arg} != --help ]; then
+      if [ "${arg}" != --help ]; then
         echo "Unknown command line argument:  ${arg}"
       fi
       echo "${USAGE}"
