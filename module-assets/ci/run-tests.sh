@@ -91,7 +91,24 @@ if [ ${IS_PR} == true ]; then
     if test -f "${pr_test_file}"; then
         test_arg=${pr_test_file}
     fi
-    go test "${test_arg}" -count=1 -v -timeout 300m
+    test_cmd="go test ${test_arg} -count=1 -v -timeout 300m"
+    # If Ingestion key and host url is present, only then logdna-agent will be in a working state.
+    if [[ "$MZ_INGESTION_KEY" && "$MZ_HOST" ]] ; then
+      # Assign location to be observed by logdna-agent
+      if [ -z "$MZ_LOG_DIRS" ]; then
+        export MZ_LOG_DIRS="/tmp"
+      fi
+      # Assign tags - This has to be modified to add values from different pipelines
+      if [ -z "$MZ_TAGS" ]; then
+        export MZ_TAGS=$TARGET_BRANCH
+      fi
+      systemctl start logdna-agent
+      $test_cmd | tee "$MZ_LOG_DIRS"/test.log
+      systemctl stop logdna-agent
+	    rm -rf "$MZ_LOG_DIRS"/test.log
+    else
+      $test_cmd
+    fi
     cd ..
   else
     echo "No file changes detected to trigger tests"
