@@ -8,9 +8,10 @@
 #
 
 set -e
-# These two variables are created for logdna-agent
-PR_NAME="" # TRAVIS_PULL_REQUEST: false if no PR ;if created PR this gives branch name like TRAVIS_PULL_REQUEST_BRANCH: temp
-REPO_NAME="" # TRAVIS_REPO_SLUG: PRATEEK-SHARMA13/Test-app
+
+# To provide tags for logdna-agent
+PR_NUM=""
+REPO_NAME="" 
 
 # Determine if PR
 IS_PR=false
@@ -19,7 +20,7 @@ if [ "${GITHUB_ACTIONS}" == "true" ]; then
   if [ -n "${GITHUB_HEAD_REF}" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/${GITHUB_BASE_REF}"
-    PR_NAME="${GITHUB_REF_NAME}"
+    PR_NUM="${GITHUB_REF}"
   fi
   REPO_NAME="${GITHUB_REPOSITORY}"
 elif [ "${TRAVIS}" == "true" ]; then
@@ -27,16 +28,16 @@ elif [ "${TRAVIS}" == "true" ]; then
   if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
     IS_PR=true
     TARGET_BRANCH="${TRAVIS_BRANCH}"
-    PR_NAME="${TRAVIS_PULL_REQUEST}"
+    PR_NUM="${TRAVIS_PULL_REQUEST}"
   fi
   REPO_NAME="${TRAVIS_REPO_SLUG}"
 elif [ -n "${PIPELINE_RUN_ID}" ]; then
   if [ "$(get_env pipeline_namespace)" == "pr" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/$(get_env base-branch)"
-    PR_NAME="YETTOBEADDED" # to be modified: Prateek - for tekton, need to find this value.
+    PR_NUM="basename $(get_env pr-url)"
   fi
-  REPO_NAME="$(load_repo app-repo path)"
+  REPO_NAME="$(load_repo app-repo name)"
 else
   echo "Could not determine CI runtime environment. Script only support tekton, travis or github actions."
   exit 1
@@ -102,13 +103,15 @@ if [ ${IS_PR} == true ]; then
     fi
     test_cmd="go test ${test_arg} -count=1 -v -timeout 300m"
     # If Ingestion key and host url is present, only then logdna-agent will be in a working state.
-    if [[ "$MZ_INGESTION_KEY" && "$MZ_HOST" ]] ; then
+    # && "$MZ_HOST" # will check and add back as condition later post travis validation
+    if [[ "$MZ_INGESTION_KEY" ]] ; then
       # Assign location to be observed by logdna-agent
       if [ -z "$MZ_LOG_DIRS" ]; then
         export MZ_LOG_DIRS="/tmp"
       fi
+      # export MZ_HOSTNAME=
       # Assign tags - from different pipelines- PR Number and Repo names to be added.
-      export MZ_TAGS=$REPO_NAME,$PR_NAME
+      export MZ_TAGS=$REPO_NAME,$PR_NUM
       systemctl start logdna-agent
       $test_cmd | tee "$MZ_LOG_DIRS"/test.log
       systemctl stop logdna-agent
