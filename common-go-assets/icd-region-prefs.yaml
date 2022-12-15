@@ -1,4 +1,6 @@
-# Supported ICD regions
+# BYOK for backups is available only in us-south and eu-de.
+# The ICD instance must be in the same region as the Key Protect one.
+# Doc: https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect&interface=ui#key-byok
 ---
 - name: eu-de
   useForTest: true
@@ -6,30 +8,3 @@
 - name: us-south
   useForTest: true
   testPriority: 2
-- name: us-east
-  useForTest: true
-  testPriority: 3
-- name: eu-gb
-  useForTest: true
-  testPriority: 4
-- name: au-syd
-  useForTest: true
-  testPriority: 5
-- name: jp-tok
-  useForTest: true
-  testPriority: 6
-- name: br-sao
-  useForTest: true
-  testPriority: 7
-- name: ca-tor
-  useForTest: true
-  testPriority: 8
-- name: jp-osa
-  useForTest: true
-  testPriority: 9
-- name: par01
-  useForTest: false
-  testPriority: 10
-- name: che01
-  useForTest: false
-  testPriority: 11
