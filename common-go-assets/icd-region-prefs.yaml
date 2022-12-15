@@ -1,5 +1,4 @@
 # Supported ICD regions
-# List got from https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/database#location
 ---
 - name: eu-de
   useForTest: true
@@ -19,6 +18,18 @@
 - name: jp-tok
   useForTest: true
   testPriority: 6
-- name: oslo01
+- name: br-sao
   useForTest: true
   testPriority: 7
+- name: ca-tor
+  useForTest: true
+  testPriority: 8
+- name: che01
+  useForTest: true
+  testPriority: 9
+- name: jp-osa
+  useForTest: true
+  testPriority: 10
+- name: par01
+  useForTest: true
+  testPriority: 11
