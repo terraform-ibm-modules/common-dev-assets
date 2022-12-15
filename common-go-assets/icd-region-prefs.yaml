@@ -24,12 +24,12 @@
 - name: ca-tor
   useForTest: true
   testPriority: 8
-- name: che01
-  useForTest: true
-  testPriority: 9
 - name: jp-osa
   useForTest: true
-  testPriority: 10
+  testPriority: 9
 - name: par01
-  useForTest: true
+  useForTest: false
+  testPriority: 19
+- name: che01
+  useForTest: false
   testPriority: 11
