@@ -29,7 +29,7 @@
   testPriority: 9
 - name: par01
   useForTest: false
-  testPriority: 19
+  testPriority: 10
 - name: che01
   useForTest: false
   testPriority: 11
