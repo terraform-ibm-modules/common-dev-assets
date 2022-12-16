@@ -192,7 +192,6 @@ endif
 			-e GOPROXY \
 			-e GONOSUMDB \
 			-e FORCE_TEST_REGION \
-			-e GH_TOKEN \
 			--env-file <(env| grep 'TRAVIS\|GH_TOKEN\|TF_VAR_\|MZ_' | cut -f1 -d=) \
 			--env-file ${DOCKER_ENV} \
 			${DOCKER_REGISTRY}/$(IMAGE) \

@@ -9,10 +9,6 @@
 
 set -e
 
-# To provide tags for logdna-agent
-PR_NUM=""
-REPO_NAME="" 
-
 # Determine if PR
 IS_PR=false
 if [ "${GITHUB_ACTIONS}" == "true" ]; then
@@ -20,9 +16,9 @@ if [ "${GITHUB_ACTIONS}" == "true" ]; then
   if [ -n "${GITHUB_HEAD_REF}" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/${GITHUB_BASE_REF}"
-    PR_NUM="${GITHUB_REF}"
+    PR_NUM=$(echo "$GITHUB_REF" | awk -F/ '{print $3}')
   fi
-  REPO_NAME="${GITHUB_REPOSITORY}"
+  REPO_NAME="$(basename "${GITHUB_REPOSITORY}")"
 elif [ "${TRAVIS}" == "true" ]; then
   # TRAVIS_PULL_REQUEST: The pull request number if the current job is a pull request, “false” if it’s not a pull request.
   if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
@@ -30,12 +26,12 @@ elif [ "${TRAVIS}" == "true" ]; then
     TARGET_BRANCH="${TRAVIS_BRANCH}"
     PR_NUM="${TRAVIS_PULL_REQUEST}"
   fi
-  REPO_NAME="${TRAVIS_REPO_SLUG}"
+  REPO_NAME="$(basename "${TRAVIS_REPO_SLUG}")"
 elif [ -n "${PIPELINE_RUN_ID}" ]; then
   if [ "$(get_env pipeline_namespace)" == "pr" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/$(get_env base-branch)"
-    PR_NUM="basename $(get_env pr-url)"
+    PR_NUM="$(basename "$(get_env pr-url)")"
   fi
   REPO_NAME="$(load_repo app-repo name)"
 else
@@ -102,20 +98,28 @@ if [ ${IS_PR} == true ]; then
         test_arg=${pr_test_file}
     fi
     test_cmd="go test ${test_arg} -count=1 -v -timeout 300m"
-    # If Ingestion key and host url is present, only then logdna-agent will be in a working state.
-    # && "$MZ_HOST" # will check and add back as condition later post travis validation
     if [[ "$MZ_INGESTION_KEY" ]] ; then
       # Assign location to be observed by logdna-agent
       if [ -z "$MZ_LOG_DIRS" ]; then
         export MZ_LOG_DIRS="/tmp"
       fi
-      # export MZ_HOSTNAME=
-      # Assign tags - from different pipelines- PR Number and Repo names to be added.
-      export MZ_TAGS=$REPO_NAME,$PR_NUM
+      # This is required to send logs to logdna-agent instance
+      if [ -z "$MZ_HOST" ]; then
+        export MZ_HOST="logs.us-south.logging.cloud.ibm.com"
+      fi
+      log_location="$MZ_LOG_DIRS/test.log"
+      # Assign tags
+      export MZ_TAGS=$REPO_NAME,"PR $PR_NUM"
+      # Exclude extra logs
+      export MZ_EXCLUSION_REGEX_RULES="/var/log/*"
+      echo "Starting logdna-agent"
       systemctl start logdna-agent
-      $test_cmd | tee "$MZ_LOG_DIRS"/test.log
-      systemctl stop logdna-agent
-	    rm -rf "$MZ_LOG_DIRS"/test.log
+      echo "Logdna-agent Status: $(systemctl status logdna-agent)"
+      $test_cmd | tee "$log_location"
+      echo "Stopping logdna-agent"
+      # Verify if logdna agent has been stopped
+      systemctl stop logdna-agent || true
+      echo "Logdna-agent Status: $(systemctl status logdna-agent)"
     else
       $test_cmd
     fi

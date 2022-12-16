@@ -196,8 +196,8 @@ if [[ "$TERRAFORM_VERSION" != "$INSTALLED_TERRAFORM_VERSION" ]]; then
   echo
   echo "-- Installing ${BINARY} ${TERRAFORM_VERSION}..."
 
-  download ${BINARY} ${TERRAFORM_VERSION} "${URL}" ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
-  verify ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
+  download ${BINARY} "${TERRAFORM_VERSION}" "${URL}" "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+  verify "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
   unzip "${TMP_DIR}/${FILE_NAME}" -d "${TMP_DIR}" > /dev/null
   copy_replace_binary ${BINARY} "${TMP_DIR}"
   clean "${TMP_DIR}"
@@ -210,7 +210,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.42.4
+TERRAGRUNT_VERSION=v0.42.5
 BINARY=terragrunt
 set +e
 INSTALLED_TERRAGRUNT_VERSION="$(terragrunt --version | head -1 | cut -d' ' -f3)"
@@ -336,8 +336,8 @@ if [[ "$GOLANGCI_LINT_VERSION" != "v$INSTALLED_GOLANGCI_LINT_VERSION" ]]; then
   echo
   echo "-- Installing ${BINARY} ${GOLANGCI_LINT_VERSION}..."
 
-  download ${BINARY} ${GOLANGCI_LINT_VERSION} ${URL} ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
-  verify ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
+  download ${BINARY} ${GOLANGCI_LINT_VERSION} ${URL} "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+  verify "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
   tar -xzf "${TMP_DIR}/${FILE_NAME}" -C "${TMP_DIR}"
   copy_replace_binary ${BINARY} "${TMP_DIR}/golangci-lint-${GOLANGCI_LINT_VERSION//v/}-${OS}-amd64"
   clean "${TMP_DIR}"
@@ -405,7 +405,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v3.10.2
+HELM_VERSION=v3.10.3
 BINARY=helm
 set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"
@@ -503,8 +503,8 @@ TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
 echo
 echo "-- Installing ${BINARY} ${TERRAFORM_CONFIG_INSPECT_VERSION}..."
 
-download ${BINARY} ${TERRAFORM_CONFIG_INSPECT_VERSION} ${URL} ${FILE_NAME} "${SUMFILE}" "${TMP_DIR}"
-verify ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
+download ${BINARY} ${TERRAFORM_CONFIG_INSPECT_VERSION} ${URL} "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+verify "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
 unzip "${TMP_DIR}/${FILE_NAME}" -d "${TMP_DIR}" > /dev/null
 copy_replace_binary ${BINARY} "${TMP_DIR}"
 clean "${TMP_DIR}"
