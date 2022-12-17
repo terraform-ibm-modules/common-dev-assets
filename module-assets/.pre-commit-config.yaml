@@ -14,6 +14,8 @@ repos:
     - id: check-yaml
       exclude: chart/|metadata.yaml
     - id: check-json
+      types: [file]
+      files: \.(json|releaserc)$
     - id: end-of-file-fixer
     - id: trailing-whitespace
     - id: check-merge-conflict
@@ -94,7 +96,7 @@ repos:
         - "--ignore=E203,E501,W503"
 # isort
 - repo: https://github.com/pycqa/isort
-  rev: 5.11.2
+  rev: v5.11.3
   hooks:
   - id: isort
     args: ["--profile", "black", "--filter-files"]
