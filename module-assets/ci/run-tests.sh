@@ -117,9 +117,7 @@ if [ ${IS_PR} == true ]; then
       echo "Logdna-agent Status: $(systemctl status logdna-agent)"
       $test_cmd | tee "$log_location"
       echo "Stopping logdna-agent"
-      # Verify if logdna agent has been stopped
       systemctl stop logdna-agent || true
-      echo "Logdna-agent Status: $(systemctl status logdna-agent)"
     else
       $test_cmd
     fi
