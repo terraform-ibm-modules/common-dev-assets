@@ -16,18 +16,24 @@ if [ "${GITHUB_ACTIONS}" == "true" ]; then
   if [ -n "${GITHUB_HEAD_REF}" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/${GITHUB_BASE_REF}"
+    PR_NUM=$(echo "$GITHUB_REF" | awk -F/ '{print $3}')
   fi
+  REPO_NAME="$(basename "${GITHUB_REPOSITORY}")"
 elif [ "${TRAVIS}" == "true" ]; then
   # TRAVIS_PULL_REQUEST: The pull request number if the current job is a pull request, “false” if it’s not a pull request.
   if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
     IS_PR=true
     TARGET_BRANCH="${TRAVIS_BRANCH}"
+    PR_NUM="${TRAVIS_PULL_REQUEST}"
   fi
+  REPO_NAME="$(basename "${TRAVIS_REPO_SLUG}")"
 elif [ -n "${PIPELINE_RUN_ID}" ]; then
   if [ "$(get_env pipeline_namespace)" == "pr" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/$(get_env base-branch)"
+    PR_NUM="$(basename "$(get_env pr-url)")"
   fi
+  REPO_NAME="$(load_repo app-repo name)"
 else
   echo "Could not determine CI runtime environment. Script only support tekton, travis or github actions."
   exit 1
@@ -91,7 +97,30 @@ if [ ${IS_PR} == true ]; then
     if test -f "${pr_test_file}"; then
         test_arg=${pr_test_file}
     fi
-    go test "${test_arg}" -count=1 -v -timeout 300m
+    test_cmd="go test ${test_arg} -count=1 -v -timeout 300m"
+    if [[ "$MZ_INGESTION_KEY" ]] ; then
+      # Assign location to be observed by logdna-agent
+      if [ -z "$MZ_LOG_DIRS" ]; then
+        export MZ_LOG_DIRS="/tmp"
+      fi
+      # This is required to send logs to logdna-agent instance
+      if [ -z "$MZ_HOST" ]; then
+        export MZ_HOST="logs.us-south.logging.cloud.ibm.com"
+      fi
+      log_location="$MZ_LOG_DIRS/test.log"
+      # Assign tags
+      export MZ_TAGS=$REPO_NAME,"PR$PR_NUM"
+      # Exclude extra logs
+      export MZ_EXCLUSION_REGEX_RULES="/var/log/*"
+      echo "Starting logdna-agent"
+      systemctl start logdna-agent
+      echo "Logdna-agent Status: $(systemctl status logdna-agent)"
+      $test_cmd | tee "$log_location"
+      echo "Stopping logdna-agent"
+      systemctl stop logdna-agent || true
+    else
+      $test_cmd
+    fi
     cd ..
   else
     echo "No file changes detected to trigger tests"
