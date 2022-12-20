@@ -37,7 +37,7 @@ elif [ -n "${PIPELINE_RUN_ID}" ]; then
   if [ "$(get_env pipeline_namespace)" == "pr" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/$(get_env base-branch)"
-    PR_NUM="$(basename "$(get_env pr-url)")"
+    PR_NUM="$(basename "${PR_URL}")"
   fi
   REPO_NAME="$(load_repo app-repo path)"
 else
