@@ -33,7 +33,7 @@ elif [ -n "${PIPELINE_RUN_ID}" ]; then
     TARGET_BRANCH="origin/$(get_env base-branch)"
     PR_NUM="$(basename "$(get_env pr-url)")"
   fi
-  REPO_NAME="$(load_repo app-repo name)"
+  REPO_NAME="$(basename "$(load_repo app-repo path))"
 else
   echo "Could not determine CI runtime environment. Script only support tekton, travis or github actions."
   exit 1
