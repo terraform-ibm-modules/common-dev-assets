@@ -11,6 +11,8 @@ set -e
 
 # Determine if PR
 IS_PR=false
+
+# GitHub Actions (see https://docs.github.com/en/actions/learn-github-actions/environment-variables)
 if [ "${GITHUB_ACTIONS}" == "true" ]; then
   # GITHUB_HEAD_REF: This property is only set when the event that triggers a workflow run is either pull_request or pull_request_target
   if [ -n "${GITHUB_HEAD_REF}" ]; then
@@ -19,6 +21,8 @@ if [ "${GITHUB_ACTIONS}" == "true" ]; then
     PR_NUM=$(echo "$GITHUB_REF" | awk -F/ '{print $3}')
   fi
   REPO_NAME="$(basename "${GITHUB_REPOSITORY}")"
+
+# Travis (see https://docs.travis-ci.com/user/environment-variables)
 elif [ "${TRAVIS}" == "true" ]; then
   # TRAVIS_PULL_REQUEST: The pull request number if the current job is a pull request, “false” if it’s not a pull request.
   if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
@@ -27,13 +31,15 @@ elif [ "${TRAVIS}" == "true" ]; then
     PR_NUM="${TRAVIS_PULL_REQUEST}"
   fi
   REPO_NAME="$(basename "${TRAVIS_REPO_SLUG}")"
+
+# Tekton Toolchain (see https://cloud.ibm.com/docs/devsecops?topic=devsecops-devsecops-pipelinectl)
 elif [ -n "${PIPELINE_RUN_ID}" ]; then
   if [ "$(get_env pipeline_namespace)" == "pr" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/$(get_env base-branch)"
     PR_NUM="$(basename "$(get_env pr-url)")"
   fi
-  REPO_NAME="$(basename "$(load_repo app-repo path)")"
+  REPO_NAME="$(load_repo app-repo path)"
 else
   echo "Could not determine CI runtime environment. Script only support tekton, travis or github actions."
   exit 1
