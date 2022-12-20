@@ -8,6 +8,7 @@
 #
 
 set -e
+set -o pipefail
 
 # Determine if PR
 IS_PR=false
