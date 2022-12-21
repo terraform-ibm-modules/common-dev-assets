@@ -116,7 +116,7 @@ if [ ${IS_PR} == true ]; then
       fi
       log_location="$MZ_LOG_DIRS/test.log"
       # Assign tags
-      export MZ_TAGS=$REPO_NAME,"PR$PR_NUM"
+      export MZ_TAGS="$REPO_NAME-PR$PR_NUM"
       # Exclude extra logs
       export MZ_EXCLUSION_REGEX_RULES="/var/log/*"
       echo "Starting logdna-agent"
