@@ -110,6 +110,10 @@ if [ ${IS_PR} == true ]; then
       if [ -z "$MZ_LOG_DIRS" ]; then
         export MZ_LOG_DIRS="/tmp"
       fi
+      #lookback strategy determines how the agent handles existing files on agent startup
+      if [ -z "$LOGDNA_LOOKBACK" ]; then
+        export LOGDNA_LOOKBACK="smallfiles"
+      fi
       # This is required to send logs to logdna-agent instance
       if [ -z "$MZ_HOST" ]; then
         export MZ_HOST="logs.us-south.logging.cloud.ibm.com"
@@ -123,8 +127,7 @@ if [ ${IS_PR} == true ]; then
       systemctl start logdna-agent
       echo "Logdna-agent Status: $(systemctl status logdna-agent)"
       $test_cmd 2>&1 | tee "$log_location"
-      echo "Stopping logdna-agent"
-      systemctl stop logdna-agent || true
+
     else
       $test_cmd
     fi
