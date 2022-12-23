@@ -72,7 +72,7 @@ function main() {
             submodule_version_remote=$(get_submodule_version ${git_submodule_name})
 
             if [ "${submodule_version_current}" != "${submodule_version_remote}" ]; then
-                printf "\nDetected common-dev-assets git submodule commit ID is older than the one in primary branch. Make sure your branch is rebased with remote primary branch and run the following command to sync with primary branch: git submodule update --rebase"
+                printf "\nDetected common-dev-assets git submodule commit ID is either older than the one in primary branch, or not at the latest. To fix, make sure your branch is rebased with remote primary branch, and then run the following command to sync the git submodule with primary branch: 'git submodule update --rebase'.\nAlternatively you can run 'git submodule update --remote --merge' to update your branch to the latest available git submodule, however this is not recommended, as you will likely soon end up with conflicts to resolve due to the renovate automation that is updating the git submodule version in primary branch very frequently."
                 rm -fr "${temp_dir}"
                 exit 1
             fi
