@@ -8,6 +8,7 @@
 #
 
 set -e
+set -o pipefail
 
 # Determine if PR
 IS_PR=false
@@ -115,13 +116,13 @@ if [ ${IS_PR} == true ]; then
       fi
       log_location="$MZ_LOG_DIRS/test.log"
       # Assign tags
-      export MZ_TAGS=$REPO_NAME,"PR$PR_NUM"
+      export MZ_TAGS="$REPO_NAME-PR$PR_NUM"
       # Exclude extra logs
       export MZ_EXCLUSION_REGEX_RULES="/var/log/*"
       echo "Starting logdna-agent"
       systemctl start logdna-agent
       echo "Logdna-agent Status: $(systemctl status logdna-agent)"
-      $test_cmd | tee "$log_location"
+      $test_cmd 2>&1 | tee "$log_location"
       echo "Stopping logdna-agent"
       systemctl stop logdna-agent || true
     else
