@@ -12,14 +12,6 @@ set -e
 #       else throw Error
 
 
-function create_temp_submodule_folder() {
-    temp_dir=$(mktemp -d)
-    cp .gitmodules "${temp_dir}"
-    cp -R .github "${temp_dir}"
-    cp -R .git "${temp_dir}"
-    echo "${temp_dir}"
-}
-
 function get_submodule_version() {
     git_submodule_name=$1
     IFS=$'\n'
@@ -58,14 +50,20 @@ function main() {
 
     if [ "${git_submodule_exists}" = true  ]
     then
-        temp_dir=$(create_temp_submodule_folder)
-        cd "${temp_dir}"
-
         # current submodule version
         submodule_version_current=$(get_submodule_version ${git_submodule_name})
 
-        # rebase submodule version with main branch
-        git submodule update --rebase
+        # get git remote url which is needed for a repo clone
+        git_remote_url=$(git config --get remote.origin.url)
+
+        # create temp folder and clone a repo
+        temp_dir=$(mktemp -d)
+        cd "${temp_dir}"
+        git clone "${git_remote_url}"
+        cd "$(ls)"
+
+        # get primary branch submodule version
+        git submodule update --init
         submodule_version_main_branch=$(get_submodule_version ${git_submodule_name})
 
         if [ "${submodule_version_current}" != "${submodule_version_main_branch}" ]; then
@@ -74,7 +72,7 @@ function main() {
             submodule_version_remote=$(get_submodule_version ${git_submodule_name})
 
             if [ "${submodule_version_current}" != "${submodule_version_remote}" ]; then
-                printf "\nDetected common-dev-assets git submodule commit ID is older than the one in primary branch. Run the following command to sync with primary branch: git submodule update --rebase"
+                printf "\nDetected common-dev-assets git submodule commit ID is older than the one in primary branch. Make sure your branch is rebased with remote primary branch and run the following command to sync with primary branch: git submodule update --rebase."
                 rm -fr "${temp_dir}"
                 exit 1
             fi
