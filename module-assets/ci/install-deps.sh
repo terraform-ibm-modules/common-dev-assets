@@ -159,7 +159,7 @@ fi
 #######################################
 
  # renovate: datasource=github-tags depName=ibm/detect-secrets versioning="regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$"
-DETECT_SECRETS_VERSION=0.13.1+ibm.55.dss
+DETECT_SECRETS_VERSION=0.13.1+ibm.56.dss
 PACKAGE=detect-secrets
 set +e
 INSTALLED_DECTECT_SECRETS="$(${PYTHON} -m pip show detect-secrets | grep Version: | cut -d' ' -f2)"
@@ -265,7 +265,7 @@ fi
 # tflint
 #######################################
  # renovate: datasource=github-releases depName=terraform-linters/tflint
-TFLINT_VERSION=v0.44.0
+TFLINT_VERSION=v0.44.1
 BINARY=tflint
 set +e
 INSTALLED_TFLINT_VERSION="$(tflint --version | grep "TFLint version " |cut -d' ' -f3)"
