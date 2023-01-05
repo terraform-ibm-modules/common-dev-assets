@@ -73,13 +73,13 @@ function main() {
 
             # get all git submodule commit ids. The list is sorted in descending order (the latest commit id is the first element)
             cd "${git_submodule_name}"
-            git_submodule_commit_ids=$(git rev-list main)
+            git_submodule_commit_ids=$(git rev-list origin)
 
             while IFS= read -r git_submodule_commit_id
             do
                 # if submodule_version_main_branch is found before submodule_version_current then the current submodule version is older than the primary branch version and script must fail
                 if [ "${submodule_version_main_branch}" = "${git_submodule_commit_id}" ]; then
-                    printf "\nDetected common-dev-assets git submodule commit ID is either older than the one in primary branch, or not at the latest. To fix, make sure your branch is rebased with remote primary branch, and then run the following command to sync the git submodule with primary branch: 'git submodule update --rebase'.\nAlternatively you can run 'git submodule update --remote --merge' to update your branch to the latest available git submodule, however this is not recommended, as you will likely soon end up with conflicts to resolve due to the renovate automation that is updating the git submodule version in primary branch very frequently."
+                    printf "\nDetected common-dev-assets git submodule commit ID is older than the one in primary branch. To fix, make sure your branch is rebased with remote primary branch, and then run the following command to sync the git submodule with primary branch: 'git submodule update --rebase'.\nAlternatively you can run 'git submodule update --remote --merge' to update your branch to the latest available git submodule, however this is not recommended, as you will likely soon end up with conflicts to resolve due to the renovate automation that is updating the git submodule version in primary branch very frequently."
                     rm -fr "${temp_dir}"
                     exit 1
                 fi
