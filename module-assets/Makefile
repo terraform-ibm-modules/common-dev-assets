@@ -88,7 +88,7 @@ docker-run:
 #
 
 # pre-commit for repos with terraform code
-# (in container approach, not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that instead)
+# (in container approach, not directly mounting ~/.ssh or ~/.netrc because we will be changing the permissions, so creating backup and mounting that instead)
 pre-commit:
 ifdef GHE
 ifndef GH_TOKEN
@@ -103,40 +103,42 @@ endif
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
-		cp -r ~/.ssh /tmp && \
+		cp -r ~/{.netrc,.ssh} /tmp && \
 		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 			-v /tmp/.ssh:/root/.ssh \
+			-v /tmp/.netrc:/root/.netrc \
 			-e GH_TOKEN \
 			${DOCKER_REGISTRY}/$(IMAGE) \
-			bash -c "chown -R root /root/.ssh && \
-				chgrp -R root /root/.ssh && \
+			bash -c "chown -R root /root/.ssh /root/.netrc && \
+				chgrp -R root /root/.ssh /root/.netrc && \
 				$${run_cmd}"; \
 		exitCode=$$?; \
-		sudo rm -rf /tmp/.ssh; \
+		sudo rm -rf /tmp/.ssh /tmp/.netrc; \
 		exit $${exitCode}; \
 	fi
 
 # pre-commit for non-terraform repos
-# (in container approach, not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that instead)
+# (in container approach, not directly mounting ~/.ssh or ~/.netrc because we will be changing the permissions, so creating backup and mounting that instead)
 pre-commit-no-terraform:
 	@run_cmd="pre-commit run --all-files" && \
 	if [ "$${NO_CONTAINER}" = "true" ]; \
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
-		cp -r ~/.ssh /tmp && \
+		cp -r ~/{.netrc,.ssh} /tmp && \
 		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 			-v /tmp/.ssh:/root/.ssh \
+			-v /tmp/.netrc:/root/.netrc \
 			${DOCKER_REGISTRY}/$(IMAGE) \
-			bash -c "chown -R root /root/.ssh && \
+			bash -c "chown -R root /root/.ssh /root/.netrc && \
 				$${run_cmd}"; \
 		exitCode=$$?; \
-		sudo rm -rf /tmp/.ssh; \
+		sudo rm -rf /tmp/.ssh /tmp/.netrc; \
 		exit $${exitCode}; \
 	fi
 
 # run pre-commit checks against renovate PRs, and commit back any changes to the PR (e.g. doc updates, secrets baseline etc)
-# (in container approach, not directly mounting ~/.ssh because we will be changing the permissions, so creating backup and mounting that instead)
+# (in container approach, not directly mounting ~/.ssh or ~/.netrc because we will be changing the permissions, so creating backup and mounting that instead)
 renovate-sweeper:
     ifndef GH_TOKEN
 	   $(error Error: GH_TOKEN is undefined)
@@ -147,19 +149,20 @@ renovate-sweeper:
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
-		cp -r ~/.ssh /tmp && \
+		cp -r ~/{.netrc,.ssh} /tmp && \
 		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 			-v /tmp/.ssh:/root/.ssh \
+			-v /tmp/.netrc:/root/.netrc \
 			-e TRAVIS \
 			-e TRAVIS_PULL_REQUEST \
 			-e TRAVIS_PULL_REQUEST_BRANCH \
 			-e GH_TOKEN \
 			${DOCKER_REGISTRY}/$(IMAGE) \
-			bash -c "chown -R root /root/.ssh && \
-				chgrp -R root /root/.ssh && \
+			bash -c "chown -R root /root/.ssh /root/.netrc && \
+				chgrp -R root /root/.ssh /root/.netrc && \
 				$${run_cmd}"; \
 		exitCode=$$?; \
-		sudo rm -rf /tmp/.ssh; \
+		sudo rm -rf /tmp/.ssh /tmp/.netrc; \
 		exit $${exitCode}; \
 	fi
 
