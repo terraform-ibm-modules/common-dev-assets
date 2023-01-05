@@ -103,7 +103,8 @@ endif
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
-		cp -r ~/{.netrc,.ssh} /tmp && \
+		cp -r ~/.ssh /tmp && \
+		cp ~/.netrc /tmp && \
 		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 			-v /tmp/.ssh:/root/.ssh \
 			-v /tmp/.netrc:/root/.netrc \
@@ -125,7 +126,8 @@ pre-commit-no-terraform:
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
-		cp -r ~/{.netrc,.ssh} /tmp && \
+		cp -r ~/.ssh /tmp && \
+		cp ~/.netrc /tmp && \
 		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 			-v /tmp/.ssh:/root/.ssh \
 			-v /tmp/.netrc:/root/.netrc \
@@ -149,7 +151,8 @@ renovate-sweeper:
 	then \
 		bash -c "$${run_cmd}"; \
 	else \
-		cp -r ~/{.netrc,.ssh} /tmp && \
+		cp -r ~/.ssh /tmp && \
+		cp ~/.netrc /tmp && \
 		${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
 			-v /tmp/.ssh:/root/.ssh \
 			-v /tmp/.netrc:/root/.netrc \
