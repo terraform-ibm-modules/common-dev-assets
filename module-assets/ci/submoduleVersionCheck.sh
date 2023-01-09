@@ -61,7 +61,7 @@ function main() {
         # create temp folder and clone a repo
         temp_dir=$(mktemp -d)
         cd "${temp_dir}"
-        git clone "${git_remote_url}"
+        git clone -q "${git_remote_url}"
         cd "$(ls)"
 
         # get primary branch submodule version
@@ -79,7 +79,7 @@ function main() {
             do
                 # if submodule_version_main_branch is found before submodule_version_current then the current submodule version is older than the primary branch version and script must fail
                 if [ "${submodule_version_main_branch}" = "${git_submodule_commit_id}" ]; then
-                    printf "\nDetected common-dev-assets git submodule commit ID is older than the one in primary branch. To fix, make sure your branch is rebased with remote primary branch, and then run the following command to sync the git submodule with primary branch: 'git submodule update --rebase'.\nAlternatively you can run 'git submodule update --remote --merge' to update your branch to the latest available git submodule, however this is not recommended, as you will likely soon end up with conflicts to resolve due to the renovate automation that is updating the git submodule version in primary branch very frequently."
+                    printf "\nDetected common-dev-assets git submodule commit ID is older than the one in primary branch. To fix:\n  1. Make sure your branch is rebased with remote primary branch (e.g. 'git pull origin <master / main>')\n  2. Run the following command to sync the git submodule with primary branch: 'git submodule update --rebase'\n\nAlternatively you can run 'git submodule update --remote --merge' to update your branch to the latest available git submodule, however this is not recommended, as you will likely soon end up with conflicts to resolve due to the renovate automation that is updating the git submodule version in primary branch very frequently."
                     rm -fr "${temp_dir}"
                     exit 1
                 fi
