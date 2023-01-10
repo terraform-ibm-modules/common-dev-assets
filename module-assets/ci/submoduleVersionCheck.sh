@@ -1,5 +1,7 @@
 #!/bin/bash
 set -e
+# GIT_INDEX_FILE is set when code is commited and it is picked by pre-commit hook when clones the repo. If repo with the same name is cloned then changes inside cloned repo are reflected to a hook in a case we use -a flag for `git commit`
+unset GIT_INDEX_FILE
 
 # Script checks if commit id of the git submodule in a PR branch is older than the one in a main branch or remote.
 # If commit id is older then error is thrown.
