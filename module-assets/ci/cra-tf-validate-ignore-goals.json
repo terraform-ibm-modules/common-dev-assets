@@ -67,12 +67,6 @@
             "is_valid": false
         },
         {
-            "scc_goal_id": "3000637",
-            "description:": "Check whether Secrets Manager service access is managed only by IAM access groups",
-            "ignore_reason": "Tracking at https://github.ibm.com/GoldenEye/issues/issues/2953",
-            "is_valid": true
-        },
-        {
             "scc_goal_id": "3000301",
             "description:": "Check whether IBM Activity Tracker is provisioned in multiple regions in an account",
             "ignore_reason": "Tracking in https://github.ibm.com/GoldenEye/issues/issues/2945",
