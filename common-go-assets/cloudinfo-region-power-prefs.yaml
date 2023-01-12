@@ -34,8 +34,8 @@
 - name: dal12
   useForTest: false
   testPriority: 11
-- name: tor01
   # not yet supported by terraform-ibm-powervs-infrastructure module
+- name: tor01
   useForTest: false
   testPriority: 12
   # not yet supported by terraform-ibm-powervs-infrastructure module
