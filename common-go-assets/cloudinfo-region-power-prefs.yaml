@@ -8,10 +8,10 @@
 - name: sao01
   useForTest: true
   testPriority: 3
-- name: tor01
+- name: eu-de-1
   useForTest: true
   testPriority: 4
-- name: mon01
+- name: eu-de-2
   useForTest: true
   testPriority: 5
 - name: lon04
@@ -26,9 +26,19 @@
 - name: tok04
   useForTest: true
   testPriority: 9
+  # not yet supported by terraform-ibm-powervs-infrastructure module
 - name: wdc06
-  useForTest: true
+  useForTest: false
   testPriority: 10
+  # not yet supported by terraform-ibm-powervs-infrastructure module
 - name: dal12
-  useForTest: true
+  useForTest: false
   testPriority: 11
+- name: tor01
+  # not yet supported by terraform-ibm-powervs-infrastructure module
+  useForTest: false
+  testPriority: 12
+  # not yet supported by terraform-ibm-powervs-infrastructure module
+- name: mon01
+  useForTest: false
+  testPriority: 13
