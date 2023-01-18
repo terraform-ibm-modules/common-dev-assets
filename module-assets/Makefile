@@ -133,6 +133,7 @@ pre-commit-no-terraform:
 			-v /tmp/.netrc:/root/.netrc \
 			${DOCKER_REGISTRY}/$(IMAGE) \
 			bash -c "chown -R root /root/.ssh /root/.netrc && \
+				chgrp -R root /root/.ssh /root/.netrc && \
 				$${run_cmd}"; \
 		exitCode=$$?; \
 		sudo rm -rf /tmp/.ssh /tmp/.netrc; \
