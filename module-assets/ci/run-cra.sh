@@ -41,7 +41,7 @@ then
   CRA_IGNORE_GOALS_FILE="cra-tf-validate-ignore-goals.json"
 fi
 
-#terraform init
+terraform init
 terraform plan --out "$plan_out"
 # Obtain JSON multilines (hence jq)
 terraform show -json "$plan_out" | jq '.' > "$plan_json"
