@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 ignoring_goals="[]"
 number_of_ignored_goals=0
