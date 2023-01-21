@@ -1,0 +1,12 @@
+# secrets-manager
+secretsManagerGuid: 8ad00d9f-2844-43d6-bdac-194097c3d2eb
+secretsManagerRegion: us-south
+
+# secrets manager private cert engine
+privateCertTemplateName: geretain-cert-template
+
+# activity-tracker
+activityTrackerFrankfurtCrn: crn:v1:bluemix:public:logdnaat:eu-de:a/abac0df06b644a9cabc6e44f55b3880e:b1ef3365-dfbf-4d8f-8ac8-75f4f84d6f4a::
+
+# cis
+cisInstanceId: crn:v1:bluemix:public:internet-svcs:global:a/abac0df06b644a9cabc6e44f55b3880e:59aa1a88-ac47-45e4-bd96-2bc778d26ca7::
