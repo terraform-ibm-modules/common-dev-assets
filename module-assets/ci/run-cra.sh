@@ -47,7 +47,7 @@ terraform plan --out "$plan_out"
 # Obtain JSON multilines (hence jq)
 terraform show -json "$plan_out" | jq '.' > "$plan_json"
 ibmcloud login --apikey "${TF_VAR_ibmcloud_api_key}" -r "$REGION"
-# Continue if CRA Fails
+# Continue if CRA Fails, Will fail later if any ot the failures are valid ie not on the ignore list or apply to the created Terraform resources
 set +e
 ibmcloud cra terraform-validate \
       --tf-plan "$plan_json" \
