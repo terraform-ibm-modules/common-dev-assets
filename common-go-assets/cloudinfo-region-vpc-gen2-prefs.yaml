@@ -12,8 +12,7 @@
   useForTest: true
   testPriority: 6
 - name: eu-gb
-  # temp disable until AT issues in eu-gb are resolved
-  useForTest: false
+  useForTest: true
   testPriority: 7
 - name: jp-osa
   useForTest: true
