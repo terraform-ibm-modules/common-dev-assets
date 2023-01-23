@@ -47,15 +47,23 @@ terraform plan --out "$plan_out"
 # Obtain JSON multilines (hence jq)
 terraform show -json "$plan_out" | jq '.' > "$plan_json"
 ibmcloud login --apikey "${TF_VAR_ibmcloud_api_key}" -r "$REGION"
+# Continue if CRA Fails, Will fail later if any ot the failures are valid ie not on the ignore list or apply to the created Terraform resources
+set +e
 ibmcloud cra terraform-validate \
       --tf-plan "$plan_json" \
       --report "$report_json" \
       --toolchainid "$TOOLCHAIN_ID" \
       --strict >&2
+set -e
+# Fail pipeline if any other step fails
 
 if [ -f "$CRA_IGNORE_GOALS_FILE" ]; then
   # built ignore list from file
   ignoring_goals=$(jq '.scc_goals[] | .scc_goal_id ' "$CRA_IGNORE_GOALS_FILE" | jq -c -s '.')
+  echo "From CRA goals ignore file: ${CRA_IGNORE_GOALS_FILE}"
+  echo "Ignore goals: ${ignoring_goals}"
+else
+  echo "CRA goals Ignore file not found: ${CRA_IGNORE_GOALS_FILE}"
 fi
 
 echo "Keeping only the SCC goals results because found in Terraform resource(s) - others are considered as skipped"
