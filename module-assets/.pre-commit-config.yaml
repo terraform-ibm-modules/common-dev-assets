@@ -8,6 +8,14 @@ repos:
       entry: ci/submoduleVersionCheck.sh
       language: script
       pass_filenames: false
+    - id: prevent-file-change-hook
+      name: Prevent File Change Hook
+      entry: ci/prevent-file-change.sh
+      types: [file]
+      language: script
+      pass_filenames: false
+      description: "This hook takes in a list of files that should not be changed or deleted, and fails if one is changed or deleted."
+      args: [LICENSE]
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.4.0
   hooks:
