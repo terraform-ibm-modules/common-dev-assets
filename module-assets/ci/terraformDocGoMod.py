@@ -48,10 +48,22 @@ def get_module_url():
     return module_url.replace(".git", "")
 
 
+# modify module url to internal or external repo
+def change_module_url(module_url):
+    git_owner = "terraform-ibm-modules"
+    if "github.ibm.com" in module_url:
+        git_owner = "GoldenEye"
+    return re.sub(
+        "/.*/",
+        lambda x: x.group(0).replace(x.group(0), "/%s/" % (git_owner)),
+        module_url,
+    )
+
+
 def main():
     go_mod_path = Path("tests/go.mod")
     if go_mod_path.is_file():
-        module_url = get_module_url()
+        module_url = change_module_url(get_module_url())
         if module_url:
             set_go_mod(go_mod_path, module_url)
 

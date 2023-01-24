@@ -1,24 +1,19 @@
 #!/bin/bash
 set -e
+# GIT_INDEX_FILE is set when code is commited and it is picked by pre-commit hook when clones the repo. If repo with the same name is cloned then changes inside cloned repo are reflected to a hook in a case we use -a flag for `git commit`
+unset GIT_INDEX_FILE
 
 # Script checks if commit id of the git submodule in a PR branch is older than the one in a main branch or remote.
 # If commit id is older then error is thrown.
 # pseudocode:
-#   if local_commit_id == main_branch_commit_id
-#   then OK
-#   else check remote submodule id
-#       if local_commit_id == remote_commit_id
-#       then OK
-#       else throw Error
+#   if local_commit_id != main_branch_commit_id
+#   then
+#       get all submodule commit ids
+#       iterate through commit ids
+#           if local_commit_id is found before main_branch_commit_id then OK
+#           else throw Error
+#   else OK
 
-
-function create_temp_submodule_folder() {
-    temp_dir=$(mktemp -d)
-    cp .gitmodules "${temp_dir}"
-    cp -R .github "${temp_dir}"
-    cp -R .git "${temp_dir}"
-    echo "${temp_dir}"
-}
 
 function get_submodule_version() {
     git_submodule_name=$1
@@ -32,7 +27,7 @@ function get_submodule_version() {
             break
         fi
     done
-    echo "${submodule_id}"
+    echo "${submodule_id}" | xargs
 }
 
 function submodule_exists(){
@@ -58,27 +53,45 @@ function main() {
 
     if [ "${git_submodule_exists}" = true  ]
     then
-        temp_dir=$(create_temp_submodule_folder)
-        cd "${temp_dir}"
-
         # current submodule version
         submodule_version_current=$(get_submodule_version ${git_submodule_name})
+        echo "Current PR branch submodule version: ${submodule_version_current}"
 
-        # rebase submodule version with main branch
-        git submodule update --rebase
+        # get git remote url which is needed for a repo clone
+        git_remote_url=$(git config --get remote.origin.url)
+
+        # create temp folder and clone a repo
+        temp_dir=$(mktemp -d)
+        cd "${temp_dir}"
+        git clone -q "${git_remote_url}"
+        cd "$(ls)"
+
+        # get primary branch submodule version
+        git submodule update --init
         submodule_version_main_branch=$(get_submodule_version ${git_submodule_name})
+        echo "Primary branch submodule version: ${submodule_version_main_branch}"
 
         if [ "${submodule_version_current}" != "${submodule_version_main_branch}" ]; then
-            # update submodule version with remote
-            git submodule update --remote --merge
-            submodule_version_remote=$(get_submodule_version ${git_submodule_name})
 
-            if [ "${submodule_version_current}" != "${submodule_version_remote}" ]; then
-                printf "\nDetected common-dev-assets git submodule commit ID is older than the one in primary branch. Run the following command to sync with primary branch: git submodule update --rebase"
-                rm -fr "${temp_dir}"
-                exit 1
-            fi
+            # get all git submodule commit ids. The list is sorted in descending order (the latest commit id is the first element)
+            cd "${git_submodule_name}"
+            git_submodule_commit_ids=$(git rev-list origin)
+
+            while IFS= read -r git_submodule_commit_id
+            do
+                # if submodule_version_main_branch is found before submodule_version_current then the current submodule version is older than the primary branch version and script must fail
+                if [ "${submodule_version_main_branch}" = "${git_submodule_commit_id}" ]; then
+                    printf "\nDetected common-dev-assets git submodule commit ID is older than the one in primary branch. To fix:\n  1. Ensure that your local primary branch is up to date:\n      i. git checkout <master / main>\n      ii. git pull origin <master / main>\n      iii. git submodule update --rebase\n  2. Make sure your dev branch is rebased with remote primary branch:\n      i. git checkout <dev-branch>\n      ii. git pull origin <master / main>\n  3. Run the following command to sync the git submodule with primary branch:\n      i. git submodule update --rebase\n\nAlternatively you can run 'git submodule update --remote --merge' to update your branch to the latest available git submodule, however this is not recommended, as you will likely soon end up with conflicts to resolve due to the renovate automation that is updating the git submodule version in primary branch very frequently."
+                    rm -fr "${temp_dir}"
+                    exit 1
+                fi
+
+                if [ "${submodule_version_current}" = "${git_submodule_commit_id}" ]; then
+                    break
+                fi
+            done <<< "${git_submodule_commit_ids}"
         fi
+
         rm -fr "${temp_dir}"
     fi
 }

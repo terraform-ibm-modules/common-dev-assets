@@ -8,26 +8,39 @@
 #
 
 set -e
+set -o pipefail
 
 # Determine if PR
 IS_PR=false
+
+# GitHub Actions (see https://docs.github.com/en/actions/learn-github-actions/environment-variables)
 if [ "${GITHUB_ACTIONS}" == "true" ]; then
   # GITHUB_HEAD_REF: This property is only set when the event that triggers a workflow run is either pull_request or pull_request_target
   if [ -n "${GITHUB_HEAD_REF}" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/${GITHUB_BASE_REF}"
+    PR_NUM=$(echo "$GITHUB_REF" | awk -F/ '{print $3}')
   fi
+  REPO_NAME="$(basename "${GITHUB_REPOSITORY}")"
+
+# Travis (see https://docs.travis-ci.com/user/environment-variables)
 elif [ "${TRAVIS}" == "true" ]; then
   # TRAVIS_PULL_REQUEST: The pull request number if the current job is a pull request, “false” if it’s not a pull request.
   if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
     IS_PR=true
     TARGET_BRANCH="${TRAVIS_BRANCH}"
+    PR_NUM="${TRAVIS_PULL_REQUEST}"
   fi
+  REPO_NAME="$(basename "${TRAVIS_REPO_SLUG}")"
+
+# Tekton Toolchain (see https://cloud.ibm.com/docs/devsecops?topic=devsecops-devsecops-pipelinectl)
 elif [ -n "${PIPELINE_RUN_ID}" ]; then
   if [ "$(get_env pipeline_namespace)" == "pr" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/$(get_env base-branch)"
+    PR_NUM="$(basename "${PR_URL}")"
   fi
+  REPO_NAME="$(load_repo app-repo path)"
 else
   echo "Could not determine CI runtime environment. Script only support tekton, travis or github actions."
   exit 1
@@ -91,7 +104,33 @@ if [ ${IS_PR} == true ]; then
     if test -f "${pr_test_file}"; then
         test_arg=${pr_test_file}
     fi
-    go test "${test_arg}" -count=1 -v -timeout 300m
+    test_cmd="go test ${test_arg} -count=1 -v -timeout 300m"
+    if [[ "$MZ_INGESTION_KEY" ]] ; then
+      # Assign location to be observed by logdna-agent
+      if [ -z "$MZ_LOG_DIRS" ]; then
+        export MZ_LOG_DIRS="/tmp"
+      fi
+      #lookback strategy determines how the agent handles existing files on agent startup
+      if [ -z "$LOGDNA_LOOKBACK" ]; then
+        export LOGDNA_LOOKBACK="smallfiles"
+      fi
+      # This is required to send logs to logdna-agent instance
+      if [ -z "$MZ_HOST" ]; then
+        export MZ_HOST="logs.us-south.logging.cloud.ibm.com"
+      fi
+      log_location="$MZ_LOG_DIRS/test.log"
+      # Assign tags
+      export MZ_TAGS="$REPO_NAME-PR$PR_NUM"
+      # Exclude extra logs
+      export MZ_EXCLUSION_REGEX_RULES="/var/log/*"
+      echo "Starting logdna-agent"
+      systemctl start logdna-agent
+      echo "Logdna-agent Status: $(systemctl status logdna-agent)"
+      $test_cmd 2>&1 | tee "$log_location"
+
+    else
+      $test_cmd
+    fi
     cd ..
   else
     echo "No file changes detected to trigger tests"
