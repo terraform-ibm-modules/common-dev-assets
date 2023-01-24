@@ -3,8 +3,8 @@
         {
             "scc_goal_id": "3000408",
             "description": "Check whether Flow Logs for VPC are enabled",
-            "ignore_reason": "Until this feature is implemented to collect flow logs for ROKS/IKS; the goal is pointless for most users https://bigblue.aha.io/ideas/ideas/CNWVPC-I-11",
-            "is_valid": false
+            "ignore_reason": "Tracking in https://github.ibm.com/GoldenEye/issues/issues/3645",
+            "is_valid": true
         },
         {
             "scc_goal_id": "3000410",
@@ -69,8 +69,8 @@
         {
             "scc_goal_id": "3000301",
             "description:": "Check whether IBM Activity Tracker is provisioned in multiple regions in an account",
-            "ignore_reason": "Tracking in https://github.ibm.com/GoldenEye/issues/issues/2945",
-            "is_valid": true
+            "ignore_reason": "CRA bug. Tracking in https://github.ibm.com/oneibmcloud/CD-CRA/issues/1681",
+            "is_valid": false
         },
         {
             "scc_goal_id": "3000031",
