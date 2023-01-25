@@ -179,8 +179,8 @@ fi
 # terraform
 #######################################
 
-# Locking into v1.2.9 until https://github.ibm.com/GoldenEye/issues/issues/2858 is complete
-TERRAFORM_VERSION=v1.2.9
+ # renovate: datasource=github-releases depName=hashicorp/terraform
+TERRAFORM_VERSION=v1.3.7
 BINARY=terraform
 set +e
 INSTALLED_TERRAFORM_VERSION="$(terraform --version | head -1 | cut -d' ' -f2)"
