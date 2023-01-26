@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # For use within Tekton pipeline
 
+set -e
+
 # shellcheck disable=SC2155
 export IBMCLOUD_APIKEY="$(get_env ibmcloud-api-key)"
 
