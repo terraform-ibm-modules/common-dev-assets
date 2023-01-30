@@ -39,11 +39,11 @@ jobs:
         run: |
           apt-get update -y
           apt remove git -y
-          apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A1715D88E1DF1F24
-          apt-get install -y make libssl-dev libghc-zlib-dev libcurl4-gnutls-dev libexpat1-dev gettext unzip
-          wget https://github.com/git/git/archive/refs/tags/v2.39.1.zip
-          unzip v2.39.1.zip
-          cd git-2.39.1 && make prefix=/usr/local all && make prefix=/usr/local install && cd ..
+          #apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A1715D88E1DF1F24
+          #apt-get install -y make libssl-dev libghc-zlib-dev libcurl4-gnutls-dev libexpat1-dev gettext unzip
+          #wget https://github.com/git/git/archive/refs/tags/v2.39.1.zip
+          #unzip v2.39.1.zip
+          #cd git-2.39.1 && make prefix=/usr/local all && make prefix=/usr/local install && cd ..
           git --version
           make renovate-sweeper
 
