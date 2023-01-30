@@ -42,4 +42,8 @@ jobs:
       # run pre-commit against all files
       - name: Pre-commit
         run: |
-          pre-commit run --all-files
+          set -x
+          ls -la
+          pre-commit run --all-files || true
+          cat /github/home/.cache/pre-commit/pre-commit.log
+          exit 1
