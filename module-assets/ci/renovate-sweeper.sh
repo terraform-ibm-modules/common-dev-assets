@@ -26,6 +26,7 @@ function git_push() {
 
 # Determine if PR
 IS_PR=false
+git -v
 if [ "${GITHUB_ACTIONS}" == "true" ]; then
   # GITHUB_HEAD_REF: This property is only set when the event that triggers a workflow run is either pull_request or pull_request_target
   if [ -n "${GITHUB_HEAD_REF}" ]; then
