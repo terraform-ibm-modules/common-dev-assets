@@ -37,6 +37,7 @@ jobs:
       # Check for pre-commit updates if it is a renovate PR
       - name: Renovate sweeper
         run: |
+          add-apt-repository --remove ppa:deadsnakes/ppa
           apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A1715D88E1DF1F24
           apt-get update -y
           apt-get remove git -y
