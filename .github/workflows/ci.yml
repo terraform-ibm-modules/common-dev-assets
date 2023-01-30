@@ -43,4 +43,5 @@ jobs:
       # run pre-commit against all files
       - name: Pre-commit
         run: |
-          make pre-commit
+          ls -la
+          terraform init && pre-commit run --all-files
