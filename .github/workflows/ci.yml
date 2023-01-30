@@ -37,11 +37,13 @@ jobs:
       # Check for pre-commit updates if it is a renovate PR
       - name: Renovate sweeper
         run: |
-          git --version
           make renovate-sweeper
 
       # run pre-commit against all files
       - name: Pre-commit
         run: |
-          python3 -m pip install -q --upgrade pre-commit==v2.21.0
-          terraform init && pre-commit run --all-files
+          git --version
+          python3 -m pip show pre-commit
+          python3 -m pip install --upgrade pre-commit==v2.21.0
+          python3 -m pip show pre-commit
+          pre-commit run --all-files
