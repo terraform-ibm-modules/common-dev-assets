@@ -42,9 +42,6 @@ jobs:
       # run pre-commit against all files
       - name: Pre-commit
         run: |
-          set -x
-          ls -la
-          git config --global --add safe.directory '*'
-          pre-commit run --all-files || true
-          cat /github/home/.cache/pre-commit/pre-commit.log
-          exit 1
+          # git config --global --add safe.directory '*'
+          pre-commit run --all-files
+          cat /github/home/.cache/pre-commit/pre-commit.log || true
