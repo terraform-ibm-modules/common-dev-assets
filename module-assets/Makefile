@@ -112,6 +112,7 @@ endif
 			${DOCKER_REGISTRY}/$(IMAGE) \
 			bash -c "chown -R root /root/.ssh /root/.netrc && \
 				chgrp -R root /root/.ssh /root/.netrc && \
+				chown -R \$(id -u):\$(id -g) \$$PWD && \
 				$${run_cmd}"; \
 		exitCode=$$?; \
 		sudo rm -rf /tmp/.ssh /tmp/.netrc; \
@@ -134,6 +135,7 @@ pre-commit-no-terraform:
 			${DOCKER_REGISTRY}/$(IMAGE) \
 			bash -c "chown -R root /root/.ssh /root/.netrc && \
 				chgrp -R root /root/.ssh /root/.netrc && \
+				chown -R \$(id -u):\$(id -g) \$$PWD && \
 				$${run_cmd}"; \
 		exitCode=$$?; \
 		sudo rm -rf /tmp/.ssh /tmp/.netrc; \
@@ -164,6 +166,7 @@ renovate-sweeper:
 			${DOCKER_REGISTRY}/$(IMAGE) \
 			bash -c "chown -R root /root/.ssh /root/.netrc && \
 				chgrp -R root /root/.ssh /root/.netrc && \
+				chown -R \$(id -u):\$(id -g) \$$PWD && \
 				$${run_cmd}"; \
 		exitCode=$$?; \
 		sudo rm -rf /tmp/.ssh /tmp/.netrc; \
@@ -204,6 +207,7 @@ endif
 			${DOCKER_REGISTRY}/$(IMAGE) \
 			bash -c "chown -R root /root/.ssh && \
 				chgrp -R root /root/.ssh && \
+				chown -R \$(id -u):\$(id -g) \$$PWD && \
 				$${run_cmd}"; \
 		exitCode=$$?; \
 		sudo rm -rf /tmp/.ssh; \
