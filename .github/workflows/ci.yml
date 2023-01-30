@@ -37,6 +37,13 @@ jobs:
       # Check for pre-commit updates if it is a renovate PR
       - name: Renovate sweeper
         run: |
+          apt-get update -y
+          apt remove git -y
+          apt-get install -y make libssl-dev libghc-zlib-dev libcurl4-gnutls-dev libexpat1-dev gettext unzip
+          wget https://github.com/git/git/archive/refs/tags/v2.39.1.zip
+          unzip v2.39.1.zip
+          cd git-2.39.1 && make prefix=/usr/local all && make prefix=/usr/local install
+          git --version
           make renovate-sweeper
 
       # run pre-commit against all files
