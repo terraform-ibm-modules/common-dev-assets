@@ -20,7 +20,7 @@ jobs:
       run:
         shell: bash
     container:
-      image: icr.io/goldeneye_images/goldeneye-ci-image:stable
+      image: icr.io/goldeneye_images/goldeneye-ci-image@sha256:ca9c6b60cca9be3fa07ff7091aba18791066a1465071825186087f966a79e865
       env:
         TF_VAR_ibmcloud_api_key: ${{ secrets.IBMCLOUD_API_KEY }}
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -42,6 +42,4 @@ jobs:
       # run pre-commit against all files
       - name: Pre-commit
         run: |
-          pre-commit run --all-files || true
-          git config --global --add safe.directory '*'
-          cat /github/home/.cache/pre-commit/pre-commit.log
+          pre-commit run --all-files
