@@ -43,4 +43,5 @@ jobs:
       - name: Pre-commit
         run: |
           pre-commit run --all-files || true
+          git config --global --add safe.directory /__w/common-dev-assets/common-dev-assets
           cat /github/home/.cache/pre-commit/pre-commit.log
