@@ -94,6 +94,12 @@ repos:
         # check out their meaning here
         # https://flake8.pycqa.org/en/latest/user/error-codes.html
         - "--ignore=E203,E501,W503"
+# isort
+- repo: https://github.com/pycqa/isort
+  rev: 5.11.5
+  hooks:
+  - id: isort
+    args: ["--profile", "black", "--filter-files"]
 # black
 - repo: https://github.com/ambv/black
   rev: 22.12.0
