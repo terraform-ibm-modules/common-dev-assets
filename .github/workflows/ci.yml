@@ -34,6 +34,11 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           submodules: true
 
+      - name: Set ownership
+        run: |
+          # this is to fix GIT not liking owner of the checkout dir
+          chown -R $(id -u):$(id -g) $PWD
+      
       # Check for pre-commit updates if it is a renovate PR
       - name: Renovate sweeper
         run: |
@@ -43,6 +48,6 @@ jobs:
       - name: Pre-commit
         run: |
           # git config --global --add safe.directory '*'
-          git config --global --add safe.directory /__w/common-dev-assets/common-dev-assets
+          # git config --global --add safe.directory /__w/common-dev-assets/common-dev-assets
           pre-commit run --all-files || true
           cat /github/home/.cache/pre-commit/pre-commit.log || true
