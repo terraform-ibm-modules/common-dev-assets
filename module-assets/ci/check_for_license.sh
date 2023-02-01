@@ -13,7 +13,7 @@ array=()
 index=0
 for ((x=max; x<=$#; x++))
 do
-    array[$index]=${!x}
+    array[index]=${!x}
     index=$((index+1))
 done
 
