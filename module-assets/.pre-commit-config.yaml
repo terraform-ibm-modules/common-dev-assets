@@ -69,7 +69,7 @@ repos:
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 2.2.299
+  rev: 2.2.319
   hooks:
     - id: checkov
       args:
@@ -104,7 +104,7 @@ repos:
         - "--ignore=E203,E501,W503"
 # isort
 - repo: https://github.com/pycqa/isort
-  rev: 5.11.4
+  rev: 5.11.5
   hooks:
   - id: isort
     args: ["--profile", "black", "--filter-files"]
@@ -154,6 +154,6 @@ repos:
       pass_filenames: false
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
-  rev: v0.1.17
+  rev: v0.1.18
   hooks:
     - id: helmlint

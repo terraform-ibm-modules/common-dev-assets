@@ -138,7 +138,7 @@ fi
 #######################################
 
  # renovate: datasource=github-tags depName=pre-commit/pre-commit
-PRE_COMMIT_VERSION=v3.0.0
+PRE_COMMIT_VERSION=v3.0.2
 PACKAGE=pre-commit
 set +e
 INSTALLED_PRE_COMMIT_VERSION="$(${PYTHON} -m pip show pre-commit | grep Version: | cut -d' ' -f2)"
@@ -179,8 +179,8 @@ fi
 # terraform
 #######################################
 
-# Locking into v1.2.9 until https://github.ibm.com/GoldenEye/issues/issues/2858 is complete
-TERRAFORM_VERSION=v1.2.9
+ # renovate: datasource=github-releases depName=hashicorp/terraform
+TERRAFORM_VERSION=v1.3.7
 BINARY=terraform
 set +e
 INSTALLED_TERRAFORM_VERSION="$(terraform --version | head -1 | cut -d' ' -f2)"
