@@ -40,7 +40,6 @@ def remove_tf_IBM_provider():
 
 def main():
     if glob.glob("*.tf"):
-
         # remove IBM provider. Must be removed so we make sure that local terraform cache has the latest version only
         remove_tf_IBM_provider()
 
