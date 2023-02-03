@@ -4,7 +4,7 @@
 # The script will run the pre-commit hook and if there are any changes detected, it will commit them to the PR
 # branch which will trigger a new run of the pipeline.
 
-set -ex
+set -e
 
 function git_config() {
   user=$1
