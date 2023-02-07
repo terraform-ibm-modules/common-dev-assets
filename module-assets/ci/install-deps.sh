@@ -245,7 +245,7 @@ INSTALLED_TERRADOCS_VERSION="$(terraform-docs --version | head -1 | cut -d' ' -f
 set -e
 if [[ "$TERRAFORM_DOCS_VERSION" != "$INSTALLED_TERRADOCS_VERSION" ]]; then
   FILE_NAME="terraform-docs-${TERRAFORM_DOCS_VERSION}-${OS}-amd64.tar.gz"
-  URL="https://terraform-docs.io/dl/${TERRAFORM_DOCS_VERSION}"
+  URL="https://github.com/terraform-docs/terraform-docs/releases/download/${TERRAFORM_DOCS_VERSION}"
   SUMFILE="terraform-docs-${TERRAFORM_DOCS_VERSION}.sha256sum"
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
 
