@@ -8,14 +8,15 @@ repos:
       entry: ci/submoduleVersionCheck.sh
       language: script
       pass_filenames: false
-    - id: "check-for-license-hook"
-      name: "Check For License(s) Hook"
-      entry: ci/check_for_license.sh
+    - id: "ensure-file-exists"
+      name: "Ensure File(s) Exist"
+      entry: ci/ensure_file_exists.sh
       types: [file]
       language: "script"
       require_serial: true
+      pass_filenames: false
       description: "This hook takes in a list of files that it ensures exist in the project"
-      args: [--NUM_OF_FILES_TO_CHECK=1, LICENSE]
+      args: [LICENSE]
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.4.0
   hooks:
