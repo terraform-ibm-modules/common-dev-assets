@@ -43,7 +43,7 @@ repos:
       stages: [commit-msg]
       additional_dependencies: ['@commitlint/config-angular']
 - repo: https://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.77.0
+  rev: v1.77.1
   hooks:
     - id: terraform_fmt
     - id: terraform_validate
@@ -70,7 +70,7 @@ repos:
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 2.2.319
+  rev: 2.2.348
   hooks:
     - id: checkov
       args:
@@ -111,7 +111,7 @@ repos:
     args: ["--profile", "black", "--filter-files"]
 # black
 - repo: https://github.com/ambv/black
-  rev: 22.12.0
+  rev: 23.1.0
   hooks:
   - id: black
     args: # arguments to configure black
