@@ -125,6 +125,15 @@ content: |-
 
     <!-- Remove the content in this previous H2 heading -->
 
+    {{- if $is_external }}
+    ## Reference architectures
+
+    <!--
+    Add links to any reference architectures for this module.
+    (Usually in the `/reference-architectures` directory.)
+    -->
+    {{- end }}
+
     ## Usage
 
     <!--
