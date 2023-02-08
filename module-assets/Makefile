@@ -80,7 +80,7 @@ docker-run:
 	        --platform linux/amd64 \
 		-v ~/.ssh:/root/.ssh \
 		-v ~/.netrc:/root/.netrc \
-		-v ~/.gitconfig:/root/.gitconfig \
+		-v ~/.gitconfig:/etc/gitconfig \
 		${DOCKER_REGISTRY}/$(IMAGE) bash
 
 #
