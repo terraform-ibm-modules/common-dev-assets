@@ -1,10 +1,10 @@
 #!/bin/bash
 # Generates the standard Terraform files if they do not already exist.
 
-echo "Generating the following Terraform files: main.tf variables.tf outputs.tf provider.tf version.tf README.md"
+echo "Generating the following Terraform files: main.tf variables.tf outputs.tf providers.tf version.tf README.md"
 
 if [ ! -f "main.tf" ]; then
-  echo "  - main.tf"
+  echo "  - main.tf created"
   cat << EOF > "main.tf"
 ##############################################################################
 # Main Configuration
@@ -15,7 +15,7 @@ else
 fi
 
 if [ ! -f "variables.tf" ]; then
-  echo "  - variables.tf"
+  echo "  - variables.tf created"
   cat << EOF > "variables.tf"
 ##############################################################################
 # Input Variables
@@ -26,7 +26,7 @@ else
 fi
 
 if [ ! -f "outputs.tf" ]; then
-  echo "  - outputs.tf"
+  echo "  - outputs.tf created"
   cat << EOF > "outputs.tf"
 ##############################################################################
 # Outputs
@@ -36,19 +36,19 @@ else
   echo "  - outputs.tf already exists, skipping creation"
 fi
 
-if [ ! -f "provider.tf" ]; then
-  echo "  - provider.tf"
-  cat << EOF > "provider.tf"
+if [ ! -f "providers.tf" ]; then
+  echo "  - providers.tf created"
+  cat << EOF > "providers.tf"
 ##############################################################################
-# Provider
+# Providers
 ##############################################################################
 EOF
 else
-  echo "  - provider.tf already exists, skipping creation"
+  echo "  - providers.tf already exists, skipping creation"
 fi
 
 if [ ! -f "version.tf" ]; then
-  echo "  - version.tf"
+  echo "  - version.tf created"
   cat << EOF > "version.tf"
 ##############################################################################
 # Terraform Version
@@ -59,7 +59,7 @@ else
 fi
 
 if [ ! -f "README.md" ]; then
-  echo "  - README.md"
+  echo "  - README.md created"
   cat << EOF > "README.md"
 # Module
 
