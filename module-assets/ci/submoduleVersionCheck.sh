@@ -46,12 +46,30 @@ function submodule_exists(){
     echo "${exists}"
 }
 
+is_merge_pipeline() {
+    merge_pipeline=false
+    # Travis (see https://docs.travis-ci.com/user/environment-variables)
+    if [ "${TRAVIS}" == "true" ] && [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
+        merge_pipeline=true
+
+    # GitHub Actions (see https://docs.github.com/en/actions/learn-github-actions/environment-variables)
+    elif [ "${GITHUB_ACTIONS}" == "true" ] && [[ "${GITHUB_REF}" =~ "merge" ]]; then
+        merge_pipeline=true
+
+    # Tekton Toolchain (see https://cloud.ibm.com/docs/devsecops?topic=devsecops-devsecops-pipelinectl)
+    elif [ -n "${PIPELINE_RUN_ID}" ] && [ "$(get_env pipeline_namespace)" == "ci" ]; then
+        merge_pipeline=true
+    fi
+    echo "${merge_pipeline}"
+}
+
 function main() {
-    # execute only if repo has common-dev-assets submodule
+    # execute only if repo has common-dev-assets submodule and it is not merge pipeline
     git_submodule_name="common-dev-assets"
     git_submodule_exists=$(submodule_exists ${git_submodule_name})
+    is_merge_pipeline=$(is_merge_pipeline)
 
-    if [ "${git_submodule_exists}" = true  ]
+    if [ "${git_submodule_exists}" = true ] && [ "${is_merge_pipeline}" = true ]
     then
         # current submodule version
         submodule_version_current=$(get_submodule_version ${git_submodule_name})
