@@ -69,7 +69,7 @@ function main() {
     git_submodule_exists=$(submodule_exists ${git_submodule_name})
     is_merge_pipeline=$(is_merge_pipeline)
 
-    if [ "${git_submodule_exists}" = true ] && [ "${is_merge_pipeline}" = true ]
+    if [ "${git_submodule_exists}" = true ] && [ "${is_merge_pipeline}" = false ]
     then
         # current submodule version
         submodule_version_current=$(get_submodule_version ${git_submodule_name})
