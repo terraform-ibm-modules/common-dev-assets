@@ -8,15 +8,14 @@ repos:
       entry: ci/submoduleVersionCheck.sh
       language: script
       pass_filenames: false
-    - id: "ensure-file-exists"
-      name: "Ensure File(s) Exist"
-      entry: ci/ensure_file_exists.sh
+    - id: license-checker
+      name: License Checker
+      entry: ci/license_checker.sh
       types: [file]
-      language: "script"
+      language: script
       require_serial: true
-      pass_filenames: false
-      description: "This hook takes in a list of files that it ensures exist in the project"
-      args: [LICENSE]
+      pass_filenames: true
+      description: This hook ensures the license exists in projects that contain .tf files
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.4.0
   hooks:
