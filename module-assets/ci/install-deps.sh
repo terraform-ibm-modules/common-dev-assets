@@ -180,7 +180,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=hashicorp/terraform
-TERRAFORM_VERSION=v1.3.8
+TERRAFORM_VERSION=v1.3.9
 BINARY=terraform
 set +e
 INSTALLED_TERRAFORM_VERSION="$(terraform --version | head -1 | cut -d' ' -f2)"
@@ -322,7 +322,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v1.51.1
+GOLANGCI_LINT_VERSION=v1.51.2
 BINARY=golangci-lint
 set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"

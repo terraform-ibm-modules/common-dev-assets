@@ -131,6 +131,8 @@ content: |-
     <!--
     Add links to any reference architectures for this module.
     (Usually in the `/reference-architectures` directory.)
+    See "Reference architecture" in Authoring Guidelines in the public documentation at
+    https://terraform-ibm-modules.github.io/documentation/#/implementation-guidelines?id=reference-architecture
     -->
     {{- end }}
 
