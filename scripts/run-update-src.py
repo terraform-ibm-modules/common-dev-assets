@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-# This script is to update module source references to hashicorp registry
-
 import glob
 import os
 import re
@@ -14,18 +12,18 @@ import requests
 ###########################################################################################################
 
 # text to be searched in files
-search_pattern_tim = (
+SEARCH_PATTERN_TIM = (
     r'(.*[Rr]eplace.*\n)?.*"git::https:\/\/github\.com\/terraform-ibm-modules\/'
 )
-search_pattern_ge = (
+SEARCH_PATTERN_GE = (
     r'(.*[Rr]eplace.*\n)?.*"git::https:\/\/github\.ibm\.com\/GoldenEye\/'
 )
 # variable to store the text that we want to replace in files
-replace_text = '  source  = "'
-files_to_be_searched = ["**/*.tf", "**/*.md"]
+REPLACE_TEXT = '  source  = "'
+FILES_TO_BE_SEARCHED = ["**/*.tf", "**/*.md"]
 # terraform registry APIs
-get_by_name = "https://registry.terraform.io/v1/modules/terraform-ibm-modules/"
-get_by_query_string = (
+GET_BY_NAME = "https://registry.terraform.io/v1/modules/terraform-ibm-modules/"
+GET_BY_QUERY_STRING = (
     "https://registry.terraform.io/v1/modules/search?q=terraform-ibm-modules%20"
 )
 
@@ -35,47 +33,111 @@ get_by_query_string = (
 
 
 # get the current working repo
-def get_repo():
+def get_repo() -> str:
+    """Gets the current working repository name
+
+    Args:
+
+    Returns:
+        string: current working repo name
+    """
+
     repo = git.Repo(os.getcwd())
     repo_name = repo.remotes.origin.url
     return repo_name
 
 
 # get source information from terraform registry
-def get_response(repo_name):
+def get_response(repo_name: str) -> dict:
+    """Get response from terraform registry using
+        1. repo_name
+        2. if no response is returned using repo_name, get response using query string
+
+    Args:
+        repo_name(str): Name of the repository to query against terraform registry API
+
+    Returns:
+        dict: object with repo registry details
+    """
+
     try:
         # search using namespace/name/provider
-        r = requests.get(get_by_name + "cos1" + "/ibm")
+        r = requests.get(GET_BY_NAME + repo_name + "/ibm")
         if r.status_code == 200:
             return r.json()
         else:
             # search using query string
-            r = requests.get(get_by_query_string + repo_name + "&limit=2&provider=ibm")
+            r = requests.get(GET_BY_QUERY_STRING + repo_name + "&limit=2&provider=ibm")
             return r.json()
     except requests.HTTPError:
         print(r.json())
 
 
 # scans md, tf files and returns files to be updated
-def get_files(extension, search_pattern, files, matched_lines):
+def get_files(
+    extension: str, search_pattern: str, files: list, matched_lines: list
+) -> list[str]:
+    """Get all the files to be updated with new source information
+
+    Args:
+        extension(str): current file pattern to be searched
+        search_pattern(str): search for GoldenEye or terraform-ibm-modules source links
+        files(list): list of files to be updated
+        matched_lines(list): lines from the files which are to be updated
+
+    Returns:
+        list(str): list of files and the lines in the files to be updated
+    """
+
     for file in glob.glob(extension, recursive=True):
         with open(file, "r") as reader:
             for line in reader:
                 if re.search(search_pattern, line):
                     matched_lines.append(line)
                     files.append(file)
-    return files, matched_lines
+        reader.close()
+    # return unique files and lines
+    return set(files), set(matched_lines)
 
 
 # extract id containing repo name and version
-def extract_response(response):
+def extract_response(response: dict) -> str:
+    """Extract id from the terraform registry API
+
+    Args:
+       response(dict): response from the terraform API
+
+    Returns:
+        string: id of the repo
+    """
+
     id = response["id"]
     return id
 
 
 # replaces the source in the file content
-def replace_source(file, search_pattern, replace_text, version_update, store):
-    id, repo_name, version = extract_repo_details(store)
+def replace_source(
+    file: str,
+    repo_name: str,
+    search_pattern: str,
+    replace_text: str,
+    version_update: bool,
+    store: list,
+) -> str:
+    """Updates source information in the given files to the one in terrafrom-ibm-modules source
+
+    Args:
+       file(str): name of the file to be updated
+       search_pattern(str): search for GoldenEye or terraform-ibm-modules source links
+       replace_text(str): new source reference to be updated
+       version_update(bool): true if version returned in the api resposne is to be updated in the file
+       store(list): list of terrafrom-ibm-modules source references captured
+
+    Returns:
+        string: replaced content of the file
+    """
+
+    id, version = extract_repo_details(store, repo_name)
     with open(file, "r") as reader:
         file_data = reader.read()
         if version_update is True:
@@ -88,17 +150,37 @@ def replace_source(file, search_pattern, replace_text, version_update, store):
             replace_text + id.rsplit("/", 1)[0] + '"' + version_replace_text,
             file_data,
         )
+    reader.close()
     return file_data
 
 
 # write replaced text and save file
-def write_modified_content(file, data):
+def write_data_to_file(file: str, data: str) -> None:
+    """writes the updated content to the file
+
+    Args:
+       file(str): path to the file to be written
+       data(str): contents to be written to the file
+
+    Returns:
+    """
+
     with open(file, "w") as f:
         f.write(data)
+        f.close()
 
 
 # extract the repo name
-def extract_repo_name(repo_name):
+def extract_repo_name(repo_name: str) -> str:
+    """extracts repo name from the current working repo url
+
+    Args:
+       repo_name(str): the repo origin url of the current working repository
+
+    Returns:
+       string: extracted repository name
+    """
+
     if "terraform-ibm-" in repo_name:
         stripped_repo_name = repo_name.split("terraform-ibm-")
     else:
@@ -109,7 +191,17 @@ def extract_repo_name(repo_name):
 
 
 # check if repo exists in the local dictionary
-def check_repo_exists(repo_name, store):
+def check_repo_exists(repo_name: str, store: list) -> bool:
+    """checks if repository details has been pulled from terraform registry
+
+    Args:
+       repo_name(str): the repo name
+       store(list): list of terraform-ibm-modules source references captured
+
+    Returns:
+       bool: true if repository information is stored
+    """
+
     repo_check = False
     for storedata in store:
         for key, value in storedata.items():
@@ -118,40 +210,49 @@ def check_repo_exists(repo_name, store):
     return repo_check
 
 
-# extract id, repo anme and version from local store
-def extract_repo_details(store):
+# extract id, repo name and version from local store
+def extract_repo_details(store: list, repo_name) -> tuple:
+    """extracts the repo name from local store of source references
+
+    Args:
+       store(list): list of terrafrom-ibm-modules source references captured
+
+    Returns:
+       tuple: id, repo name and version of the repository
+    """
+
     for storedata in store:
         for key, value in storedata.items():
-            repo_name = key
-            id = value.rsplit("/", 1)[0]
-            version = value.rsplit("/", 1)[1]
-    return id, repo_name, version
+            if repo_name == key:
+                id = value.rsplit("/", 1)[0]
+                version = value.rsplit("/", 1)[1]
+    return id, version
 
 
 # get all referenced source information from terraform registry
-def get_source_details(lines):
-    store = []
-    for line in lines:
-        referenced_repo_name = re.sub(
-            r"\?ref.*\n", "", (line.rsplit("/", 1)[1]).rsplit(".git", 1)[0]
-        )
+def get_source_details(repo_name: str, store: list) -> list:
+    """get terraform source information
 
-        stripped_repo_name = extract_repo_name(referenced_repo_name)
-        # check if store has referenced repo details
-        if check_repo_exists(stripped_repo_name, store) is False:
-            response = get_response(stripped_repo_name)
-            if "name" in response:
-                id = extract_response(response)
-                idobj = {stripped_repo_name: id}
-                # append response to store
-                store.append(idobj)
+    Args:
+       repo_name(str): name of referenced repo
+       store(list): list of terrafrom-ibm-modules source references captured
 
-            elif "modules" in response:
-                if len(response["modules"]) > 0:
-                    id = extract_response(response["modules"][0])
-                    idobj = {stripped_repo_name: id}
-                    # append response to store
-                    store.append(idobj)
+    Returns:
+       list: list of terraform-ibm-modules source references
+    """
+    response = get_response(repo_name)
+    if "name" in response:
+        id = extract_response(response)
+        idobj = {repo_name: id}
+        # append response to store
+        store.append(idobj)
+
+    elif "modules" in response:
+        if len(response["modules"]) > 0:
+            id = extract_response(response["modules"][0])
+            idobj = {repo_name: id}
+            # append response to store
+            store.append(idobj)
     return store
 
 
@@ -159,52 +260,47 @@ def get_source_details(lines):
 # Main
 ###########################################################################################################
 
-
-def main():
-    for current_file_extension in files_to_be_searched:
-        if current_file_extension == "**/*.md":
-            files = []
-            store = []
-            files, lines = get_files("**/*.md", search_pattern_tim, [], [])
-            files, lines = get_files("**/*.md", search_pattern_ge, files, lines)
-            store = get_source_details(lines)
-            if len(files) > 0 and len(store) > 0:
-                for file in files:
-                    data = replace_source(
-                        file, search_pattern_tim, replace_text, False, store
+if __name__ == "__main__":
+    for current_file_pattern in FILES_TO_BE_SEARCHED:
+        vesion_update = None
+        if current_file_pattern == "**/*.md":
+            vesion_update = False
+        elif current_file_pattern == "**/*.tf":
+            version_update = True
+        files = []
+        store = []
+        files, lines = get_files(current_file_pattern, SEARCH_PATTERN_TIM, [], [])
+        files, lines = get_files(current_file_pattern, SEARCH_PATTERN_GE, files, lines)
+        if len(files) > 0:
+            for file in files:
+                for line in lines:
+                    tim_repo_name = re.sub(
+                        r"\?ref.*\n", "", (line.rsplit("/", 1)[1]).rsplit(".git", 1)[0]
                     )
-                    if data != "":
-                        write_modified_content(file, data)
+                    repo_name = extract_repo_name(tim_repo_name)
+                    # check if store has referenced repo details
+                    if check_repo_exists(repo_name, store) is False:
+                        store = get_source_details(repo_name, store)
                     data = replace_source(
-                        file, search_pattern_ge, replace_text, False, store
+                        file,
+                        repo_name,
+                        SEARCH_PATTERN_TIM,
+                        REPLACE_TEXT,
+                        version_update,
+                        store,
                     )
-                    if data != "":
-                        write_modified_content(file, data)
-                print("Source references are updated in md files")
-            else:
-                print("No tf files found to update")
-
-        if current_file_extension == "**/*.tf":
-            files = []
-            store = []
-            files, lines = get_files("**/*.tf", search_pattern_tim, [], [])
-            files, lines = get_files("**/*.tf", search_pattern_ge, files, lines)
-            store = get_source_details(lines)
-            if len(files) > 0 and len(store) > 0:
-                for file in files:
+                    if data is not None:
+                        write_data_to_file(file, data)
                     data = replace_source(
-                        file, search_pattern_tim, replace_text, True, store
+                        file,
+                        repo_name,
+                        SEARCH_PATTERN_GE,
+                        REPLACE_TEXT,
+                        version_update,
+                        store,
                     )
-                    if data != "":
-                        write_modified_content(file, data)
-                    data = replace_source(
-                        file, search_pattern_ge, replace_text, True, store
-                    )
-                    if data != "":
-                        write_modified_content(file, data)
-                print("Source references are updated in tf files")
-            else:
-                print("No md files found to update")
-
-
-main()
+                    if data is not None:
+                        write_data_to_file(file, data)
+            print("Source references are updated in " + current_file_pattern + " files")
+        else:
+            print("No " + current_file_pattern + " files found to update")
