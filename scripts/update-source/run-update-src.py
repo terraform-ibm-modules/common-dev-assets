@@ -22,8 +22,8 @@ SEARCH_PATTERN_GE = (
 REPLACE_TEXT = '  source  = "'
 FILES_TO_BE_SEARCHED = ["**/*.tf", "**/*.md"]
 # terraform registry APIs
-GET_BY_NAME = "https://registry.terraform.io/v1/modules/terraform-ibm-modules/"
-GET_BY_QUERY_STRING = (
+MODULE_REGISTRY_URL = "https://registry.terraform.io/v1/modules/terraform-ibm-modules/"
+MODULE_SEARCH_URL = (
     "https://registry.terraform.io/v1/modules/search?q=terraform-ibm-modules%20"
 )
 
@@ -59,29 +59,33 @@ def get_response(repo_name: str) -> dict:
     Returns:
         dict: object with repo registry details
     """
-
     try:
         # search using namespace/name/provider
-        r = requests.get(GET_BY_NAME + repo_name + "/ibm")
-        if r.status_code == 200:
-            return r.json()
-        else:
+        response = requests.get(MODULE_REGISTRY_URL + repo_name + "/ibm")
+        if response.status_code != 200:
             # search using query string
-            r = requests.get(GET_BY_QUERY_STRING + repo_name + "&limit=2&provider=ibm")
-            return r.json()
-    except requests.HTTPError:
-        print(r.json())
+            response = requests.get(
+                MODULE_SEARCH_URL + repo_name + "&limit=2&provider=ibm"
+            )
+        response.raise_for_status()
+        return response.json()
+    except requests.HTTPError as err:
+        print(f"HTTP error occurred: {err}")
+        return None
+    except Exception as err:
+        print(f"An error occurred: {err}")
+        return None
 
 
 # scans md, tf files and returns files to be updated
 def get_files(
     extension: str, search_pattern: str, files: list, matched_lines: list
-) -> list[str]:
+) -> tuple[set[str], set[str]]:
     """Get all the files to be updated with new source information
 
     Args:
         extension(str): current file pattern to be searched
-        search_pattern(str): search for GoldenEye or terraform-ibm-modules source links
+        search_pattern(str): search for the given pattern
         files(list): list of files to be updated
         matched_lines(list): lines from the files which are to be updated
 
@@ -100,21 +104,6 @@ def get_files(
     return set(files), set(matched_lines)
 
 
-# extract id containing repo name and version
-def extract_response(response: dict) -> str:
-    """Extract id from the terraform registry API
-
-    Args:
-       response(dict): response from the terraform API
-
-    Returns:
-        string: id of the repo
-    """
-
-    id = response["id"]
-    return id
-
-
 # replaces the source in the file content
 def replace_source(
     file: str,
@@ -124,13 +113,13 @@ def replace_source(
     version_update: bool,
     store: list,
 ) -> str:
-    """Updates source information in the given files to the one in terrafrom-ibm-modules source
+    """Updates source information in the given files to the one found in store
 
     Args:
        file(str): name of the file to be updated
-       search_pattern(str): search for GoldenEye or terraform-ibm-modules source links
-       replace_text(str): new source reference to be updated
-       version_update(bool): true if version returned in the api resposne is to be updated in the file
+       search_pattern(str): pattern to be searched in the file
+       replace_text(str): text to be replaced in the file
+       version_update(bool): true if the version returned in the api response is to be updated in the file
        store(list): list of terrafrom-ibm-modules source references captured
 
     Returns:
@@ -140,7 +129,7 @@ def replace_source(
     id, version = extract_repo_details(store, repo_name)
     with open(file, "r") as reader:
         file_data = reader.read()
-        if version_update is True:
+        if version_update:
             version_replace_text = '\n  version = "' + version + '"'
         else:
             version_replace_text = '\n  version = "latest" # Replace "latest" with a release version to lock into a specific release'
@@ -171,23 +160,23 @@ def write_data_to_file(file: str, data: str) -> None:
 
 
 # extract the repo name
-def extract_repo_name(repo_name: str) -> str:
+def extract_repo_name(repo_name: str, prefix: str = "terraform-ibm-") -> str:
     """extracts repo name from the current working repo url
 
     Args:
        repo_name(str): the repo origin url of the current working repository
+       prefix(str): string used to identify the repository name in the URL
 
     Returns:
        string: extracted repository name
     """
-
-    if "terraform-ibm-" in repo_name:
-        stripped_repo_name = repo_name.split("terraform-ibm-")
+    if prefix in repo_name:
+        stripped_repo_name = repo_name.split(prefix)
     else:
         stripped_repo_name = repo_name.split("-module")
-    for rname in stripped_repo_name:
-        if rname != "":
-            return rname
+    for repo_name_part in stripped_repo_name:
+        if repo_name_part != "":
+            return repo_name_part.rstrip("/.").strip()
 
 
 # check if repo exists in the local dictionary
@@ -241,18 +230,19 @@ def get_source_details(repo_name: str, store: list) -> list:
        list: list of terraform-ibm-modules source references
     """
     response = get_response(repo_name)
-    if "name" in response:
-        id = extract_response(response)
-        idobj = {repo_name: id}
-        # append response to store
-        store.append(idobj)
-
-    elif "modules" in response:
-        if len(response["modules"]) > 0:
-            id = extract_response(response["modules"][0])
+    if response is not None:
+        if "name" in response:
+            id = response["id"]
             idobj = {repo_name: id}
             # append response to store
             store.append(idobj)
+
+        elif "modules" in response:
+            if len(response["modules"]) > 0:
+                id = response["modules"][0]["id"]
+                idobj = {repo_name: id}
+                # append response to store
+                store.append(idobj)
     return store
 
 
@@ -281,26 +271,27 @@ if __name__ == "__main__":
                     # check if store has referenced repo details
                     if check_repo_exists(repo_name, store) is False:
                         store = get_source_details(repo_name, store)
-                    data = replace_source(
-                        file,
-                        repo_name,
-                        SEARCH_PATTERN_TIM,
-                        REPLACE_TEXT,
-                        version_update,
-                        store,
-                    )
-                    if data is not None:
-                        write_data_to_file(file, data)
-                    data = replace_source(
-                        file,
-                        repo_name,
-                        SEARCH_PATTERN_GE,
-                        REPLACE_TEXT,
-                        version_update,
-                        store,
-                    )
-                    if data is not None:
-                        write_data_to_file(file, data)
+                    if len(store) > 0:
+                        data = replace_source(
+                            file,
+                            repo_name,
+                            SEARCH_PATTERN_TIM,
+                            REPLACE_TEXT,
+                            version_update,
+                            store,
+                        )
+                        if data is not None:
+                            write_data_to_file(file, data)
+                        data = replace_source(
+                            file,
+                            repo_name,
+                            SEARCH_PATTERN_GE,
+                            REPLACE_TEXT,
+                            version_update,
+                            store,
+                        )
+                        if data is not None:
+                            write_data_to_file(file, data)
             print("Source references are updated in " + current_file_pattern + " files")
         else:
             print("No " + current_file_pattern + " files found to update")
