@@ -16,4 +16,4 @@ certificateAuthorityName: geretain-acme-ca-config
 dnsProviderName: geretain-acme-dns-config
 
 # IAM ServiceID for Service dnlb
-sdnlbServiceId: "geretain - sDNLB-ServiceID - DO NOT DELETE"
+sdnlbServiceIdName: "geretain - sDNLB-ServiceID - DO NOT DELETE"
