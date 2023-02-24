@@ -14,3 +14,6 @@ cisInstanceId: "crn:v1:bluemix:public:internet-svcs:global:a/abac0df06b644a9cabc
 # secrets manager public cert engine
 certificateAuthorityName: geretain-acme-ca-config
 dnsProviderName: geretain-acme-dns-config
+
+# IAM ServiceID for Service dnlb
+sdnlbServiceIdName: "geretain - sDNLB-ServiceID - DO NOT DELETE"
