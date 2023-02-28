@@ -58,6 +58,7 @@ if [ ${IS_PR} == true ]; then
                          ".md"
                          ".mdlrc"
                          ".png"
+                         ".svg"
                          ".pre-commit-config.yaml"
                          ".releaserc"
                          ".secrets.baseline"
