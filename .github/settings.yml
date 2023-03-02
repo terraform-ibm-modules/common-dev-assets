@@ -8,10 +8,12 @@
 _extends: repo-settings
 
 # unique to this repo
-required_status_checks:
-  strict: true
-  contexts:
-    - "CI_Pipeline"
+branches:
+  - name: main
+    protection:
+      required_status_checks:
+        contexts:
+          - "CI_Pipeline"
 
 repository:
   # See https://terraform-ibm-modules.github.io/documentation/#/implementation-guidelines?id=module-names-and-descriptions
