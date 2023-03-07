@@ -2,9 +2,15 @@
 
 # Pre-commit hook that checks if the license exists in the project with terraform files
 
-regex=' [^//]*.tf '
-if [[ ! "'$*'" =~ $regex ]]; then
+# Won't run if repo is internal
+if git remote -v | head -n 1 | grep -q "github.ibm"; then
+    echo "internal repo"
     exit 0
+fi
+
+count=$(ls -1 *.tf 2>/dev/null | wc -l)
+if [ "$count" != 0 ]; then
+  exit 1
 fi
 
 if [[ ! -f "LICENSE" ]]; then
