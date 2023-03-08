@@ -103,11 +103,7 @@ pre-commit-no-terraform:
 	@pre-commit run --all-files
 
 # run pre-commit checks against renovate PRs, and commit back any changes to the PR (e.g. doc updates, secrets baseline etc)
-renovate-sweeper:
-    ifndef GH_TOKEN
-	   $(error Error: GH_TOKEN is undefined)
-    endif
-	make ghe-netrc
+renovate-sweeper: ghe-netrc
 	ci/renovate-sweeper.sh
 
 #
@@ -116,13 +112,7 @@ renovate-sweeper:
 
 # run tests for terraform repos (pipeline execution only - not for local usage)
 run-tests: SHELL:=/bin/bash
-run-tests:
-ifdef GHE
-ifndef GH_TOKEN
-	$(error Error: GH_TOKEN is undefined)
-endif
-endif
-	make ghe-netrc
+run-tests: ghe-netrc
 	ci/run-tests.sh
 
 # run tests for terraform repos locally
@@ -131,7 +121,7 @@ run-tests-local:
 
 # run unit tests for golang projects
 run-go-module-tests:
-	go test \$$(go list ./... | grep -v /common-dev-assets/) -count=1 -v -timeout 5m
+	go test $$(go list ./... | grep -v /common-dev-assets/) -count=1 -v -timeout 5m
 
 # go mod tidy
 go-mod-tidy:
