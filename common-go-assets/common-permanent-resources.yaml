@@ -26,5 +26,4 @@ dedicatedHostCrn: "crn:v1:bluemix:public:cloudantnosqldb:us-south:a/abac0df06b64
 # IAM Access tags
 accessTags:
   - geretain-dev:permanent-test-tag-1
-  - geretain-dev:permanent-test-tag-2
-  - geretain-dev:permanent-test-tag-3
+  - geretain-dev2:permanent-test-tag-4
