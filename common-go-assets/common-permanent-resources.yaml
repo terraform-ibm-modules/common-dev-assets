@@ -22,3 +22,9 @@ sdnlbServiceIdName: "geretain - sDNLB-ServiceID - DO NOT DELETE"
 
 # Cloudant Dedicated Host
 dedicatedHostCrn: "crn:v1:bluemix:public:cloudantnosqldb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:7c88e3f2-4412-4f45-b613-bae10b1e103c::"
+
+# IAM Access tags
+accessTags:
+  - geretain-dev:permanent-test-tag-1
+  - geretain-dev:permanent-test-tag-2
+  - geretain-dev:permanent-test-tag-3
