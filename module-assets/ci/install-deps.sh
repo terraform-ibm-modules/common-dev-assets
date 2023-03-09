@@ -180,7 +180,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=hashicorp/terraform
-TERRAFORM_VERSION=v1.3.9
+TERRAFORM_VERSION=v1.4.0
 BINARY=terraform
 set +e
 INSTALLED_TERRAFORM_VERSION="$(terraform --version | head -1 | cut -d' ' -f2)"
@@ -405,7 +405,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v3.11.1
+HELM_VERSION=v3.11.2
 BINARY=helm
 set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"
