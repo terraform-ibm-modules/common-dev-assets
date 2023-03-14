@@ -69,7 +69,7 @@ repos:
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 2.3.70
+  rev: 2.3.88
   hooks:
     - id: checkov
       args:
@@ -154,6 +154,6 @@ repos:
       pass_filenames: false
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
-  rev: v0.1.18
+  rev: v0.1.19
   hooks:
     - id: helmlint
