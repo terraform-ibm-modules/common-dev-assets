@@ -8,7 +8,7 @@ if git remote -v | head -n 1 | grep -q "github.ibm"; then
     exit 0
 fi
 
-count=$(ls -1 *.tf 2>/dev/null | wc -l)
+count=$(find ./*.tf 2>/dev/null | wc -l)
 if [ "$count" != 0 ]; then
   exit 1
 fi
