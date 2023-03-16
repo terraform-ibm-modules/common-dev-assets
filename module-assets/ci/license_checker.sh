@@ -4,7 +4,6 @@
 
 # Won't run if repo is internal
 if git remote -v | head -n 1 | grep -q "github.ibm"; then
-    echo "internal repo"
     exit 0
 fi
 
