@@ -180,7 +180,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=hashicorp/terraform
-TERRAFORM_VERSION=v1.4.1
+TERRAFORM_VERSION=v1.4.2
 BINARY=terraform
 set +e
 INSTALLED_TERRAFORM_VERSION="$(terraform --version | head -1 | cut -d' ' -f2)"
