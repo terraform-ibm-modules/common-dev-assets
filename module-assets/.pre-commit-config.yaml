@@ -61,7 +61,7 @@ repos:
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 2.3.102
+  rev: 2.3.105
   hooks:
     - id: checkov
       args:
@@ -77,7 +77,7 @@ repos:
   - id: shellcheck
   - id: go-fmt
 - repo: https://github.com/ibm/detect-secrets
-  rev: 0.13.1+ibm.56.dss
+  rev: 0.13.1+ibm.57.dss
   hooks:
   - id: detect-secrets
     args: ['--baseline', '.secrets.baseline', '--fail-on-unaudited', 'use-all-plugins']
