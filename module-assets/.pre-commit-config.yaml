@@ -14,7 +14,7 @@ repos:
       types: [file]
       language: script
       require_serial: true
-      pass_filenames: true
+      pass_filenames: false
       description: This hook ensures that a file named LICENSE exists for any repo (on github.com) which contains .tf files in the root directory of the repo
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.4.0
