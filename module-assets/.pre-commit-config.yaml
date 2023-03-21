@@ -61,7 +61,7 @@ repos:
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 2.3.105
+  rev: 2.3.106
   hooks:
     - id: checkov
       args:
