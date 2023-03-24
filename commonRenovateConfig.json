@@ -46,7 +46,7 @@
       "semanticCommitType": "ci"
     },
     {
-      "description": "Use the widen range stretegy to allow us to lock into exact supported terraform range since terraform can release breaking changes in minor version releases.",
+      "description": "Use the widen range strategy to allow us to lock into exact supported terraform range since terraform can release breaking changes in minor version releases.",
       "matchManagers": ["terraform"],
       "matchDepTypes": ["required_version"],
       "enabled": true,
