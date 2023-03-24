@@ -46,10 +46,11 @@
       "semanticCommitType": "ci"
     },
     {
-      "description": "Disable updates of the terraform version so it stays at >= 1.0.0",
+      "description": "Use the widen range stretegy to allow us to lock into exact supported terraform range since terraform can release breaking changes in minor version releases.",
       "matchManagers": ["terraform"],
       "matchDepTypes": ["required_version"],
-      "enabled": false
+      "enabled": true,
+      "rangeStrategy": "widen"
     },
     {
       "description": "Disable terraform provider updates by default. To enable, set enable to true below and renovate will priortise bumping this. We only need to bump this version to consume required bug fixes and/or new provider features.",
