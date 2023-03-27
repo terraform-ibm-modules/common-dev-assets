@@ -138,7 +138,7 @@ fi
 #######################################
 
  # renovate: datasource=github-tags depName=pre-commit/pre-commit
-PRE_COMMIT_VERSION=v3.2.0
+PRE_COMMIT_VERSION=v3.2.1
 PACKAGE=pre-commit
 set +e
 INSTALLED_PRE_COMMIT_VERSION="$(${PYTHON} -m pip show pre-commit | grep Version: | cut -d' ' -f2)"
@@ -176,34 +176,59 @@ else
 fi
 
 #######################################
+# terraform-switcher
+#######################################
+
+ # renovate: datasource=github-releases depName=warrensbox/terraform-switcher
+TFSWITCH_VERSION=0.13.1308
+BINARY=tfswitch
+set +e
+INSTALLED_TFSWITCH_VERSION="$(tfswitch --version | grep Version | awk '{ print $2 }')"
+set -e
+if [[ "$TFSWITCH_VERSION" != "$INSTALLED_TFSWITCH_VERSION" ]]; then
+  FILE_NAME="terraform-switcher_${TFSWITCH_VERSION}_${OS}_amd64.tar.gz"
+  URL="https://github.com/warrensbox/terraform-switcher/releases/download/${TFSWITCH_VERSION}"
+  SUMFILE="terraform-switcher_${TFSWITCH_VERSION}_checksums.txt"
+  TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
+
+  echo
+  echo "-- Installing ${BINARY} ${TFSWITCH_VERSION}..."
+
+  download ${BINARY} "${TFSWITCH_VERSION}" "${URL}" "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+  verify "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+  tar -xzf "${TMP_DIR}/${FILE_NAME}" -C "${TMP_DIR}"
+  copy_replace_binary ${BINARY} "${TMP_DIR}"
+  clean "${TMP_DIR}"
+else
+  echo "${BINARY} ${TFSWITCH_VERSION} already installed - skipping install"
+fi
+
+#######################################
 # terraform
 #######################################
 
  # renovate: datasource=github-releases depName=hashicorp/terraform
 TERRAFORM_VERSION=v1.4.2
 BINARY=terraform
-set +e
-INSTALLED_TERRAFORM_VERSION="$(terraform --version | head -1 | cut -d' ' -f2)"
-set -e
-if [[ "$TERRAFORM_VERSION" != "$INSTALLED_TERRAFORM_VERSION" ]]; then
-  # 'v' prefix required for renovate to query github.com for new release, but needs to be removed to pull from hashicorp.com
-  TERRAFORM_VERSION="${TERRAFORM_VERSION:1}"
-  FILE_NAME="terraform_${TERRAFORM_VERSION}_${OS}_amd64.zip"
-  URL="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}"
-  SUMFILE="terraform_${TERRAFORM_VERSION}_SHA256SUMS"
-  TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
 
-  echo
-  echo "-- Installing ${BINARY} ${TERRAFORM_VERSION}..."
+TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
+echo
+echo "-- Installing terraform ..."
 
-  download ${BINARY} "${TERRAFORM_VERSION}" "${URL}" "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
-  verify "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
-  unzip "${TMP_DIR}/${FILE_NAME}" -d "${TMP_DIR}" > /dev/null
-  copy_replace_binary ${BINARY} "${TMP_DIR}"
-  clean "${TMP_DIR}"
-else
-  echo "${BINARY} ${TERRAFORM_VERSION} already installed - skipping install"
+# Remove if binary already exists in /usr/local/bin
+arg=""
+if ! [ -w "${DIRECTORY}" ]; then
+  echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
+  arg=sudo
 fi
+${arg} rm -f "${DIRECTORY}/${BINARY}"
+
+# If a .tf file with the terraform constrain is detected in the current directory, it should automatically download or switch to the latest terraform version in the defined range.
+# Otherwise it will default to TERRAFORM_VERSION value defined above
+tfswitch --default "${TERRAFORM_VERSION:1}" --bin "${TMP_DIR}/${BINARY}"
+actual_binary_location=$(which "${TMP_DIR}/${BINARY}")
+copy_replace_binary ${BINARY} "$(dirname "${actual_binary_location}")"
+clean "${TMP_DIR}"
 
 #######################################
 # terragrunt
@@ -322,7 +347,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v1.52.1
+GOLANGCI_LINT_VERSION=v1.52.2
 BINARY=golangci-lint
 set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"
