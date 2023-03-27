@@ -25,9 +25,9 @@ dedicatedHostCrn: "crn:v1:bluemix:public:cloudantnosqldb:us-south:a/abac0df06b64
 
 # HyperProtect Crypto Instances and Root Keys
 hpcs_east: "bc07f975-0b8c-47a3-9c10-fffa60f483f1"
-hpcs_east_root_key_crn: "crn:v1:bluemix:public:hs-crypto:us-east:a/abac0df06b644a9cabc6e44f55b3880e:bc07f975-0b8c-47a3-9c10-fffa60f483f1:key:ab15dcaf-39e5-4a6b-b97a-8c807c6b9145" 
+hpcs_east_root_key_crn: "crn:v1:bluemix:public:hs-crypto:us-east:a/abac0df06b644a9cabc6e44f55b3880e:bc07f975-0b8c-47a3-9c10-fffa60f483f1:key:ab15dcaf-39e5-4a6b-b97a-8c807c6b9145"
 hpcs_south: "e6dce284-e80f-46e1-a3c1-830f7adff7a9"
-hpcs_south_root_key_crn: "crn:v1:bluemix:public:hs-crypto:us-south:a/abac0df06b644a9cabc6e44f55b3880e:e6dce284-e80f-46e1-a3c1-830f7adff7a9:key:1368d2eb-3ed0-4a8b-b09c-2155895f01ea" 
+hpcs_south_root_key_crn: "crn:v1:bluemix:public:hs-crypto:us-south:a/abac0df06b644a9cabc6e44f55b3880e:e6dce284-e80f-46e1-a3c1-830f7adff7a9:key:1368d2eb-3ed0-4a8b-b09c-2155895f01ea"
 
 # IAM Access tags
 accessTags:
