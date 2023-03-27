@@ -27,19 +27,3 @@ variable "resource_tags" {
   description = "Optional list of tags to be added to created resources"
   default     = []
 }
-
-variable "cos_location" {
-  description = "Location to provision the cloud object storage instance. Only used if 'create_cos_instance' is true."
-  type        = string
-  default     = "global"
-}
-
-variable "cos_plan" {
-  description = "Plan to be used for creating cloud object storage instance."
-  type        = string
-  default     = "standard"
-  validation {
-    condition     = contains(["standard", "lite"], var.cos_plan)
-    error_message = "The specified cos_plan is not a valid selection!"
-  }
-}
