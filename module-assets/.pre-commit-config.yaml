@@ -20,6 +20,7 @@ repos:
     - id: trailing-whitespace
     - id: check-merge-conflict
     - id: detect-private-key
+      exclude: ibm_catalog.json
     - id: mixed-line-ending
       args: ['--fix=lf']
       description: Forces to replace line ending by the UNIX 'lf' character.
@@ -68,6 +69,7 @@ repos:
         - --skip-path=.scv
         - --skip-path=Dockerfile
         - --skip-path=module-metadata.json
+        - --skip-path=ibm_catalog.json
         - --skip-framework=github_actions
 - repo: https://github.com/syntaqx/git-hooks
   rev: v0.0.17
