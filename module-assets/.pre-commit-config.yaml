@@ -17,6 +17,7 @@ repos:
       types: [file]
       files: \.(json|releaserc)$
     - id: end-of-file-fixer
+      exclude: .svg
     - id: trailing-whitespace
     - id: check-merge-conflict
     - id: detect-private-key
