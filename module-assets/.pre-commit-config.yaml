@@ -25,9 +25,11 @@ repos:
       types: [file]
       files: \.(json|releaserc)$
     - id: end-of-file-fixer
+      exclude: .svg
     - id: trailing-whitespace
     - id: check-merge-conflict
     - id: detect-private-key
+      exclude: ibm_catalog.json
     - id: mixed-line-ending
       args: ['--fix=lf']
       description: Forces to replace line ending by the UNIX 'lf' character.
@@ -69,13 +71,14 @@ repos:
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 2.3.102
+  rev: 2.3.134
   hooks:
     - id: checkov
       args:
         - --skip-path=.scv
         - --skip-path=Dockerfile
         - --skip-path=module-metadata.json
+        - --skip-path=ibm_catalog.json
         - --skip-framework=github_actions
 - repo: https://github.com/syntaqx/git-hooks
   rev: v0.0.17
@@ -85,7 +88,7 @@ repos:
   - id: shellcheck
   - id: go-fmt
 - repo: https://github.com/ibm/detect-secrets
-  rev: 0.13.1+ibm.56.dss
+  rev: 0.13.1+ibm.57.dss
   hooks:
   - id: detect-secrets
     args: ['--baseline', '.secrets.baseline', '--fail-on-unaudited', 'use-all-plugins']
@@ -110,7 +113,7 @@ repos:
     args: ["--profile", "black", "--filter-files"]
 # black
 - repo: https://github.com/ambv/black
-  rev: 23.1.0
+  rev: 23.3.0
   hooks:
   - id: black
     args: # arguments to configure black
