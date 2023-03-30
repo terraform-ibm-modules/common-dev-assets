@@ -7,16 +7,18 @@ function trigger_pipeline() {
   repo_name=$1
   product=$2
   flavor_label=$3
-  version=$4
-  git_url=$5
-  git_org=$6
-  destroy_on_failure=$7
-  publish_apikey_override=$8
-  validation_apikey_override=$9
+  install_type=$4
+  version=$5
+  git_url=$6
+  git_org=$7
+  destroy_on_failure=$8
+  publish_apikey_override=$9
+  validation_apikey_override=${10}
 
   payload=$(jq -c -n --arg repoName "${repo_name}" \
                      --arg product "${product}" \
                      --arg flavorLabel "${flavor_label}" \
+                     --arg installType "${install_type}" \
                      --arg version "${version}" \
                      --arg gitUrl "${git_url}" \
                      --arg gitOrg "${git_org}" \
@@ -26,6 +28,7 @@ function trigger_pipeline() {
                      '{"repo-name": $repoName,
                        "product": $product,
                        "flavor-label": $flavorLabel,
+                       "install-type": $installType,
                        "version": $version,
                        "git-url": $gitUrl,
                        "git-org": $gitOrg,
@@ -168,9 +171,10 @@ if test -f "${CATALOG_JSON_FILENAME}"; then
     while IFS='' read -r line; do flavor_label_array+=("$line"); done < <(jq -r --arg product "${product}" '.products | .[] | select(.name==$product) | .flavors | .[] | .label' "${CATALOG_JSON_FILENAME}")
     # Loop through all flavors and trigger onboarding pipeline for each one
     for flavor_label in "${flavor_label_array[@]}"; do
+      install_type=$(jq -r --arg product "${product}" --arg label "${flavor_label}" '.products | .[] | select(.name==$product) | .flavors | .[] | select(.label==$label) | .install_type' "${CATALOG_JSON_FILENAME}")
       echo
       echo "Kicking off tekton pipeline for ${product} (${flavor_label}) .."
-      trigger_pipeline "${REPO_NAME}" "${product}" "${flavor_label}" "${VERSION}" "${GITHUB_URL}" "${GITHUB_ORG}" "${DESTROY_ON_FAILURE}" "${PUBLISH_APIKEY_OVERRIDE}" "${VALIDATION_APIKEY_OVERRIDE}"
+      trigger_pipeline "${REPO_NAME}" "${product}" "${flavor_label}" "${install_type}" "${VERSION}" "${GITHUB_URL}" "${GITHUB_ORG}" "${DESTROY_ON_FAILURE}" "${PUBLISH_APIKEY_OVERRIDE}" "${VALIDATION_APIKEY_OVERRIDE}"
       echo
 
       # Using syntax ${#a[@]} here to get last element of array so code is compatible on older bash (v4.0 or earlier) - see https://unix.stackexchange.com/a/198788
@@ -186,5 +190,5 @@ else
   # When repo contains no ibm_catalog.json, pass null as flavor label and repo name for product name
   echo
   echo "Kicking off tekton pipeline for ${REPO_NAME} .."
-  trigger_pipeline "${REPO_NAME}" "${REPO_NAME}" "null" "${VERSION}" "${GITHUB_URL}" "${GITHUB_ORG}" "${DESTROY_ON_FAILURE}" "${PUBLISH_APIKEY_OVERRIDE}" "${VALIDATION_APIKEY_OVERRIDE}"
+  trigger_pipeline "${REPO_NAME}" "${REPO_NAME}" "null" "non-da" "${VERSION}" "${GITHUB_URL}" "${GITHUB_ORG}" "${DESTROY_ON_FAILURE}" "${PUBLISH_APIKEY_OVERRIDE}" "${VALIDATION_APIKEY_OVERRIDE}"
 fi
