@@ -8,6 +8,14 @@ repos:
       entry: ci/submoduleVersionCheck.sh
       language: script
       pass_filenames: false
+    - id: license-checker
+      name: License Checker
+      entry: ci/license_checker.sh
+      types: [file]
+      language: script
+      require_serial: true
+      pass_filenames: false
+      description: This hook ensures that a file named LICENSE exists for any repo (on github.com) which contains .tf files in the root directory of the repo
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.4.0
   hooks:
@@ -63,7 +71,7 @@ repos:
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 2.3.132
+  rev: 2.3.134
   hooks:
     - id: checkov
       args:
