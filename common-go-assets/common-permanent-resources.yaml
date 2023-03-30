@@ -40,4 +40,4 @@ accessTags:
   - geretain-dev-1:permanent-test-tag-4
 
 # postgresql instance crn for PITR test
-postgresql_Crn: "crn:v1:bluemix:public:databases-for-postgresql:us-south:a/abac0df06b644a9cabc6e44f55b3880e:eb7aac46-7cb1-40b3-9f0f-12f9c541d605::"
+postgresqlCrn: "crn:v1:bluemix:public:databases-for-postgresql:us-south:a/abac0df06b644a9cabc6e44f55b3880e:eb7aac46-7cb1-40b3-9f0f-12f9c541d605::"
