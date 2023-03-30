@@ -171,7 +171,7 @@ if test -f "${CATALOG_JSON_FILENAME}"; then
     while IFS='' read -r line; do flavor_label_array+=("$line"); done < <(jq -r --arg product "${product}" '.products | .[] | select(.name==$product) | .flavors | .[] | .label' "${CATALOG_JSON_FILENAME}")
     # Loop through all flavors and trigger onboarding pipeline for each one
     for flavor_label in "${flavor_label_array[@]}"; do
-      install_type=$(jq -r --arg product "${product}" --arg label "${flavor_label}" '.products | .[] | select(.name==$product) | .flavors | .[] | select(.label==$label) | .install_type' "${CATALOG_JSON_FILENAME}")
+      install_type=$(jq -r --arg product "${product}" --arg flavorLabel "${flavor_label}" '.products | .[] | select(.name==$product) | .flavors | .[] | select(.label==$flavorLabel) | .install_type' "${CATALOG_JSON_FILENAME}")
       echo
       echo "Kicking off tekton pipeline for ${product} (${flavor_label}) .."
       trigger_pipeline "${REPO_NAME}" "${product}" "${flavor_label}" "${install_type}" "${VERSION}" "${GITHUB_URL}" "${GITHUB_ORG}" "${DESTROY_ON_FAILURE}" "${PUBLISH_APIKEY_OVERRIDE}" "${VALIDATION_APIKEY_OVERRIDE}"
