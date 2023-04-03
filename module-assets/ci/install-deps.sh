@@ -138,7 +138,7 @@ fi
 #######################################
 
  # renovate: datasource=github-tags depName=pre-commit/pre-commit
-PRE_COMMIT_VERSION=v3.2.1
+PRE_COMMIT_VERSION=v3.2.2
 PACKAGE=pre-commit
 set +e
 INSTALLED_PRE_COMMIT_VERSION="$(${PYTHON} -m pip show pre-commit | grep Version: | cut -d' ' -f2)"
@@ -235,7 +235,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.45.0
+TERRAGRUNT_VERSION=v0.45.1
 BINARY=terragrunt
 set +e
 INSTALLED_TERRAGRUNT_VERSION="$(terragrunt --version | head -1 | cut -d' ' -f3)"
