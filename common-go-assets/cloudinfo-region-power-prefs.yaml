@@ -1,8 +1,8 @@
 ---
-- name: syd04
+- name: syd05
   useForTest: true
   testPriority: 1
-- name: tok04
+- name: osa21
   useForTest: true
   testPriority: 2
 - name: sao01
@@ -20,10 +20,10 @@
 - name: lon06
   useForTest: true
   testPriority: 7
-- name: osa21
+- name: tok04
   useForTest: true
   testPriority: 8
-- name: syd05
+- name: syd04
   useForTest: true
   testPriority: 9
   # not yet supported by terraform-ibm-powervs-infrastructure module
