@@ -26,7 +26,6 @@
 - name: syd05
   useForTest: true
   testPriority: 9
-
   # not yet supported by terraform-ibm-powervs-infrastructure module
 - name: wdc06
   useForTest: false
