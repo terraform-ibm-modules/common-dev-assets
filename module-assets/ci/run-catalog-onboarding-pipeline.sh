@@ -173,8 +173,6 @@ for product in "${product_array[@]}"; do
   while IFS='' read -r line; do directory_array+=("$line"); done < <(jq -r --arg product "${product}" '.products | .[] | select(.name==$product) | .flavors | .[] | .working_directory' "${CATALOG_JSON_FILENAME}")
   # Loop through all flavor directories and trigger onboarding pipeline for each one
   for flavor_dir in "${directory_array[@]}"; do
-    # remove any trailing slash
-    flavor_dir=${flavor_dir%/}
     # determine the flavor label
     flavor_label=$(jq -r --arg wdir "${flavor_dir}" --arg product "${product}" '.products | .[] | select(.name==$product) | .flavors | .[] | select(.working_directory==$wdir) | .label' "${CATALOG_JSON_FILENAME}")
     # determine the install type
