@@ -190,10 +190,10 @@ for product in "${product_array[@]}"; do
 
     # Using syntax ${#a[@]} here to get last element of array so code is compatible on older bash (v4.0 or earlier) - see https://unix.stackexchange.com/a/198788
     if [ "${flavor_dir}" != "${directory_array[${#directory_array[@]}-1]}" ]; then
-      # Sleep for 10 secs before triggering pipeline again
+      # Sleep for 5 mins before triggering pipeline again
       echo
-      echo "Sleeping for 10 secs.."
-      sleep 10
+      echo "Sleeping for 5 mins.."
+      sleep 300
     fi
   done
 done
