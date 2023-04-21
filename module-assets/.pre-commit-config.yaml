@@ -44,7 +44,7 @@ repos:
       stages: [commit-msg]
       additional_dependencies: ['@commitlint/config-angular']
 - repo: https://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.77.2
+  rev: v1.77.3
   hooks:
     - id: terraform_fmt
     - id: terraform_validate
@@ -71,7 +71,7 @@ repos:
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 2.3.191
+  rev: 2.3.192
   hooks:
     - id: checkov
       args:
@@ -157,6 +157,6 @@ repos:
       pass_filenames: false
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
-  rev: v0.1.20
+  rev: v0.1.21
   hooks:
     - id: helmlint
