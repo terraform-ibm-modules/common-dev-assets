@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+# Validate that required environment variables are set
 if [ -z "$TF_VAR_ibmcloud_api_key" ]
 then
       echo "ERROR: Environment variable TF_VAR_ibmcloud_api_key must be set"
@@ -19,13 +20,14 @@ then
       exit 1
 fi
 
-
+# Change to target directory if provided as an argument
 if [ $# -eq 1 ]
 then
     echo "Changing to target directory"
     cd "$1" || { echo "Directory $1 does not exist. Exiting..."; exit 1; }
 fi
 
+# Set default values for optional environment variables if not set
 if [ -z "$REGION" ]
 then
       REGION="us-south"
@@ -42,7 +44,7 @@ then
   CRA_IGNORE_RULES_FILE="cra-tf-validate-ignore-rules.json"
 fi
 
-
+# Initialize variables used in the script
 ignoring_rules="[]"
 number_of_ignored_rules=0
 number_of_skipped_evidences=0
@@ -57,19 +59,24 @@ plan_out="plan.out"
 plan_json="plan.json"
 profile_json="profile.json"
 
-
+# Get IAM token for authentication
 echo "Getting IAM token..."
 IAM_TOKEN=$(curl -s -X POST "https://iam.cloud.ibm.com/identity/token" -H "Content-Type: application/x-www-form-urlencoded" -H "Accept: application/json" --data-urlencode "grant_type=urn:ibm:params:oauth:grant-type:apikey" --data-urlencode "apikey=$TF_VAR_ibmcloud_api_key" | jq -r '.access_token')
 
 # Fetch the profile JSON using curl
 curl -s -X GET "https://us.compliance.cloud.ibm.com/v3/profiles/$PROFILE_ID?account_id=$ACCOUNT_ID" -H "Authorization: Bearer $IAM_TOKEN" -H "Content-Type: application/json" -o "$profile_json"
 
+# Initialize Terraform and run Terraform plan
 terraform init
 terraform plan --out "$plan_out"
-# Obtain JSON multilines (hence jq)
+
+# Convert Terraform plan output to JSON format
 terraform show -json "$plan_out" | jq '.' > "$plan_json"
+
+# Login to IBM Cloud using API key and set the target region
 ibmcloud login --apikey "${TF_VAR_ibmcloud_api_key}" -r "$REGION"
-# Continue if CRA Fails, Will fail later if any ot the failures are valid ie not on the ignore list or apply to the created Terraform resources
+
+# Run IBM Cloud CRA Terraform validate and continue if it fails, Will fail later if any ot the failures are valid ie not on the ignore list or apply to the created Terraform resources
 set +e
 ibmcloud cra terraform-validate \
       --tf-plan "$plan_json" \
@@ -80,6 +87,7 @@ ibmcloud cra terraform-validate \
 set -e
 # Fail pipeline if any other step fails
 
+# Check if the CRA_IGNORE_RULES_FILE exists and read the ignore rules from it
 if [ -f "$CRA_IGNORE_RULES_FILE" ]; then
   # built ignore list from file
   ignoring_rules=$(jq '.scc_rules[] | .scc_rule_id ' "$CRA_IGNORE_RULES_FILE" | jq -c -s '.')
@@ -136,4 +144,6 @@ echo "$number_of_ignored_rules Ignored SCC Rules"
 echo "$number_of_scanned_evidences Relevant SCC Rules (After Ignore)"
 echo "$number_of_resourced_failed_rules Failed SCC Rules"
 echo "--------------------------------------------------"
+
+# Exit with the appropriate exit code based on the presence of failed rules
 exit $exit_code
