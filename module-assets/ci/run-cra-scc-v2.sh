@@ -64,6 +64,7 @@ echo "Getting IAM token..."
 IAM_TOKEN=$(curl -s -X POST "https://iam.cloud.ibm.com/identity/token" -H "Content-Type: application/x-www-form-urlencoded" -H "Accept: application/json" --data-urlencode "grant_type=urn:ibm:params:oauth:grant-type:apikey" --data-urlencode "apikey=$TF_VAR_ibmcloud_api_key" | jq -r '.access_token')
 
 # Fetch the profile JSON using curl
+echo "Getting Policy JSON for ID: $PROFILE_ID"
 curl -s --retry 3 -X GET "https://us.compliance.cloud.ibm.com/v3/profiles/$PROFILE_ID?account_id=$ACCOUNT_ID" -H "Authorization: Bearer $IAM_TOKEN" -H "Content-Type: application/json" -o "$profile_json"
 
 # Initialize Terraform and run Terraform plan
