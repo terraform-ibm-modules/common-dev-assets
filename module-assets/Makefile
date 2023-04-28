@@ -76,12 +76,23 @@ docker-pull:
 	${CONTAINER_RUNTIME} pull "${DOCKER_REGISTRY}/$(IMAGE)"
 
 docker-run:
-	${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
-	        --platform linux/amd64 \
-		-v ~/.ssh:/root/.ssh \
-		-v ~/.netrc:/root/.netrc \
-		-v ~/.gitconfig:/etc/gitconfig \
-		${DOCKER_REGISTRY}/$(IMAGE) bash
+	@# create all of the directories + files we are mounting if they do not already exist to prevent "Error response from daemon: error while creating mount source path"
+	@mkdir -p ~/.ssh
+	@touch ~/.netrc ~/.gitconfig
+	@# Mount into /tmp (as read only) so files can be moved and permissions updated for root user
+	@${CONTAINER_RUNTIME} run -it -v $$(pwd):/mnt \
+		--platform linux/amd64 \
+		-v ~/.ssh:/tmp/.ssh:ro \
+		-v ~/.netrc:/tmp/.netrc:ro \
+		-v ~/.gitconfig:/tmp/.gitconfig:ro \
+		${DOCKER_REGISTRY}/$(IMAGE) \
+		bash -c "cp -R /tmp/.ssh /root && \
+			 cp /tmp/.netrc /root/.netrc && \
+			 cp /tmp/.gitconfig /root/.gitconfig && \
+			 chown -R root /root/.ssh /root/.netrc /root/.gitconfig && \
+			 chgrp -R root /root/.ssh /root/.netrc && \
+ 			 git config --global --add safe.directory /mnt && \
+ 			 bash"
 
 #
 # pre-commit
