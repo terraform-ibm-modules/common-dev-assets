@@ -91,7 +91,7 @@ docker-run:
 			 cp /tmp/.gitconfig /etc/gitconfig && \
 			 chown -R root /root/.ssh /root/.netrc /etc/gitconfig && \
 			 chgrp -R root /root/.ssh /root/.netrc && \
- 			 git config --global --add safe.directory * && \
+ 			 git config --global --add safe.directory '*' && \
  			 bash"
 
 #
