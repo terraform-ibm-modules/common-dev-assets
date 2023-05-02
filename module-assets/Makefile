@@ -88,10 +88,10 @@ docker-run:
 		${DOCKER_REGISTRY}/$(IMAGE) \
 		bash -c "cp -R /tmp/.ssh /root && \
 			 cp /tmp/.netrc /root/.netrc && \
-			 cp /tmp/.gitconfig /root/.gitconfig && \
-			 chown -R root /root/.ssh /root/.netrc /root/.gitconfig && \
+			 cp /tmp/.gitconfig /etc/gitconfig && \
+			 chown -R root /root/.ssh /root/.netrc /etc/gitconfig && \
 			 chgrp -R root /root/.ssh /root/.netrc && \
- 			 git config --global --add safe.directory /mnt && \
+ 			 git config --global --add safe.directory * && \
  			 bash"
 
 #
