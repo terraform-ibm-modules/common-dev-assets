@@ -173,7 +173,6 @@ for product in "${product_array[@]}"; do
   while IFS='' read -r line; do directory_array+=("$line"); done < <(jq -r --arg product "${product}" '.products | .[] | select(.name==$product) | .flavors | .[] | .working_directory' "${CATALOG_JSON_FILENAME}")
   # Loop through all flavor directories and trigger onboarding pipeline for each one
   for flavor_dir in "${directory_array[@]}"; do
-    # TODO: See if we can refactor so we no longer rely on working_directory to be present, as its not actually required by ibm_catalog.json
     if [ "${flavor_dir}" == "null" ]; then
       echo "Unable to determine working directory. Please ensure the ibm_catalog.json has working_directory value set"
       exit 1
