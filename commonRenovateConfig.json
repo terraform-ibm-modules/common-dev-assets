@@ -58,6 +58,7 @@
       "matchManagers": ["terraform"],
       "matchDepTypes": ["required_provider"],
       "rangeStrategy": "bump",
+      "semanticCommitType": "feat",
       "group": true,
       "groupName": "required_provider",
       "prPriority": 100
