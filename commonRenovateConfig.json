@@ -28,7 +28,7 @@
     "commands": ["pre-commit run --all-files || true"],
     "fileFilters": ["**/**"],
     "executionMode": "update"
-  }
+  },
   "packageRules": [
     {
       "description": "Use fix as Semantic Commit prefix for all dependency updates except ones specified in rules below",
