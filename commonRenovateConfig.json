@@ -4,8 +4,9 @@
     ":semanticCommits",
     ":disableDependencyDashboard"
   ],
-  "cloneSubmodules": false,
+  "cloneSubmodules": true,
   "prConcurrentLimit": 1,
+  "prHourlyLimit": 10,
   "branchConcurrentLimit": 0,
   "automerge": false,
   "force": {
@@ -25,7 +26,7 @@
   ],
   "postUpdateOptions": ["gomodTidy", "gomodUpdateImportPaths"],
   "postUpgradeTasks": {
-    "commands": ["export PATH=$PATH:/tmp && make dependency-install-darwin-linux CUSTOM_DIRECTORY=/tmp", "export PATH=$PATH:/tmp && pre-commit run --all-files || true"],
+    "commands": ["export CUSTOM_DIRECTORY=/tmp && export PATH=$PATH:/tmp && ./common-dev-assets/module-assets/ci/install-deps.sh", "export PATH=$PATH:/tmp && pre-commit run --all-files || true"],
     "fileFilters": ["**/**"],
     "executionMode": "update"
   },
