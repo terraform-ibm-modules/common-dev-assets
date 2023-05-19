@@ -4,7 +4,7 @@
     ":semanticCommits",
     ":disableDependencyDashboard"
   ],
-  "cloneSubmodules": false,
+  "cloneSubmodules": true,
   "prConcurrentLimit": 1,
   "prHourlyLimit": 10,
   "branchConcurrentLimit": 0,
