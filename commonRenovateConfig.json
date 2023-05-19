@@ -25,7 +25,7 @@
   ],
   "postUpdateOptions": ["gomodTidy", "gomodUpdateImportPaths"],
   "postUpgradeTasks": {
-    "commands": ["export PATH=$PATH:/tmp", "make dependency-install-darwin-linux CUSTOM_DIRECTORY=/tmp", "pre-commit run --all-files || true"],
+    "commands": ["export PATH=$PATH:/tmp && make dependency-install-darwin-linux CUSTOM_DIRECTORY=/tmp", "export PATH=$PATH:/tmp && pre-commit run --all-files || true"],
     "fileFilters": ["**/**"],
     "executionMode": "update"
   },
