@@ -6,7 +6,7 @@
   ],
   "cloneSubmodules": false,
   "prConcurrentLimit": 1,
-  "prHourlyLimit": 0,
+  "prHourlyLimit": 5,
   "branchConcurrentLimit": 0,
   "automerge": false,
   "force": {
