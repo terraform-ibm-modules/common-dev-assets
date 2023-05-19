@@ -25,7 +25,7 @@
   ],
   "postUpdateOptions": ["gomodTidy", "gomodUpdateImportPaths"],
   "postUpgradeTasks": {
-    "commands": ["pre-commit run --all-files || true"],
+    "commands": ["make dependency-install-darwin-linux", "pre-commit run --all-files || true"],
     "fileFilters": ["**/**"],
     "executionMode": "update"
   },
