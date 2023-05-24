@@ -75,7 +75,9 @@ if [ ${IS_PR} == true ]; then
                          "module-metadata.json"
                          "ibm_catalog.json"
                          "cra-tf-validate-ignore-goals.json"
-                         "pvs.preset.json")
+                         "cra-tf-validate-ignore-rules.json"
+                         "pvs.preset.json"
+                         ".fileignore")
 
   # Determine all files being changed in the PR, and add it to array
   changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
