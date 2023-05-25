@@ -151,11 +151,16 @@ content: |-
 
     {{- if $is_internal }}
     <!--
-    Include the following 'Controls' section if the module implements NIST controls
-    Remove the 'section if the module does not implement controls
+    The following 'Compliance and security' section
+    is for the GoldenEye core team only.
     -->
 
-    <!-- GoldenEye core team only
+    <!-- MODULE IMPLEMENTS CONTROLS
+    If the module implements NIST controls,
+    uncomment the following block and update the information.
+    -->
+
+    <!--
     ## Compliance and security
 
     This module implements the following NIST controls. For more information about how this module implements the controls in the following list, see [NIST controls](docs/controls.md).
@@ -177,6 +182,18 @@ content: |-
 
     For details about the controls, see the NIST Risk Management Framework page at
     https://csrc.nist.gov/Projects/risk-management/sp800-53-controls/release-search#/controls?version=4.0.
+    -->
+
+    <!-- NO CONTROLS FOR MODULE
+    However, if the module requires a section about controls
+    but no controls are implemented by the module,
+    uncomment the following block instead of the previous one.
+    -->
+
+    <!--
+    ## Compliance and security
+
+    NIST controls do not apply to this module.
     -->
     {{- end }}
 
