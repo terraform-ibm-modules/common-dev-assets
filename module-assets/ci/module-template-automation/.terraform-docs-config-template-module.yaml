@@ -151,14 +151,13 @@ content: |-
 
     {{- if $is_internal }}
     <!--
-    Uncomment one of the two following 'Compliance and security' sections
-    if the module needs to expose information about NIST controls
+    The following 'Compliance and security' section
+    is for the GoldenEye core team only.
     -->
 
-    <!-- GoldenEye core team only -->
     <!-- MODULE IMPLEMENTS CONTROLS
     If the module implements NIST controls,
-    uncomment the following block, update the information.
+    uncomment the following block and update the information.
     -->
 
     <!--
@@ -186,9 +185,9 @@ content: |-
     -->
 
     <!-- NO CONTROLS FOR MODULE
-    If no controls are implemented by the module, yet the module requires
-    a section about controls, uncomment the following block instead of
-    the previous section.
+    However, if the module requires a section about controls
+    but no controls are implemented by the module,
+    uncomment the following block instead of the previous one.
     -->
 
     <!--
