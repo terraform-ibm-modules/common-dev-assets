@@ -516,7 +516,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=IBM-Cloud/terraform-config-inspect
-TERRAFORM_CONFIG_INSPECT_VERSION=v1.0.0-beta3
+TERRAFORM_CONFIG_INSPECT_VERSION=v1.0.0-beta4
 # Not possible to check the version of this yet https://github.com/hashicorp/terraform-config-inspect/issues/88
 TERRAFORM_CONFIG_INSPECT_VERSION_NUMBER="${TERRAFORM_CONFIG_INSPECT_VERSION:1}"
 BINARY=terraform-config-inspect
