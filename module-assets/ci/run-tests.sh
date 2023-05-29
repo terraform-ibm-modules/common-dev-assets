@@ -146,13 +146,13 @@ if [ ${IS_PR} == true ]; then
               echo "Logdna-agent Status: $(systemctl status logdna-agent)"
               LOGDNA_RUN_ATTEMPT=$((LOGDNA_RUN_ATTEMPT+1))
               echo "=================================================== Logdna-agent: Service Log ==================================================="
-              cat /var/log/journal/logdna-agent.service.log
+              cat /var/log/journal/logdna-agent.service.log | grep -i error
               echo "================================================================================================================================="
 
               echo "Retrying..."
           fi
       done
-      
+
       $test_cmd 2>&1 | tee "$log_location"
 
     else
