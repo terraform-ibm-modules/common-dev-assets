@@ -128,24 +128,31 @@ if [ ${IS_PR} == true ]; then
       # Exclude extra logs
       export MZ_EXCLUSION_REGEX_RULES="/var/log/*"
 
-      ## Retry running logdna if fails to run
-      MAX_RETRY_LOGDNA=3
+      ## Retry running logdna if fails to run and adding more logs
+
+      MAX_RETRY_LOGDNA=5
       LOGDNA_RUN_ATTEMPT=0
 
-      while [$LOGDNA_RUN_ATTEMPT -le $MAX_RETRY_COUNT ];do
-        echo "Starting logdna-agent"
-        systemctl start logdna-agent
+      while [ "$LOGDNA_RUN_ATTEMPT" -le "$MAX_RETRY_LOGDNA" ]; do
+          echo "Starting logdna-agent: [$LOGDNA_RUN_ATTEMPT/$MAX_RETRY_LOGDNA]"
+          systemctl start logdna-agent
 
-        if [$? -eq 0]; then
-          break
-        else
-          echo "Logdna-agent Tag added: $REPO_NAME-PR$PR_NUM"
-          echo "Logdna-agent Status: $(systemctl status logdna-agent)"
-          LOGDNA_RUN_ATTEMPT=$((LOGDNA_RUN_ATTEMPT+1))
-        fi
+          if [ $? -eq 0 ]; then
+              echo "Logdna-agent started successfully"
+              break
+          else
+              echo "Logdna-agent start command exit status: $?"
+              echo "Logdna-agent Tag added: $REPO_NAME-PR$PR_NUM"
+              echo "Logdna-agent Status: $(systemctl status logdna-agent)"
+              LOGDNA_RUN_ATTEMPT=$((LOGDNA_RUN_ATTEMPT+1))
+              echo "=================================================== Logdna-agent: Service Log ==================================================="
+              cat /var/log/journal/logdna-agent.service.log
+              echo "================================================================================================================================="
+
+              echo "Retrying..."
+          fi
       done
-
-      echo "Logdna-agent Status: $(systemctl status logdna-agent)"
+      
       $test_cmd 2>&1 | tee "$log_location"
 
     else
