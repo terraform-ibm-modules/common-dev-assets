@@ -136,17 +136,18 @@ if [ ${IS_PR} == true ]; then
       while [ "$LOGDNA_RUN_ATTEMPT" -le "$MAX_RETRY_LOGDNA" ]; do
           echo "Starting logdna-agent: [$LOGDNA_RUN_ATTEMPT/$MAX_RETRY_LOGDNA]"
           systemctl start logdna-agent
+          RESULT_LOGDNA_START=$?
 
-          if [ $? -eq 0 ]; then
+          if [ $RESULT_LOGDNA_START -eq 0 ]; then
               echo "Logdna-agent started successfully"
               break
           else
-              echo "Logdna-agent start command exit status: $?"
+              echo "Logdna-agent start command exit status: $RESULT_LOGDNA_START"
               echo "Logdna-agent Tag added: $REPO_NAME-PR$PR_NUM"
               echo "Logdna-agent Status: $(systemctl status logdna-agent)"
               LOGDNA_RUN_ATTEMPT=$((LOGDNA_RUN_ATTEMPT+1))
               echo "=================================================== Logdna-agent: Service Log ==================================================="
-              cat /var/log/journal/logdna-agent.service.log | grep -i error
+              grep -i error < /var/log/journal/logdna-agent.service.log | tail -n 10
               echo "================================================================================================================================="
 
               echo "Retrying..."
