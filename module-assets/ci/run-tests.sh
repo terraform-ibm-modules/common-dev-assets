@@ -146,7 +146,7 @@ if [ ${IS_PR} == true ]; then
           else
               echo "Logdna-agent start command exit status: $RESULT_LOGDNA_START"
               echo "Logdna-agent Tag added: $MZ_TAGS"
-              set +e 
+              set +e
                 echo "Logdna-agent Status: $(systemctl status logdna-agent)"
                 LOGDNA_RUN_ATTEMPT=$((LOGDNA_RUN_ATTEMPT+1))
                 echo "=================================================== Logdna-agent: Service Log ==================================================="
