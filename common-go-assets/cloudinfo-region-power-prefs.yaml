@@ -2,7 +2,7 @@
 - name: syd05
   useForTest: true
   testPriority: 1
-- name: lon04
+- name: lon06
   useForTest: true
   testPriority: 2
 - name: sao01
@@ -17,7 +17,7 @@
 - name: eu-de-2
   useForTest: true
   testPriority: 6
-- name: lon06
+- name: lon04
   useForTest: true
   testPriority: 7
 - name: tok04
