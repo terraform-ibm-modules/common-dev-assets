@@ -130,14 +130,14 @@ if [ ${IS_PR} == true ]; then
 
       ## Retry running logdna if fails to run and adding more logs
 
-      MAX_RETRY_LOGDNA=5
+      MAX_RETRY_LOGDNA=3
       LOGDNA_RUN_ATTEMPT=1
 
       while [ "$LOGDNA_RUN_ATTEMPT" -le "$MAX_RETRY_LOGDNA" ]; do
           echo "Starting logdna-agent: [$LOGDNA_RUN_ATTEMPT/$MAX_RETRY_LOGDNA]"
           set +e
-            systemctl start logdna-agent
-            RESULT_LOGDNA_START=$?
+          systemctl start logdna-agent
+          RESULT_LOGDNA_START=$?
           set -e
 
           if [ $RESULT_LOGDNA_START -eq 0 ]; then
@@ -147,14 +147,14 @@ if [ ${IS_PR} == true ]; then
               echo "Logdna-agent start command exit status: $RESULT_LOGDNA_START"
               echo "Logdna-agent Tag added: $MZ_TAGS"
               set +e
-                echo "Logdna-agent Status: $(systemctl status logdna-agent)"
-                LOGDNA_RUN_ATTEMPT=$((LOGDNA_RUN_ATTEMPT+1))
-                echo "=================================================== Logdna-agent: Service Log ==================================================="
-                  tail -n 20 /var/log/journal/logdna-agent.service.log
-                echo "================================================================================================================================="
-                if [ $LOGDNA_RUN_ATTEMPT -le $MAX_RETRY_LOGDNA ]; then
-                  echo "Retrying..."
-                fi
+              echo "Logdna-agent Status: $(systemctl status logdna-agent)"
+              LOGDNA_RUN_ATTEMPT=$((LOGDNA_RUN_ATTEMPT+1))
+              echo "=================================================== Logdna-agent: Service Log ==================================================="
+                tail -n 20 /var/log/journal/logdna-agent.service.log
+              echo "================================================================================================================================="
+              if [ $LOGDNA_RUN_ATTEMPT -le $MAX_RETRY_LOGDNA ]; then
+                echo "Retrying..."
+              fi
               set -e
           fi
       done
