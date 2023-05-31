@@ -24,3 +24,5 @@ repository:
   # The description is displayed under the repository name on the
   # organization page and in the 'About' section of the repository.
   description: "Provides common development and CI assets that support the repos in this GitHub organization"
+
+  topics: "core-team"
