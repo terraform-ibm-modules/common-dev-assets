@@ -85,6 +85,15 @@ ibmcloud cra terraform-validate \
       --toolchainid "$TOOLCHAIN_ID" \
       --strict \
       --policy-file "$profile_json" >&2
+exit_status=$?
+
+# --strict flag results in exit status 2 if policies fail.
+# Any other non-zero exit code should hard fail the script 
+# (fix for https://github.ibm.com/GoldenEye/issues/issues/4977)
+if [ ${exit_status} -ne 2 ] && [ ${exit_status} -ne 0 ]; then
+  echo "Encountered an error while attempting to run CRA. Exiting."
+  exit 1
+fi
 set -e
 # Fail pipeline if any other step fails
 
