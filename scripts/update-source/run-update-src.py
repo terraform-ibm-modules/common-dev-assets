@@ -16,7 +16,7 @@ SEARCH_PATTERN_TIM = (
     r'(.*[Rr]eplace.*\n)?.*"?git::https:\/\/github\.com\/terraform-ibm-modules\/'
 )
 SEARCH_PATTERN_GE = (
-    r'(.*[Rr]eplace.*\n)?.*"git::https:\/\/github\.ibm\.com\/GoldenEye\/'
+    r'(.*[Rr]eplace.*\n)?.*"?git::https:\/\/github\.ibm\.com\/GoldenEye\/'
 )
 # variable to store the text that we want to replace in files
 REPLACE_TEXT = '  source  = "'
