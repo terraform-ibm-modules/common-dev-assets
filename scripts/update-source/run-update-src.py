@@ -13,7 +13,7 @@ import requests
 
 # text to be searched in files
 SEARCH_PATTERN_TIM = (
-    r'(.*[Rr]eplace.*\n)?.*"git::https:\/\/github\.com\/terraform-ibm-modules\/'
+    r'(.*[Rr]eplace.*\n)?.*"?git::https:\/\/github\.com\/terraform-ibm-modules\/'
 )
 SEARCH_PATTERN_GE = (
     r'(.*[Rr]eplace.*\n)?.*"git::https:\/\/github\.ibm\.com\/GoldenEye\/'
@@ -26,6 +26,7 @@ MODULE_REGISTRY_URL = "https://registry.terraform.io/v1/modules/terraform-ibm-mo
 MODULE_SEARCH_URL = (
     "https://registry.terraform.io/v1/modules/search?q=terraform-ibm-modules%20"
 )
+EXCLUDE_DIRECTORIES = ["common-dev-assets", "ci"]
 
 ###########################################################################################################
 # Core Logic
@@ -94,53 +95,64 @@ def get_files(
     """
 
     for file in glob.glob(extension, recursive=True):
-        with open(file, "r") as reader:
-            for line in reader:
-                if re.search(search_pattern, line):
-                    matched_lines.append(line)
-                    files.append(file)
-        reader.close()
+        directory_name = os.path.dirname(file)
+        if not any(directory_name.startswith(prefix) for prefix in EXCLUDE_DIRECTORIES):
+            with open(file, "r") as reader:
+                for line in reader:
+                    if re.search(search_pattern, line):
+                        matched_lines.append(line)
+                        files.append(file)
+            reader.close()
     # return unique files and lines
     return set(files), set(matched_lines)
 
 
 # replaces the source in the file content
 def replace_source(
+    current_file_pattern: str,
     file: str,
+    line: str,
     repo_name: str,
     search_pattern: str,
     replace_text: str,
-    version_update: bool,
     store: list,
 ) -> str:
     """Updates source information in the given files to the one found in store
 
     Args:
+       current_file_pattern(str): extension of the file being updated
        file(str): name of the file to be updated
+       line(str): text from the file to be updated
        search_pattern(str): pattern to be searched in the file
        replace_text(str): text to be replaced in the file
-       version_update(bool): true if the version returned in the api response is to be updated in the file
-       store(list): list of terrafrom-ibm-modules source references captured
+       store(list): list of terraform-ibm-modules source references captured
 
     Returns:
         string: replaced content of the file
     """
 
     id, version = extract_repo_details(store, repo_name)
-    with open(file, "r") as reader:
-        file_data = reader.read()
-        if version_update:
-            version_replace_text = '\n  version = "' + version + '"'
-        else:
-            version_replace_text = '\n  version = "latest" # Replace "latest" with a release version to lock into a specific release'
-        # replace source reference
-        file_data = re.sub(
-            search_pattern + ".*" + repo_name + ".*",
-            replace_text + id.rsplit("/", 1)[0] + '"' + version_replace_text,
-            file_data,
-        )
-    reader.close()
-    return file_data
+    if id is not None and version is not None:
+        repo_id = id.rsplit("/", 1)[0] + '/ibm"'
+        with open(file, "r") as reader:
+            file_data = reader.read()
+            if current_file_pattern == "**/*.tf":
+                version_replace_text = '\n  version = "' + version + '"'
+            elif re.search(r"<a name=", line):
+                version_replace_text = " | " + version + " | "
+                search_pattern = r"git::https:\/\/github\.com\/"
+                replace_text = ""
+                repo_id = id.rsplit("/", 1)[0] + "/ibm"
+            else:
+                version_replace_text = '\n  version = "latest" # Replace "latest" with a release version to lock into a specific release'
+            # replace source reference
+            file_data = re.sub(
+                search_pattern + ".*" + repo_name + ".*",
+                replace_text + repo_id + version_replace_text,
+                file_data,
+            )
+        reader.close()
+        return file_data
 
 
 # write replaced text and save file
@@ -209,7 +221,8 @@ def extract_repo_details(store: list, repo_name) -> tuple:
     Returns:
        tuple: id, repo name and version of the repository
     """
-
+    id = None
+    version = None
     for storedata in store:
         for key, value in storedata.items():
             if repo_name == key:
@@ -252,11 +265,7 @@ def get_source_details(repo_name: str, store: list) -> list:
 
 if __name__ == "__main__":
     for current_file_pattern in FILES_TO_BE_SEARCHED:
-        vesion_update = None
-        if current_file_pattern == "**/*.md":
-            vesion_update = False
-        elif current_file_pattern == "**/*.tf":
-            version_update = True
+        version_replace_text = None
         files = []
         store = []
         files, lines = get_files(current_file_pattern, SEARCH_PATTERN_TIM, [], [])
@@ -273,21 +282,23 @@ if __name__ == "__main__":
                         store = get_source_details(repo_name, store)
                     if len(store) > 0:
                         data = replace_source(
+                            current_file_pattern,
                             file,
+                            line,
                             repo_name,
                             SEARCH_PATTERN_TIM,
                             REPLACE_TEXT,
-                            version_update,
                             store,
                         )
                         if data is not None:
                             write_data_to_file(file, data)
                         data = replace_source(
+                            current_file_pattern,
                             file,
+                            line,
                             repo_name,
                             SEARCH_PATTERN_GE,
                             REPLACE_TEXT,
-                            version_update,
                             store,
                         )
                         if data is not None:
