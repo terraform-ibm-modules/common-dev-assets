@@ -5,7 +5,7 @@
     ":disableDependencyDashboard"
   ],
   "cloneSubmodules": true,
-  "prConcurrentLimit": 1,
+  "prConcurrentLimit": 5,
   "prHourlyLimit": 10,
   "branchConcurrentLimit": 0,
   "automerge": false,
