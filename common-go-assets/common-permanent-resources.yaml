@@ -49,6 +49,6 @@ postgresqlPITRVersion: 14
 postgresqlPITRRegion: "us-south"
 
 # Enterprise DB instance crn for PITR test
-enterpriseDbPITRCrn: "crn:v1:bluemix:public:databases-for-enterprisedb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:ddb04e5d-970a-4bfd-b3fd-13c3588b95c5::"
+enterpriseDbPITRCrn: "crn:v1:bluemix:public:databases-for-enterprisedb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:3d3077b9-fcc0-427f-a877-d7af3830ca5e::"
 enterpriseDbPITRVersion: 12
 enterpriseDbPITRRegion: "us-south"
