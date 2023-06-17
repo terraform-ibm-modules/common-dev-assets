@@ -138,7 +138,7 @@ fi
 #######################################
 
  # renovate: datasource=github-tags depName=pre-commit/pre-commit
-PRE_COMMIT_VERSION=v3.3.2
+PRE_COMMIT_VERSION=v3.3.3
 PACKAGE=pre-commit
 set +e
 INSTALLED_PRE_COMMIT_VERSION="$(${PYTHON} -m pip show pre-commit | grep Version: | cut -d' ' -f2)"
@@ -208,7 +208,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=hashicorp/terraform
-TERRAFORM_VERSION=v1.4.6
+TERRAFORM_VERSION=v1.5.0
 BINARY=terraform
 
 TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
@@ -235,7 +235,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.46.3
+TERRAGRUNT_VERSION=v0.47.0
 BINARY=terragrunt
 set +e
 INSTALLED_TERRAGRUNT_VERSION="$(terragrunt --version | head -1 | cut -d' ' -f3)"
@@ -347,7 +347,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v1.53.2
+GOLANGCI_LINT_VERSION=v1.53.3
 BINARY=golangci-lint
 set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"
@@ -430,7 +430,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v3.12.0
+HELM_VERSION=v3.12.1
 BINARY=helm
 set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"
@@ -457,7 +457,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.27.2
+KUBECTL_VERSION=v1.27.3
 BINARY=kubectl
 set +e
 INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml --client | grep "gitVersion" | cut -d' ' -f4)"
