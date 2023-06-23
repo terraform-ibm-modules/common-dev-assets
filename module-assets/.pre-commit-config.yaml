@@ -48,7 +48,7 @@ repos:
   hooks:
     - id: terraform_fmt
     - id: terraform_validate
-      files: ^examples/
+      files: ^examples/|^patterns/|^solutions/
     - id: terraform_docs
       args: ['--args=--hide=providers']
     - id: terraform_tflint
