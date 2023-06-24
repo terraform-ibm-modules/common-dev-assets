@@ -208,7 +208,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=hashicorp/terraform
-TERRAFORM_VERSION=v1.5.0
+TERRAFORM_VERSION=v1.5.1
 BINARY=terraform
 
 TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
