@@ -5,7 +5,7 @@
 - name: lon06
   useForTest: true
   testPriority: 2
-- name: sao01
+- name: syd05
   useForTest: true
   testPriority: 3
 - name: eu-de-1
@@ -35,7 +35,7 @@
   useForTest: false
   testPriority: 11
   # not yet supported by terraform-ibm-powervs-infrastructure module
-- name: syd05
+- name: sao01
   useForTest: true
   testPriority: 12
   # not yet supported by terraform-ibm-powervs-infrastructure module
