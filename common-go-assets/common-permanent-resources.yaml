@@ -47,3 +47,8 @@ accessTags:
 postgresqlPITRCrn: "crn:v1:bluemix:public:databases-for-postgresql:us-south:a/abac0df06b644a9cabc6e44f55b3880e:90adc2f3-cfbe-4f4e-b8aa-6d5a8bf458b9::"
 postgresqlPITRVersion: 14
 postgresqlPITRRegion: "us-south"
+
+# Enterprise DB instance crn for PITR test
+enterpriseDbPITRCrn: "crn:v1:bluemix:public:databases-for-enterprisedb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:3d3077b9-fcc0-427f-a877-d7af3830ca5e::"
+enterpriseDbPITRVersion: 12
+enterpriseDbPITRRegion: "us-south"
