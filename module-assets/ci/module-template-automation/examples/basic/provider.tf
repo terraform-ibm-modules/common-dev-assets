@@ -1,8 +1,8 @@
 ##############################################################################
-# Outputs
+# Provider config
 ##############################################################################
 
-output "vpc_id" {
-  description = "ID of the existing VPC"
-  value       = data.ibm_is_vpc.example.id
+provider "ibm" {
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = var.region
 }

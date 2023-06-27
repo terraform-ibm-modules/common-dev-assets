@@ -1,5 +1,5 @@
 ##############################################################################
-# Resource Group
+# Resource group
 ##############################################################################
 
 module "resource_group" {
@@ -9,6 +9,10 @@ module "resource_group" {
   resource_group_name          = var.resource_group == null ? "${var.prefix}-resource-group" : null
   existing_resource_group_name = var.resource_group
 }
+
+##############################################################################
+# COS instance
+##############################################################################
 
 resource "ibm_resource_instance" "cos_instance" {
   name              = "${var.prefix}-cos"

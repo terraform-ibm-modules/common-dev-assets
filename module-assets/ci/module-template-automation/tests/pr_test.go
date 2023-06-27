@@ -1,4 +1,4 @@
-// Tests in this file are run in the PR pipeline
+// Tests in this file are run in the PR pipeline and the continuous testing pipeline
 package test
 
 import (
@@ -10,7 +10,7 @@ import (
 
 // Use existing resource group
 const resourceGroup = "geretain-test-resources"
-const defaultExampleTerraformDir = "examples/default"
+const completeExampleDir = "examples/complete"
 
 func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptions {
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
@@ -22,10 +22,10 @@ func setupOptions(t *testing.T, prefix string, dir string) *testhelper.TestOptio
 	return options
 }
 
-func TestRunDefaultExample(t *testing.T) {
+func TestRunCompleteExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, "mod-template", defaultExampleTerraformDir)
+	options := setupOptions(t, "mod-template", completeExampleDir)
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
@@ -35,10 +35,7 @@ func TestRunDefaultExample(t *testing.T) {
 func TestRunUpgradeExample(t *testing.T) {
 	t.Parallel()
 
-	// TODO: Remove this line after the first merge to primary branch is complete to enable upgrade test
-	t.Skip("Skipping upgrade test until initial code is in primary branch")
-
-	options := setupOptions(t, "mod-template-upg", defaultExampleTerraformDir)
+	options := setupOptions(t, "mod-template-upg", completeExampleDir)
 
 	output, err := options.RunTestUpgrade()
 	if !options.UpgradeTestSkipped {
