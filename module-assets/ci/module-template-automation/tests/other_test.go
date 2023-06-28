@@ -7,12 +7,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const nonDefaultExampleTerraformDir = "examples/non-default"
-
-func TestRunNonDefaultExample(t *testing.T) {
+func TestRunBasicExample(t *testing.T) {
 	t.Parallel()
 
-	options := setupOptions(t, "non-default-tmp", nonDefaultExampleTerraformDir)
+	options := setupOptions(t, "mod-template-basic", "examples/basic")
 
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")

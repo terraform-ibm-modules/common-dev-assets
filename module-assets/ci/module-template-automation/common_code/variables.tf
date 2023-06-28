@@ -2,10 +2,8 @@
 # Input Variables
 ##############################################################################
 
-#variable "myvariable" {
+#variable "my_variable" {
 #  type        = string
 #  description = "A description of my variable"
-#  default     = ""
+#  default     = "default_value"
 #}
-
-##############################################################################
