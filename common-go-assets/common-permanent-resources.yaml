@@ -1,5 +1,6 @@
 # secrets-manager
 secretsManagerGuid: 79c6d411-c18f-4670-b009-b0044a238667
+secretsManagerCRN: "crn:v1:bluemix:public:secrets-manager:us-south:a/abac0df06b644a9cabc6e44f55b3880e:79c6d411-c18f-4670-b009-b0044a238667::"
 secretsManagerRegion: us-south
 
 # secrets manager private cert engine
