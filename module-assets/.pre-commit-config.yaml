@@ -2,6 +2,23 @@ default_stages: [commit]
 repos:
 - repo: local
   hooks:
+    - id: set-diagram-changed
+      stages: [pre-commit]
+      name: Set Diagram Changed
+      description: Hook that saves into the file when diagrams inside README.md have been changed. It saves 'true' which is later used by replace-diagram-permlink hook.
+      entry: set-diagram-changed.sh
+      language: script
+      verbose: true
+      pass_filenames: false
+      files: ^reference-architectures/vpc.drawio.svg|^reference-architectures/vsi-vsi.drawio.svg|^reference-architectures/roks.drawio.svg|^.docs/images/mixed.png
+    - id: replace-diagram-permlink
+      stages: [post-commit]
+      name: Replace Diagram Permlink
+      description: Hook that will replace permlinks for diagrams inside README.md. It works with set-diagram-changed hook.
+      entry: ci/replace-diagram-permlink.sh
+      language: script
+      pass_filenames: false
+      always_run: true
     - id: git-submodule-version-check
       name: Check git submodule up to date
       description: Hook that will fail if local common-dev-assets git submodule is older than the one currently on primary branch
