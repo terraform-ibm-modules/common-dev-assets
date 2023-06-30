@@ -56,7 +56,8 @@
       "matchManagers": ["terraform"],
       "matchDepTypes": ["required_version"],
       "enabled": true,
-      "rangeStrategy": "widen"
+      "rangeStrategy": "widen",
+      "prFooter" : "SKIP UPGRADE TEST since pipeline will fail because it will have a newer version of terraform that is not yet supported on master/main branch"
     },
     {
       "description": "Disable terraform provider updates by default. To enable, set enable to true below and renovate will priortise bumping this. We only need to bump this version to consume required bug fixes and/or new provider features.",
