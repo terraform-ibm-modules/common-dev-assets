@@ -77,7 +77,8 @@ if [ ${IS_PR} == true ]; then
                          "cra-tf-validate-ignore-goals.json"
                          "cra-tf-validate-ignore-rules.json"
                          "pvs.preset.json"
-                         ".fileignore")
+                         ".fileignore"
+                         "cra-config.yaml")
 
   # Determine all files being changed in the PR, and add it to array
   changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
