@@ -42,14 +42,10 @@
       "semanticCommitType": "chore"
     },
     {
-      "description": "Use chore as Semantic Commit prefix for git submodule, go.mod and pre-commit updates",
-      "matchManagers": ["git-submodules", "gomod", "pre-commit"],
-      "semanticCommitType": "chore"
-    },
-    {
-      "description": "Use ci as Semantic Commit prefix for GHA pipeline updates",
-      "matchPackageNames": ["terraform-ibm-modules/common-pipeline-assets"],
-      "semanticCommitType": "ci"
+      "description": "Use chore as Semantic Commit prefix for git submodule, go.mod, github actions, and pre-commit updates, and bundle into the same PR to reduce number of PRs created by renovate.",
+      "matchManagers": ["git-submodules", "gomod", "pre-commit", "github-actions"],
+      "semanticCommitType": "chore",
+      "groupName" "ci-deps"
     },
     {
       "description": "Use the widen range strategy to allow us to lock into exact supported terraform range since terraform can release breaking changes in minor version releases.",
