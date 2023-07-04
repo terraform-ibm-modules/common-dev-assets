@@ -3,7 +3,7 @@
 import os
 from pathlib import Path
 
-examples_markdown = "EXAMPLES.md"
+modules_markdown = "MODULES.md"
 
 
 # Return title (first line) of README file
@@ -21,10 +21,10 @@ def has_tf_files(path):
         return False
 
 
-# Return titles of all README files inside examples folder.
+# Return titles of all README files inside modules folder.
 def get_readme_titles():
     readme_titles = []
-    for readme_file in Path("examples").rglob("README.md"):
+    for readme_file in Path("modules").rglob("README.md"):
         path = str(readme_file)
         # ignore README file if it has dot(.) in a path or the parent path does not contain any tf file
         if not ("/.") in path and has_tf_files(readme_file.parent):
@@ -36,7 +36,7 @@ def get_readme_titles():
     return readme_titles
 
 
-def prepare_example_lines(readme_titles, newlines):
+def prepare_modules_lines(readme_titles, newlines):
     if len(readme_titles) > 0:
         for readme_title in readme_titles:
             prepare_line = (
@@ -48,12 +48,12 @@ def prepare_example_lines(readme_titles, newlines):
             )
             newlines.append(prepare_line)
     else:
-        prepare_line = "- [Examples](examples)\n"
+        prepare_line = "- [Modules](modules)\n"
         newlines.append(prepare_line)
 
 
-def create_examples_markdown(newlines):
-    with open(examples_markdown, "w") as writer:
+def create_modules_markdown(newlines):
+    with open(modules_markdown, "w") as writer:
         if len(newlines) > 0:
             for line in newlines:
                 writer.writelines(line)
@@ -61,33 +61,35 @@ def create_examples_markdown(newlines):
 
 def run_terraform_docs():
     os.system(
-        "terraform-docs -c common-dev-assets/module-assets/.terraform-docs-config-examples.yaml ."
+        "terraform-docs -c common-dev-assets/module-assets/.terraform-docs-config-modules.yaml ."
     )
 
 
-def remove_examples_markdown():
-    if os.path.exists(examples_markdown):
-        os.remove(examples_markdown)
+def remove_modules_markdown():
+    if os.path.exists(modules_markdown):
+        os.remove(modules_markdown)
 
 
-def is_examples_hook_exists():
+def is_modules_hook_exists():
     exists = False
     with open("README.md", "r") as reader:
         lines = reader.readlines()
         for line in lines:
-            if "BEGIN EXAMPLES HOOK" in line:
+            if "BEGIN TF SUBMODULES HOOK" in line:
                 exists = True
     return exists
 
 
 def main():
-    if os.path.isdir("examples") and is_examples_hook_exists():
+    print("start")
+    if os.path.isdir("modules") and is_modules_hook_exists():
+        print("sd")
         newlines = []
         readme_titles = get_readme_titles()
-        prepare_example_lines(readme_titles, newlines)
-        create_examples_markdown(newlines)
+        prepare_modules_lines(readme_titles, newlines)
+        create_modules_markdown(newlines)
         run_terraform_docs()
-        remove_examples_markdown()
+        # remove_modules_markdown()
 
 
 main()

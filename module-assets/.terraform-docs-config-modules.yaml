@@ -1,0 +1,14 @@
+formatter: "markdown"
+
+content: |-
+    ## Modules
+
+    {{ include "MODULES.md" }}
+
+output:
+  file: "README.md"
+  mode: inject
+  template: |-
+    <!-- BEGIN TF SUBMODULES HOOK -->
+    {{ .Content }}
+    <!-- END TF SUBMODULES HOOK -->
