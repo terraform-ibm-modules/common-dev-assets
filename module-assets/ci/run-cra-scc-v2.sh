@@ -14,9 +14,15 @@ then
       exit 1
 fi
 
-if [ -z "$ACCOUNT_ID" ]
+if [ -z "$SCC_INSTANCE_ID" ]
 then
-      echo "ERROR: Environment variable ACCOUNT_ID must be set"
+      echo "ERROR: Environment variable SCC_INSTANCE_ID must be set"
+      exit 1
+fi
+
+if [ -z "$SCC_REGION" ]
+then
+      echo "ERROR: Environment variable SCC_REGION must be set"
       exit 1
 fi
 
@@ -25,12 +31,6 @@ if [ $# -eq 1 ]
 then
     echo "Changing to target directory"
     cd "$1" || { echo "Directory $1 does not exist. Exiting..."; exit 1; }
-fi
-
-# Set default values for optional environment variables if not set
-if [ -z "$REGION" ]
-then
-      REGION="us-south"
 fi
 
 if [ -z "$TOOLCHAIN_ID" ]
@@ -65,7 +65,7 @@ IAM_TOKEN=$(curl -s -X POST "https://iam.cloud.ibm.com/identity/token" -H "Conte
 
 # Fetch the profile JSON using curl
 echo "Getting Policy JSON for ID: $PROFILE_ID"
-curl -s --retry 3 -X GET "https://us.compliance.cloud.ibm.com/v3/profiles/$PROFILE_ID?account_id=$ACCOUNT_ID" -H "Authorization: Bearer $IAM_TOKEN" -H "Content-Type: application/json" -o "$profile_json"
+curl -s --retry 3 -X GET "https://$SCC_REGION.compliance.cloud.ibm.com/instances/$SCC_INSTANCE_ID/v3/profiles/$PROFILE_ID" -H "Authorization: Bearer $IAM_TOKEN" -H "Content-Type: application/json" -o "$profile_json"
 
 # Initialize Terraform and run Terraform plan
 terraform init
@@ -75,7 +75,7 @@ terraform plan --out "$plan_out"
 terraform show -json "$plan_out" | jq '.' > "$plan_json"
 
 # Login to IBM Cloud using API key and set the target region
-ibmcloud login --apikey "${TF_VAR_ibmcloud_api_key}" -r "$REGION"
+ibmcloud login --apikey "${TF_VAR_ibmcloud_api_key}" -r "$SCC_REGION"
 
 # Run IBM Cloud CRA Terraform validate and continue if it fails, Will fail later if any ot the failures are valid ie not on the ignore list or apply to the created Terraform resources
 set +e
@@ -132,7 +132,6 @@ if [[ "$number_of_ignored_rules" != 0 ]]; then
     echo "--------------------------------------------------"
   fi
 fi
-
 
 # failed evidences
 jq '.evidence_list[] | select(.result=="failed")' "$relevant_rules_json" | jq -s '{evidence_list:.}' > "$failed_json"
