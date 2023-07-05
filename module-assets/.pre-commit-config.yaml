@@ -134,10 +134,10 @@ repos:
       language: python
       files: "README.md"
       pass_filenames: false
-    - id: add_examples
-      name: Add examples section to README
-      description: Add examples section to README
-      entry: python3 ci/terraformDocExamples.py
+    - id: add_examples_modules
+      name: Add tf submodules and examples section to README
+      description: Add tf submodules and examples section to README
+      entry: python3 ci/terraformDocExamplesModules.py
       language: python
       files: "README.md"
       pass_filenames: false
