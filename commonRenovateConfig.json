@@ -45,7 +45,7 @@
       "description": "Use chore as Semantic Commit prefix for git submodule, go.mod, github actions, and pre-commit updates, and bundle into the same PR to reduce number of PRs created by renovate.",
       "matchManagers": ["git-submodules", "gomod", "pre-commit", "github-actions"],
       "semanticCommitType": "chore",
-      "groupName": "ci-deps"
+      "groupName": "CI dependencies"
     },
     {
       "description": "Use the widen range strategy to allow us to lock into exact supported terraform range since terraform can release breaking changes in minor version releases.",
