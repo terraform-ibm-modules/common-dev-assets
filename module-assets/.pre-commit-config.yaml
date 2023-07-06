@@ -80,6 +80,8 @@ repos:
         - --skip-path=module-metadata.json
         - --skip-path=ibm_catalog.json
         - --skip-framework=github_actions
+        # see https://github.ibm.com/GoldenEye/issues/issues/5317
+        - --skip-check=CKV_TF_1
 - repo: https://github.com/syntaqx/git-hooks
   rev: v0.0.18
   hooks:
