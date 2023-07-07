@@ -1,6 +1,5 @@
 terraform {
-  # Since hashicorp can include breaking changes in minor version updates, ensure to lock into a range here.
-  required_version = ">= 1.3, < 1.6"
+  required_version = ">= 1.3.0"
 
   # Use a flexible range in modules that future proofs the module's usage with upcoming minor and patch versions
   #  required_providers {

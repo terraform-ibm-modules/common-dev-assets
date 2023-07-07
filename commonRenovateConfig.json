@@ -48,12 +48,10 @@
       "groupName": "CI dependencies"
     },
     {
-      "description": "Use the widen range strategy to allow us to lock into exact supported terraform range since terraform can release breaking changes in minor version releases.",
+      "description": "Disable terraform required_version updates.",
       "matchManagers": ["terraform"],
       "matchDepTypes": ["required_version"],
-      "enabled": true,
-      "rangeStrategy": "widen",
-      "prFooter" : "SKIP UPGRADE TEST since pipeline will fail because it will have a newer version of terraform that is not yet supported on master/main branch"
+      "enabled": false
     },
     {
       "description": "Disable terraform provider updates by default. To enable, set enable to true below and renovate will priortise bumping this. We only need to bump this version to consume required bug fixes and/or new provider features.",

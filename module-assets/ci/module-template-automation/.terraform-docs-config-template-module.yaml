@@ -47,6 +47,8 @@ content: |-
     - `variables.tf`: The input variables for the module
     - `outputs.tf`: The values that are output from the module
 
+    Nested modules should exist under a `modules/` subdirectory. Nested modules should be used to split complex behavior into multiple small modules that advanced users can carefully pick and choose. If a repository contains multiple nested modules, they should ideally be [composable](https://developer.hashicorp.com/terraform/language/modules/develop/composition) by the caller, rather than calling directly to each other and creating a deeply-nested tree of modules.
+
     {{- if $is_external }}
     For more information, see [Module structure](https://terraform-ibm-modules.github.io/documentation/#/module-structure) in the project documentation.
     {{- end }}
