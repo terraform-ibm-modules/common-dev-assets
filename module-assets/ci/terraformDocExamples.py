@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import os
+
 import terraformDocsUtils
 
 
@@ -28,7 +29,9 @@ def run_terraform_docs():
 
 def main():
     examples_markdown = "EXAMPLES.md"
-    if os.path.isdir("examples") and terraformDocsUtils.is_hook_exists("BEGIN EXAMPLES HOOK"):
+    if os.path.isdir("examples") and terraformDocsUtils.is_hook_exists(
+        "BEGIN EXAMPLES HOOK"
+    ):
         newlines = []
         readme_titles = terraformDocsUtils.get_readme_titles("examples")
         prepare_lines(readme_titles, newlines)
