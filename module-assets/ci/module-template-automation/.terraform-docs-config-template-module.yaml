@@ -47,6 +47,8 @@ content: |-
     - `variables.tf`: The input variables for the module
     - `outputs.tf`: The values that are output from the module
 
+    Use nested modules to split complex behavior into smaller modules that advanced users can choose from. Put nested modules under a `/modules` subdirectory. If you include more than one nested module, make the submodules [composable](https://developer.hashicorp.com/terraform/language/modules/develop/composition) by the caller. In other words, don't embed calls between submodules to create a deeply nested tree of modules.
+
     {{- if $is_external }}
     For more information, see [Module structure](https://terraform-ibm-modules.github.io/documentation/#/module-structure) in the project documentation.
     {{- end }}
