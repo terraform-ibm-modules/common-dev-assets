@@ -71,7 +71,7 @@ repos:
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 2.3.312
+  rev: 2.3.319
   hooks:
     - id: checkov
       args:
@@ -115,7 +115,7 @@ repos:
     args: ["--profile", "black", "--filter-files"]
 # black
 - repo: https://github.com/ambv/black
-  rev: 23.3.0
+  rev: 23.7.0
   hooks:
   - id: black
     args: # arguments to configure black
