@@ -208,7 +208,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=hashicorp/terraform
-TERRAFORM_VERSION=v1.5.2
+TERRAFORM_VERSION=v1.5.3
 BINARY=terraform
 
 TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
@@ -430,7 +430,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v3.12.1
+HELM_VERSION=v3.12.2
 BINARY=helm
 set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"
