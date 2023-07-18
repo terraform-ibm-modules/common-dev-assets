@@ -40,7 +40,7 @@ def get_title(
     return (level, title, code_block, comment_block)
 
 
-# cet main readme headings
+# get main readme headings
 def get_main_readme_headings():
     with open("./README.md", "r") as f:
         code_block = False

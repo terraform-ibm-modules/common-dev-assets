@@ -136,6 +136,13 @@ repos:
       language: python
       files: "README.md"
       pass_filenames: false
+    - id: add_examples_modules
+      name: Add examples section to README
+      description: Add examples section to README
+      entry: python3 ci/terraformDocExamples.py
+      language: python
+      files: "README.md"
+      pass_filenames: false
     - id: terraform_docs
       name: Add terraform docs section to README
       description: Add terraform docs section to README
