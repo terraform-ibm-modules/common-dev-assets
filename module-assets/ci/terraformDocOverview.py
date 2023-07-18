@@ -91,7 +91,7 @@ def get_headings(folder_name):
 def add_to_overview(overview, folder_name):
     if os.path.isdir(folder_name.lower()):
         # add lvl 1 bullet point to an overview
-        bullet_point = "* [{}](#{})".format(
+        bullet_point = "* [{}](./{})".format(
             "Submodules" if folder_name == "Modules" else folder_name,
             folder_name.lower(),
         )
