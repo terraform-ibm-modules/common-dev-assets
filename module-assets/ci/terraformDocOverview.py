@@ -116,7 +116,7 @@ def main():
         repo_name = path.name
         overview.append("* [{}](#{})".format(repo_name, repo_name))
 
-        # add examples to "overview"
+        # add modules to "overview"
         add_to_overview(overview, "Modules")
 
         # add examples to "overview"
