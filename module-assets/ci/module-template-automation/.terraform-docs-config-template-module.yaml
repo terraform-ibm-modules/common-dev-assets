@@ -142,7 +142,7 @@ content: |-
     -->
     {{- end }}
 
-    ## Usage
+    ### Usage
 
     <!--
     Add an example of the use of the module in the following code block.
@@ -167,7 +167,7 @@ content: |-
     -->
 
     <!--
-    ## Compliance and security
+    ### Compliance and security
 
     This module implements the following NIST controls. For more information about how this module implements the controls in the following list, see [NIST controls](docs/controls.md).
 
@@ -197,7 +197,7 @@ content: |-
     -->
 
     <!--
-    ## Compliance and security
+    ### Compliance and security
 
     NIST controls do not apply to this module.
     -->
