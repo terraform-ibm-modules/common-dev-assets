@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 
 # create temp markdown which content is added to main README
@@ -40,18 +39,3 @@ def get_readme_title(readme_file):
     with open(readme_file, "r") as reader:
         line = reader.readline()
         return line
-
-
-# get first line of all README files inside specific path
-def get_readme_titles(path):
-    readme_titles = []
-    for readme_file in Path(path).rglob("README.md"):
-        path = str(readme_file)
-        # ignore README file if it has dot(.) in a path or the parent path does not contain any tf file
-        if not ("/.") in path and has_tf_files(readme_file.parent):
-            readme_title = get_readme_title(path)
-            if readme_title:
-                data = {"path": path, "title": readme_title}
-                readme_titles.append(data)
-    readme_titles.sort(key=lambda x: x["path"])
-    return readme_titles

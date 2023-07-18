@@ -1,14 +1,13 @@
 formatter: "markdown"
 
 content: |-
-    ## Examples
-
-    {{ include "EXAMPLES.md" }}
+    ## Overview
+    {{ include "overview.md" }}
 
 output:
   file: "README.md"
   mode: inject
   template: |-
-    <!-- BEGIN EXAMPLES HOOK -->
+    <!-- BEGIN OVERVIEW HOOK -->
     {{ .Content }}
-    <!-- END EXAMPLES HOOK -->
+    <!-- END OVERVIEW HOOK -->
