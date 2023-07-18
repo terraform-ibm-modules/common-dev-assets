@@ -143,10 +143,17 @@ repos:
       language: python
       files: "README.md"
       pass_filenames: false
-    - id: add_toc
-      name: Add table of contents section to README
-      description: Add table of contents section to README
-      entry: python3 ci/terraformDocsTOC.py
+    - id: terraform_docs
+      name: Add terraform docs section to README
+      description: Add terraform docs section to README
+      entry: python3 ci/terraformDocs.py
+      language: python
+      files: "README.md"
+      pass_filenames: false
+    - id: add_overview
+      name: Add overview section to README
+      description: Add overview section to README
+      entry: python3 ci/terraformDocOverview.py
       language: python
       files: "README.md"
       pass_filenames: false
