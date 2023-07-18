@@ -49,8 +49,6 @@ repos:
     - id: terraform_fmt
     - id: terraform_validate
       files: ^examples/|^patterns/|^solutions/
-    - id: terraform_docs
-      args: ['--args=--hide=providers']
     - id: terraform_tflint
       args:
         - --args=--enable-rule=terraform_unused_declarations
