@@ -1,5 +1,8 @@
 import os
+import sys
 from pathlib import Path
+from subprocess import PIPE, Popen
+from urllib.parse import urlparse
 
 
 # create temp markdown which content is added to main README
@@ -55,3 +58,24 @@ def get_readme_titles(path):
                 readme_titles.append(data)
     readme_titles.sort(key=lambda x: x["path"])
     return readme_titles
+
+
+# get repository url
+def get_module_url():
+    get_repository_url_command = "git config --get remote.origin.url"
+    proc = Popen(get_repository_url_command, stdout=PIPE, stderr=PIPE, shell=True)
+    output, error = proc.communicate()
+    full_url = output.decode("utf-8").strip()
+
+    if proc.returncode != 0:
+        print(error)
+        sys.exit(proc.returncode)
+
+    # urlparse can not be used for git urls
+    if full_url.startswith("http"):
+        output = urlparse(full_url)
+        module_url = output.hostname + output.path
+    else:
+        module_url = full_url.replace("git@", "").replace(":", "/")
+
+    return module_url.replace(".git", "")

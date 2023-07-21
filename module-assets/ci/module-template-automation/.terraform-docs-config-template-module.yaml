@@ -31,7 +31,11 @@ content: |-
     [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
     [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-    {{include "ci/module-template-automation/toc.md"}}
+    {{- if $is_internal }}
+    {{include "ci/module-template-automation/overview-internal.md"}}
+    {{- else if $is_external }}
+    {{include "ci/module-template-automation/overview-external.md"}}
+    {{- end }}
 
     <!-- Remove the content in this H2 heading after completing the steps -->
 
@@ -128,7 +132,7 @@ content: |-
     <!-- Remove the content in this previous H2 heading -->
 
     {{- if $is_external }}
-    ## Reference architectures
+    ### Reference architectures
 
     <!--
     Add links to any reference architectures for this module.
@@ -138,7 +142,7 @@ content: |-
     -->
     {{- end }}
 
-    ## Usage
+    ### Usage
 
     <!--
     Add an example of the use of the module in the following code block.
@@ -163,7 +167,7 @@ content: |-
     -->
 
     <!--
-    ## Compliance and security
+    ### Compliance and security
 
     This module implements the following NIST controls. For more information about how this module implements the controls in the following list, see [NIST controls](docs/controls.md).
 
@@ -193,7 +197,7 @@ content: |-
     -->
 
     <!--
-    ## Compliance and security
+    ### Compliance and security
 
     NIST controls do not apply to this module.
     -->
