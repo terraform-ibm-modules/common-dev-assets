@@ -21,7 +21,7 @@ then
     export GH_HOST=github.ibm.com
 else
     #  Public GH
-    GIT_URL="api.github.com"
+    GIT_URL="github.com/api/v3"
     GIT_ORG="terraform-ibm-modules"
     export GH_HOST=github.com
 fi
