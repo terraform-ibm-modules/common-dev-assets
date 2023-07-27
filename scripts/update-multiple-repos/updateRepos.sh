@@ -16,7 +16,7 @@ IS_PRIVATE_GH=false
 if [ "${IS_PRIVATE_GH}" = true ]
 then
     # Private GHE
-    GIT_URL="api.github.ibm.com"
+    GIT_URL="github.ibm.com/api/v3"
     GIT_ORG="GoldenEye"
     export GH_HOST=github.ibm.com
 else
