@@ -1,14 +1,12 @@
 formatter: "markdown"
 
 content: |-
-    ## Examples
-
-    {{ include "EXAMPLES.md" }}
+    {{ include "tf-docs.md" }}
 
 output:
   file: "README.md"
   mode: inject
   template: |-
-    <!-- BEGIN EXAMPLES HOOK -->
+    <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
     {{ .Content }}
-    <!-- END EXAMPLES HOOK -->
+    <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

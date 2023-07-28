@@ -58,6 +58,7 @@ if [ ${IS_PR} == true ]; then
                          ".md"
                          ".mdlrc"
                          ".png"
+                         ".svg"
                          ".pre-commit-config.yaml"
                          ".releaserc"
                          ".secrets.baseline"
@@ -73,7 +74,11 @@ if [ ${IS_PR} == true ]; then
                          ".one-pipeline.yaml"
                          "module-metadata.json"
                          "ibm_catalog.json"
-                         "cra-tf-validate-ignore-goals.json")
+                         "cra-tf-validate-ignore-goals.json"
+                         "cra-tf-validate-ignore-rules.json"
+                         "pvs.preset.json"
+                         ".fileignore"
+                         "cra-config.yaml")
 
   # Determine all files being changed in the PR, and add it to array
   changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
@@ -104,7 +109,7 @@ if [ ${IS_PR} == true ]; then
     if test -f "${pr_test_file}"; then
         test_arg=${pr_test_file}
     fi
-    test_cmd="go test ${test_arg} -count=1 -v -timeout 300m"
+    test_cmd="go test ${test_arg} -count=1 -v -timeout=300m -parallel=10"
     if [[ "$MZ_INGESTION_KEY" ]] ; then
       # Assign location to be observed by logdna-agent
       if [ -z "$MZ_LOG_DIRS" ]; then
@@ -123,9 +128,38 @@ if [ ${IS_PR} == true ]; then
       export MZ_TAGS="$REPO_NAME-PR$PR_NUM"
       # Exclude extra logs
       export MZ_EXCLUSION_REGEX_RULES="/var/log/*"
-      echo "Starting logdna-agent"
-      systemctl start logdna-agent
-      echo "Logdna-agent Status: $(systemctl status logdna-agent)"
+
+      ## Retry running logdna if fails to run and adding more logs
+
+      MAX_RETRY_LOGDNA=3
+      LOGDNA_RUN_ATTEMPT=1
+
+      while [ "$LOGDNA_RUN_ATTEMPT" -le "$MAX_RETRY_LOGDNA" ]; do
+          echo "Starting logdna-agent: [$LOGDNA_RUN_ATTEMPT/$MAX_RETRY_LOGDNA]"
+          set +e
+          systemctl start logdna-agent
+          RESULT_LOGDNA_START=$?
+          set -e
+
+          if [ $RESULT_LOGDNA_START -eq 0 ]; then
+              echo "Logdna-agent started successfully"
+              break
+          else
+              echo "Logdna-agent start command exit status: $RESULT_LOGDNA_START"
+              echo "Logdna-agent Tag added: $MZ_TAGS"
+              set +e
+              echo "Logdna-agent Status: $(systemctl status logdna-agent)"
+              LOGDNA_RUN_ATTEMPT=$((LOGDNA_RUN_ATTEMPT+1))
+              echo "=================================================== Logdna-agent: Service Log ==================================================="
+                tail -n 20 /var/log/journal/logdna-agent.service.log
+              echo "================================================================================================================================="
+              if [ $LOGDNA_RUN_ATTEMPT -le $MAX_RETRY_LOGDNA ]; then
+                echo "Retrying..."
+              fi
+              set -e
+          fi
+      done
+
       $test_cmd 2>&1 | tee "$log_location"
 
     else

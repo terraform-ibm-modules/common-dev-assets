@@ -2,9 +2,9 @@
 # Outputs
 ##############################################################################
 
-output "vpc_id" {
-  description = "ID of VPC created"
-  value       = ibm_is_vpc.vpc.id
+output "cos_instance_id" {
+  description = "COS instance id"
+  value       = ibm_resource_instance.cos_instance.id
 }
 
 output "resource_group_name" {

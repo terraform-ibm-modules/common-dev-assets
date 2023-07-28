@@ -8,10 +8,12 @@
 _extends: repo-settings
 
 # unique to this repo
-required_status_checks:
-  strict: true
-  contexts:
-    - "CI_Pipeline"
+branches:
+  - name: main
+    protection:
+      required_status_checks:
+        contexts:
+          - "CI_Pipeline"
 
 repository:
   # See https://terraform-ibm-modules.github.io/documentation/#/implementation-guidelines?id=module-names-and-descriptions
@@ -21,4 +23,6 @@ repository:
 
   # The description is displayed under the repository name on the
   # organization page and in the 'About' section of the repository.
-  description: "Provides common development and CI assets that support the modules in this GitHub organization"
+  description: "Provides common development and CI assets that support the repos in this GitHub organization"
+
+  topics: "core-team"

@@ -1,8 +1,8 @@
 ##############################################################################
-# Outputs
+# Provider config
 ##############################################################################
 
-#output "myoutput" {
-#  description = "Description of my output"
-#  value       = "value"
-#}
+provider "ibm" {
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = var.region
+}

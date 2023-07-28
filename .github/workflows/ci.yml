@@ -39,11 +39,6 @@ jobs:
         run: |
           chown -R $(id -u):$(id -g) $PWD
 
-      # Check for pre-commit updates if it is a renovate PR
-      - name: Renovate sweeper
-        run: |
-          make renovate-sweeper
-
       # run pre-commit against all files
       - name: Pre-commit
         run: |

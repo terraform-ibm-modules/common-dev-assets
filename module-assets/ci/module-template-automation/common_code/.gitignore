@@ -40,9 +40,6 @@ terraform.rc
 # Ignore .tfsec
 .tfsec/
 
-# Ignore brew lock
-Brewfile.lock.json
-
 # Ignore Mac files
 .DS_Store
 

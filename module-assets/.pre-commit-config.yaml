@@ -8,6 +8,14 @@ repos:
       entry: ci/submoduleVersionCheck.sh
       language: script
       pass_filenames: false
+    - id: license-checker
+      name: License Checker
+      entry: ci/license_checker.sh
+      types: [file]
+      language: script
+      require_serial: true
+      pass_filenames: false
+      description: This hook ensures that a file named LICENSE exists for any repo (on github.com) which contains .tf files in the root directory of the repo
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.4.0
   hooks:
@@ -17,9 +25,11 @@ repos:
       types: [file]
       files: \.(json|releaserc)$
     - id: end-of-file-fixer
+      exclude: .svg
     - id: trailing-whitespace
     - id: check-merge-conflict
     - id: detect-private-key
+      exclude: ibm_catalog.json
     - id: mixed-line-ending
       args: ['--fix=lf']
       description: Forces to replace line ending by the UNIX 'lf' character.
@@ -28,19 +38,17 @@ repos:
   hooks:
     - id: hadolint
 - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
-  rev: v9.4.0
+  rev: v9.5.0
   hooks:
     - id: commitlint
       stages: [commit-msg]
       additional_dependencies: ['@commitlint/config-angular']
 - repo: https://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.77.1
+  rev: v1.81.0
   hooks:
     - id: terraform_fmt
     - id: terraform_validate
-      files: ^examples/
-    - id: terraform_docs
-      args: ['--args=--hide=providers']
+      files: ^examples/|^patterns/|^solutions/
     - id: terraform_tflint
       args:
         - --args=--enable-rule=terraform_unused_declarations
@@ -61,26 +69,29 @@ repos:
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 2.3.10
+  rev: 2.3.338
   hooks:
     - id: checkov
       args:
         - --skip-path=.scv
         - --skip-path=Dockerfile
         - --skip-path=module-metadata.json
+        - --skip-path=ibm_catalog.json
         - --skip-framework=github_actions
+        # see https://github.ibm.com/GoldenEye/issues/issues/5317
+        - --skip-check=CKV_TF_1
 - repo: https://github.com/syntaqx/git-hooks
-  rev: v0.0.17
+  rev: v0.0.18
   hooks:
   - id: forbid-binary
     exclude: .png|.jpg
   - id: shellcheck
   - id: go-fmt
 - repo: https://github.com/ibm/detect-secrets
-  rev: 0.13.1+ibm.56.dss
+  rev: 0.13.1+ibm.61.dss
   hooks:
   - id: detect-secrets
-    args: ['--baseline', '.secrets.baseline', '--fail-on-unaudited', 'use-all-plugins']
+    args: ['--baseline', '.secrets.baseline', '--fail-on-unaudited', '--use-all-plugins']
     exclude: go.sum|module-metadata.json
 # flake8
 - repo: https://github.com/pycqa/flake8
@@ -96,13 +107,13 @@ repos:
         - "--ignore=E203,E501,W503"
 # isort
 - repo: https://github.com/pycqa/isort
-  rev: 5.11.5
+  rev: 5.12.0
   hooks:
   - id: isort
     args: ["--profile", "black", "--filter-files"]
 # black
 - repo: https://github.com/ambv/black
-  rev: 23.1.0
+  rev: 23.7.0
   hooks:
   - id: black
     args: # arguments to configure black
@@ -123,10 +134,24 @@ repos:
       language: python
       files: "README.md"
       pass_filenames: false
-    - id: add_examples
+    - id: add_examples_modules
       name: Add examples section to README
       description: Add examples section to README
       entry: python3 ci/terraformDocExamples.py
+      language: python
+      files: "README.md"
+      pass_filenames: false
+    - id: terraform_docs
+      name: Add terraform docs section to README
+      description: Add terraform docs section to README
+      entry: python3 ci/terraformDocs.py
+      language: python
+      files: "README.md"
+      pass_filenames: false
+    - id: add_overview
+      name: Add overview section to README
+      description: Add overview section to README
+      entry: python3 ci/terraformDocOverview.py
       language: python
       files: "README.md"
       pass_filenames: false
@@ -146,6 +171,6 @@ repos:
       pass_filenames: false
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
-  rev: v0.1.18
+  rev: v0.1.22
   hooks:
     - id: helmlint

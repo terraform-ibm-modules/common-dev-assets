@@ -6,17 +6,19 @@ function trigger_pipeline() {
 
   repo_name=$1
   product=$2
-  flavor=$3
-  version=$4
-  git_url=$5
-  git_org=$6
-  destroy_on_failure=$7
-  publish_apikey_override=$8
-  validation_apikey_override=$9
+  flavor_label=$3
+  install_type=$4
+  version=$5
+  git_url=$6
+  git_org=$7
+  destroy_on_failure=$8
+  publish_apikey_override=$9
+  validation_apikey_override=${10}
 
   payload=$(jq -c -n --arg repoName "${repo_name}" \
                      --arg product "${product}" \
-                     --arg flavor "${flavor}" \
+                     --arg flavorLabel "${flavor_label}" \
+                     --arg installType "${install_type}" \
                      --arg version "${version}" \
                      --arg gitUrl "${git_url}" \
                      --arg gitOrg "${git_org}" \
@@ -25,7 +27,8 @@ function trigger_pipeline() {
                      --arg validationApikeyOverride "${validation_apikey_override}" \
                      '{"repo-name": $repoName,
                        "product": $product,
-                       "flavor": $flavor,
+                       "flavor-label": $flavorLabel,
+                       "install-type": $installType,
                        "version": $version,
                        "git-url": $gitUrl,
                        "git-org": $gitOrg,
@@ -88,6 +91,12 @@ CATALOG_JSON_FILENAME="ibm_catalog.json"
 PUBLISH_APIKEY_OVERRIDE="none"
 VALIDATION_APIKEY_OVERRIDE="none"
 DESTROY_ON_FAILURE=false
+
+# Verify ibm_catalog.json exists
+if ! test -f "${CATALOG_JSON_FILENAME}"; then
+  echo "No ${CATALOG_JSON_FILENAME} file was detected, unable to proceed."
+  exit 1
+fi
 
 # Determine repo name
 REPO_NAME="$(basename "$(git config --get remote.origin.url)")"
@@ -153,38 +162,42 @@ if [ "${GITHUB_URL}" != "github.ibm.com" ] && [ "${GITHUB_URL}" != "github.com" 
   exit 1
 fi
 
-# Parse ibm_catalog.json if it exists
-if test -f "${CATALOG_JSON_FILENAME}"; then
-  echo "Parsing values from ${CATALOG_JSON_FILENAME} .."
+# Add all products into product array
+product_array=()
+while IFS='' read -r line; do product_array+=("$line"); done < <(jq -r '.products | .[].name' "${CATALOG_JSON_FILENAME}")
 
-  # Add all products into product array
-  product_array=()
-  while IFS='' read -r line; do product_array+=("$line"); done < <(jq -r '.products | .[].name' "${CATALOG_JSON_FILENAME}")
-
-  # Loop through all products
-  for product in "${product_array[@]}"; do
-    # Add all product flavors into flavor array
-    flavor_array=()
-    while IFS='' read -r line; do flavor_array+=("$line"); done < <(jq -r --arg product "${product}" '.products | .[] | select(.name==$product) | .flavors | .[] | .name' "${CATALOG_JSON_FILENAME}")
-    # Loop through all flavors and trigger onboarding pipeline for each one
-    for flavor in "${flavor_array[@]}"; do
+# Loop through all products
+for product in "${product_array[@]}"; do
+  # Add all product flavors into a directory array since directory will be unique for each entry
+  directory_array=()
+  while IFS='' read -r line; do directory_array+=("$line"); done < <(jq -r --arg product "${product}" '.products | .[] | select(.name==$product) | .flavors | .[] | .working_directory' "${CATALOG_JSON_FILENAME}")
+  # Loop through all flavor directories and trigger onboarding pipeline for each one
+  for flavor_dir in "${directory_array[@]}"; do
+    if [ "${flavor_dir}" == "null" ]; then
+      echo "Unable to determine working directory. Please ensure the ibm_catalog.json has working_directory value set"
+      exit 1
+    fi
+    # determine the flavor label
+    flavor_label=$(jq -r --arg wdir "${flavor_dir}" --arg product "${product}" '.products | .[] | select(.name==$product) | .flavors | .[] | select(.working_directory==$wdir) | .label' "${CATALOG_JSON_FILENAME}")
+    # determine the install type
+    install_type="non-da"
+    if [ "${flavor_label}" != "null" ]; then
+      install_type=$(jq -r --arg wdir "${flavor_dir}" --arg product "${product}" '.products | .[] | select(.name==$product) | .flavors | .[] | select(.working_directory==$wdir) | .install_type' "${CATALOG_JSON_FILENAME}")
       echo
-      echo "Kicking off tekton pipeline for ${product} (${flavor}) .."
-      trigger_pipeline "${REPO_NAME}" "${product}" "${flavor}" "${VERSION}" "${GITHUB_URL}" "${GITHUB_ORG}" "${DESTROY_ON_FAILURE}" "${PUBLISH_APIKEY_OVERRIDE}" "${VALIDATION_APIKEY_OVERRIDE}"
+      echo "Kicking off tekton pipeline for ${product} (${flavor_label} - ${install_type}) .."
+    else
       echo
+      echo "Kicking off tekton pipeline for ${product} (${install_type}) .."
+    fi
+    trigger_pipeline "${REPO_NAME}" "${product}" "${flavor_label}" "${install_type}" "${VERSION}" "${GITHUB_URL}" "${GITHUB_ORG}" "${DESTROY_ON_FAILURE}" "${PUBLISH_APIKEY_OVERRIDE}" "${VALIDATION_APIKEY_OVERRIDE}"
+    echo
 
-      # Using syntax ${#a[@]} here to get last element of array so code is compatible on older bash (v4.0 or earlier) - see https://unix.stackexchange.com/a/198788
-      if [ "${flavor}" != "${flavor_array[${#flavor_array[@]}-1]}" ]; then
-        # Sleep for 5 mins to prevent 409 doc conflict when pipeline tries to update same document
-        echo
-        echo "Sleeping for 5 mins.."
-        sleep 300
-      fi
-    done
+    # Using syntax ${#a[@]} here to get last element of array so code is compatible on older bash (v4.0 or earlier) - see https://unix.stackexchange.com/a/198788
+    if [ "${flavor_dir}" != "${directory_array[${#directory_array[@]}-1]}" ]; then
+      # Sleep for 5 mins before triggering pipeline again
+      echo
+      echo "Sleeping for 5 mins.."
+      sleep 300
+    fi
   done
-else
-  # When repo contains no ibm_catalog.json, pass null as flavor type and repo name for product name
-  echo
-  echo "Kicking off tekton pipeline for ${REPO_NAME} .."
-  trigger_pipeline "${REPO_NAME}" "${REPO_NAME}" "null" "${VERSION}" "${GITHUB_URL}" "${GITHUB_ORG}" "${DESTROY_ON_FAILURE}" "${PUBLISH_APIKEY_OVERRIDE}" "${VALIDATION_APIKEY_OVERRIDE}"
-fi
+done
