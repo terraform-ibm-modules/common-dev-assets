@@ -53,7 +53,7 @@ is_merge_pipeline() {
         merge_pipeline=true
 
     # GitHub Actions (see https://docs.github.com/en/actions/learn-github-actions/environment-variables)
-    elif [ "${GITHUB_ACTIONS}" == "true" ] && [[ "${GITHUB_REF}" =~ "merge" ]]; then
+    elif [ "${GITHUB_ACTIONS}" == "true" ] && [[ "${GITHUB_REF}" != "merge" ]]; then
         merge_pipeline=true
 
     # Tekton Toolchain (see https://cloud.ibm.com/docs/devsecops?topic=devsecops-devsecops-pipelinectl)
