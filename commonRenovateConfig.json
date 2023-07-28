@@ -37,8 +37,8 @@
       "semanticCommitType": "fix"
     },
     {
-      "description": "Use chore as Semantic Commit prefix for all dependency updates in examples folder",
-      "matchPaths": ["examples/**"],
+      "description": "Use chore as Semantic Commit prefix for all dependency updates in examples and tests folders",
+      "matchPaths": ["examples/**", "tests/resources/**"],
       "semanticCommitType": "chore"
     },
     {
