@@ -46,14 +46,11 @@ function submodule_exists(){
     echo "${exists}"
 }
 
+# GHA pipeline doesn't run pre-commit hooks on merge. Support travis and tekton pipelines only
 is_merge_pipeline() {
     merge_pipeline=false
     # Travis (see https://docs.travis-ci.com/user/environment-variables)
     if [ "${TRAVIS}" == "true" ] && [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
-        merge_pipeline=true
-
-    # GitHub Actions (see https://docs.github.com/en/actions/learn-github-actions/environment-variables)
-    elif [ "${GITHUB_ACTIONS}" == "true" ] && [[ "${GITHUB_REF}" != "merge" ]]; then
         merge_pipeline=true
 
     # Tekton Toolchain (see https://cloud.ibm.com/docs/devsecops?topic=devsecops-devsecops-pipelinectl)
