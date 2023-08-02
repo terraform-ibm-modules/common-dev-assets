@@ -147,7 +147,7 @@ repos:
       entry: python3 ci/terraformDocs.py
       language: python
       files: "README.md"
-      pass_filenames: false
+      pass_filenames: true
     - id: add_overview
       name: Add overview section to README
       description: Add overview section to README
