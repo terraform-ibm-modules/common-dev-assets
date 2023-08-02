@@ -4,25 +4,25 @@
   testPriority: 1
 - name: br-sao
   useForTest: true
-  testPriority: 4
+  testPriority: 3
 - name: ca-tor
   useForTest: true
   testPriority: 2
 - name: eu-de
   useForTest: true
-  testPriority: 6
+  testPriority: 4
 - name: eu-gb
   useForTest: true
-  testPriority: 7
+  testPriority: 5
 - name: jp-osa
   useForTest: true
-  testPriority: 3
+  testPriority: 8
 - name: jp-tok
   useForTest: true
-  testPriority: 5
+  testPriority: 9
 - name: us-east
   useForTest: true
-  testPriority: 8
+  testPriority: 6
 - name: us-south
   useForTest: true
-  testPriority: 9
+  testPriority: 7
