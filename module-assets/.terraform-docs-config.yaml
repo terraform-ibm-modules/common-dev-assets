@@ -4,6 +4,7 @@ content: |-
     {{ include "tf-docs.md" }}
 
 output:
+  file: "README.md"
   mode: inject
   template: |-
     <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
