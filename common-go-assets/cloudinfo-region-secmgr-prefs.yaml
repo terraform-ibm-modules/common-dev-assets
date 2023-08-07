@@ -9,10 +9,10 @@
   useForTest: true
   testPriority: 3
 - name: jp-osa
-  useForTest: true
+  useForTest: false
   testPriority: 8
 - name: jp-tok
-  useForTest: true
+  useForTest: false
   testPriority: 9
 - name: eu-de
   useForTest: true
