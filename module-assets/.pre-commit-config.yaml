@@ -127,13 +127,7 @@ repos:
       types: [go]
       language: golang
       pass_filenames: false
-    - id: build_module_template
-      name: Build module template
-      description: Build module template (module template repos only)
-      entry: python3 ci/module-template-automation/moduleTemplateBuilder.py
-      language: python
-      files: "README.md"
-      pass_filenames: false
+      # This will be going away once the metadata for the "add_overview" hook is rolled out to all repos
     - id: add_examples_modules
       name: Add examples section to README
       description: Add examples section to README
