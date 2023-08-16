@@ -207,7 +207,7 @@ fi
 # terraform
 #######################################
 
- # renovate: datasource=github-releases depName=hashicorp/terraform
+# Locking into last version that is not BSL
 TERRAFORM_VERSION=v1.5.5
 BINARY=terraform
 
