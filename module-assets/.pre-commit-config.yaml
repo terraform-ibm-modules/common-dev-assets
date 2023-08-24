@@ -67,6 +67,8 @@ repos:
   hooks:
     - id: checkov
       args:
+        # chart is owned by community
+        - --skip-path=chart/external-secrets
         - --skip-path=.scv
         - --skip-path=Dockerfile
         - --skip-path=module-metadata.json
