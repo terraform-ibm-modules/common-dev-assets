@@ -11,9 +11,10 @@ function trigger_pipeline() {
   version=$5
   git_url=$6
   git_org=$7
-  destroy_on_failure=$8
-  publish_apikey_override=$9
-  validation_apikey_override=${10}
+  destroy_resources_on_failure=$8
+  destroy_workspace_on_failure=$9
+  publish_apikey_override=${10}
+  validation_apikey_override=${11}
 
   payload=$(jq -c -n --arg repoName "${repo_name}" \
                      --arg product "${product}" \
@@ -22,7 +23,8 @@ function trigger_pipeline() {
                      --arg version "${version}" \
                      --arg gitUrl "${git_url}" \
                      --arg gitOrg "${git_org}" \
-                     --arg destroyOnFailure "${destroy_on_failure}" \
+                     --arg destroyResourcesOnFailure "${destroy_resources_on_failure}" \
+                     --arg destroyWorkspaceOnFailure "${destroy_workspace_on_failure}" \
                      --arg publishApikeyOverride "${publish_apikey_override}" \
                      --arg validationApikeyOverride "${validation_apikey_override}" \
                      '{"repo-name": $repoName,
@@ -34,7 +36,8 @@ function trigger_pipeline() {
                        "git-org": $gitOrg,
                        "external-catalog-api-key-override": $publishApikeyOverride,
                        "external-validation-api-key-override": $validationApikeyOverride,
-                       "destroy-on-failure": $destroyOnFailure
+                       "destroy-resources-on-failure": $destroyResourcesOnFailure,
+                       "destroy_workspace_on_failure": $destroyWorkspaceOnFailure
                      }')
 
   curl -X POST \
@@ -67,7 +70,8 @@ usage:	${PRG}
         [--use_valadation_apikey_override]  (Requires CATALOG_VALIDATION_APIKEY env var to be set)
         [--github_url=<github_url>]  (Defaults to github.ibm.com)
         [--github_org=<github-org>]  (Defaults to GoldenEye)
-        [--destroy_on_failure]  (By default resources will not be destroyed on validation failure to allow to debug. Use this flag to always attempt a destroy)
+        [--destroy_resources_on_failure]  (By default resources will not be destroyed on validation failure to allow to debug. Use this flag to always attempt a destroy of resources)
+        [--destroy_workspace_on_failure]  (By default the workspace will not be destroyed on validation failure to allow to debug. Use this flag to always attempt a destroy of the workspace (can only be used if --destroy_resources_on_failure is set too)
 "
 
 # Verify required environment variables are set
@@ -90,7 +94,8 @@ GITHUB_ORG="GoldenEye"
 CATALOG_JSON_FILENAME="ibm_catalog.json"
 PUBLISH_APIKEY_OVERRIDE="none"
 VALIDATION_APIKEY_OVERRIDE="none"
-DESTROY_ON_FAILURE=false
+DESTROY_RESOURCES_ON_FAILURE=false
+DESTROY_WORKSPACE_ON_FAILURE=false
 
 # Verify ibm_catalog.json exists
 if ! test -f "${CATALOG_JSON_FILENAME}"; then
@@ -104,8 +109,10 @@ REPO_NAME="${REPO_NAME//.git/}"
 
 # Loop through all args
 for arg in "$@"; do
-  if [ "${arg}" = --destroy_on_failure ]; then
-    DESTROY_ON_FAILURE=true
+  if [ "${arg}" = --destroy_resources_on_failure ]; then
+    DESTROY_RESOURCES_ON_FAILURE=true
+  elif [ "${arg}" = --destroy_workspace_on_failure ]; then
+    DESTROY_WORKSPACE_ON_FAILURE=true
   elif [ "${arg}" = --use_publish_apikey_override ]; then
     set +u
     if [ -z "${CATALOG_PUBLISH_APIKEY}" ]; then
@@ -156,6 +163,12 @@ if [ "${VERSION}" = "" ]; then
   exit 1
 fi
 
+# Verify destroy flags used correctly
+if [ ${DESTROY_WORKSPACE_ON_FAILURE} == true ] && [ ${DESTROY_RESOURCES_ON_FAILURE} == false ]; then
+  echo "If you are setting --destroy_workspace_on_failure then you must also set --destroy_resources_on_failure"
+  exit 1
+fi
+
 # Verify github org value
 if [ "${GITHUB_URL}" != "github.ibm.com" ] && [ "${GITHUB_URL}" != "github.com" ]; then
   echo "--github_url value must be github.ibm.com or github.com"
@@ -189,7 +202,7 @@ for product in "${product_array[@]}"; do
       echo
       echo "Kicking off tekton pipeline for ${product} (${install_type}) .."
     fi
-    trigger_pipeline "${REPO_NAME}" "${product}" "${flavor_label}" "${install_type}" "${VERSION}" "${GITHUB_URL}" "${GITHUB_ORG}" "${DESTROY_ON_FAILURE}" "${PUBLISH_APIKEY_OVERRIDE}" "${VALIDATION_APIKEY_OVERRIDE}"
+    trigger_pipeline "${REPO_NAME}" "${product}" "${flavor_label}" "${install_type}" "${VERSION}" "${GITHUB_URL}" "${GITHUB_ORG}" "${DESTROY_RESOURCES_ON_FAILURE}" "${DESTROY_WORKSPACE_ON_FAILURE}" "${PUBLISH_APIKEY_OVERRIDE}" "${VALIDATION_APIKEY_OVERRIDE}"
     echo
 
     # Using syntax ${#a[@]} here to get last element of array so code is compatible on older bash (v4.0 or earlier) - see https://unix.stackexchange.com/a/198788
