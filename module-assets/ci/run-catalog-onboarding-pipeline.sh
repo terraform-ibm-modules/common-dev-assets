@@ -71,7 +71,7 @@ usage:	${PRG}
         [--github_url=<github_url>]  (Defaults to github.ibm.com)
         [--github_org=<github-org>]  (Defaults to GoldenEye)
         [--destroy_resources_on_failure]  (By default resources will not be destroyed on validation failure to allow to debug. Use this flag to always attempt a destroy of resources)
-        [--destroy_workspace_on_failure]  (By default the workspace will not be destroyed on validation failure to allow to debug. Use this flag to always attempt a destroy of the workspace (can only be used if --destroy_resources_on_failure is set too)
+        [--destroy_workspace_on_failure]  (By default the workspace will not be destroyed on validation failure to allow to debug. Use this flag to always attempt a destroy of the workspace (can only be used if --destroy_resources_on_failure is set too))
 "
 
 # Verify required environment variables are set
