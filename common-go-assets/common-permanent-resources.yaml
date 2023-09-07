@@ -15,7 +15,7 @@ activityTrackerFrankfurtRegion: "eu-de"
 cisInstanceId: "crn:v1:bluemix:public:internet-svcs:global:a/abac0df06b644a9cabc6e44f55b3880e:59aa1a88-ac47-45e4-bd96-2bc778d26ca7::"
 cisInstanceName: "geretain-permanent-cis"
 
-# resource group
+# geretain-test-permanent resource group ID
 resourceGroupTestPermanentId: 6deff3aad31a48b696cb1b173e54c41d # pragma: allowlist secret
 
 # secrets manager public cert engine
