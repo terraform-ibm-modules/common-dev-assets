@@ -37,7 +37,7 @@ function trigger_pipeline() {
                        "external-catalog-api-key-override": $publishApikeyOverride,
                        "external-validation-api-key-override": $validationApikeyOverride,
                        "destroy-resources-on-failure": $destroyResourcesOnFailure,
-                       "destroy_workspace_on_failure": $destroyWorkspaceOnFailure
+                       "destroy-workspace-on-failure": $destroyWorkspaceOnFailure
                      }')
 
   curl -X POST \
