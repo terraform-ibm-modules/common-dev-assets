@@ -109,7 +109,7 @@ repos:
     args: ["--profile", "black", "--filter-files"]
 # black
 - repo: https://github.com/ambv/black
-  rev: 23.7.0
+  rev: 23.9.0
   hooks:
   - id: black
     args: # arguments to configure black
