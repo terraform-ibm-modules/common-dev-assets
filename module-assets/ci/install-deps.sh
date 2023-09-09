@@ -235,7 +235,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.50.12
+TERRAGRUNT_VERSION=v0.50.14
 BINARY=terragrunt
 set +e
 INSTALLED_TERRAGRUNT_VERSION="$(terragrunt --version | head -1 | cut -d' ' -f3)"
@@ -318,7 +318,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=aquasecurity/tfsec
-TFSEC_VERSION=v1.28.1
+TFSEC_VERSION=v1.28.2
 BINARY=tfsec
 set +e
 INSTALLED_TFSEC_VERSION="$(tfsec --version)"
