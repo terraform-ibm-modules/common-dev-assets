@@ -318,7 +318,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=aquasecurity/tfsec
-TFSEC_VERSION=v1.28.2
+TFSEC_VERSION=v1.28.4
 BINARY=tfsec
 set +e
 INSTALLED_TFSEC_VERSION="$(tfsec --version)"
