@@ -24,6 +24,7 @@ def set_go_mod(path, module_url):
             lines[index] = expected_line + "\n"
             with open(path, "w") as writer:
                 writer.writelines(lines)
+            print("warning: If repository name has changed, then update 'remote.origin.url' locally by running 'git remote set-url origin new_repo_url'.")
 
 
 # modify module url to internal or external repo
