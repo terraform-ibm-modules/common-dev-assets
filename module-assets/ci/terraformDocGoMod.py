@@ -18,6 +18,7 @@ def set_go_mod(path, module_url):
             if regex:
                 regex_result = regex.string.strip()
                 if regex_result.lower() != expected_line.lower():
+                    print("current value: {}\nnew value    : {}".format(regex_result.lower(), expected_line.lower()))
                     replace_module = True
                     break
         if replace_module:
