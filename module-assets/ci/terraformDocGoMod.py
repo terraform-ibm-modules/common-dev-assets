@@ -18,14 +18,20 @@ def set_go_mod(path, module_url):
             if regex:
                 regex_result = regex.string.strip()
                 if regex_result.lower() != expected_line.lower():
-                    print("current value: {}\nnew value    : {}".format(regex_result.lower(), expected_line.lower()))
+                    print(
+                        "current value: {}\nnew value    : {}".format(
+                            regex_result.lower(), expected_line.lower()
+                        )
+                    )
                     replace_module = True
                     break
         if replace_module:
             lines[index] = expected_line + "\n"
             with open(path, "w") as writer:
                 writer.writelines(lines)
-            print("warning: If repository name has changed, then update 'remote.origin.url' locally by running 'git remote set-url origin new_repo_url'.")
+            print(
+                "warning: If repository name has changed, then update 'remote.origin.url' locally by running 'git remote set-url origin new_repo_url'."
+            )
 
 
 # modify module url to internal or external repo
