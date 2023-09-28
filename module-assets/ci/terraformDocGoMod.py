@@ -40,7 +40,7 @@ def change_module_url(module_url: str) -> str:
 
 
 # read repo name from .github/settings.yml file
-def get_repo_name():
+def get_repo_name() -> str:
     repo_name = ""
     with open(".github/settings.yml", "r") as file:
         prime_service = yaml.safe_load(file)
