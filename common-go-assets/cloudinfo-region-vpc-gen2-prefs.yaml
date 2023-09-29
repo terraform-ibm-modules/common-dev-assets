@@ -15,10 +15,10 @@
   useForTest: true
   testPriority: 5
 - name: jp-osa
-  useForTest: false
+  useForTest: true
   testPriority: 8
 - name: jp-tok
-  useForTest: false
+  useForTest: true
   testPriority: 9
 - name: us-east
   useForTest: true
