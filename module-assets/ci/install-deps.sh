@@ -208,7 +208,7 @@ fi
 #######################################
 
 # Locking into last version that is not BSL
-TERRAFORM_VERSION=v1.5.5
+TERRAFORM_VERSION=v1.5.7
 BINARY=terraform
 
 TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
