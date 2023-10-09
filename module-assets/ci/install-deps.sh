@@ -11,6 +11,13 @@ else
   mkdir -p "${DIRECTORY}"
 fi
 
+# Optionally specify the directory to run tfswitch in. If not speciffied it will run in repo root dir
+if [[ -z "${TFSWITCH_DIRECTORY}" ]]; then
+  TFSWITCH_DIR="."
+else
+  TFSWITCH_DIR="${TFSWITCH_DIRECTORY}"
+fi
+
 # Determine OS type
 if [[ $OSTYPE == 'darwin'* ]]; then
   OS="darwin"
@@ -225,7 +232,7 @@ ${arg} rm -f "${DIRECTORY}/${BINARY}"
 
 # If a .tf file with the terraform constrain is detected in the current directory, it should automatically download or switch to the latest terraform version in the defined range.
 # Otherwise it will default to TERRAFORM_VERSION value defined above
-tfswitch --default "${TERRAFORM_VERSION:1}" --bin "${TMP_DIR}/${BINARY}"
+tfswitch --default "${TERRAFORM_VERSION:1}" --bin "${TMP_DIR}/${BINARY}" --chdir "${TFSWITCH_DIR}"
 actual_binary_location=$(which "${TMP_DIR}/${BINARY}")
 copy_replace_binary ${BINARY} "$(dirname "${actual_binary_location}")"
 clean "${TMP_DIR}"
