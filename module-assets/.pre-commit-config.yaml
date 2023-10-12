@@ -43,6 +43,8 @@ repos:
     - id: terraform_fmt
     - id: terraform_validate
       files: ^examples/|^patterns/|^solutions/
+      args:
+        - --hook-config=--retry-once-with-cleanup=true
     - id: terraform_tflint
       args:
         - --args=--enable-rule=terraform_unused_declarations
