@@ -16,13 +16,6 @@ repos:
       require_serial: true
       pass_filenames: false
       description: This hook ensures that a file named LICENSE exists for any repo (on github.com) which contains .tf files in the root directory of the repo
-    - id: tf-upgrade
-      name: Upgrade terraform for each example
-      description: This hook upgrades terraform for each example in a case that .terraform folder inside example exists
-      entry: ci/tf-upgrade.sh
-      language: script
-      pass_filenames: false
-      files: ^examples/
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.5.0
   hooks:
@@ -50,6 +43,8 @@ repos:
     - id: terraform_fmt
     - id: terraform_validate
       files: ^examples/|^patterns/|^solutions/
+      args:
+        - --hook-config=--retry-once-with-cleanup=true
     - id: terraform_tflint
       args:
         - --args=--enable-rule=terraform_unused_declarations
