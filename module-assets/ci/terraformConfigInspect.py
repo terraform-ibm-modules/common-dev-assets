@@ -37,8 +37,8 @@ def run_metadata_generator(file_path, terraform_provider):
         print(error)
         sys.exit(proc.returncode)
     else:
-        with open(file_path, "wb") as text_file:
-            text_file.write(output)
+        with open(file_path, "wb") as binary_file:
+            binary_file.write(output)
 
 
 def remove_tf_IBM_provider():
