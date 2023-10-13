@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import glob
-import os
 import shutil
 import sys
 from pathlib import Path
@@ -23,13 +22,23 @@ def get_terraform_provider():
 
 
 def run_metadata_generator(file_path, terraform_provider):
+    tf_config_inspect_command = ""
     if terraform_provider:
-        os.system(
-            "terraform-config-inspect --json --metadata %s > %s"
-            % (terraform_provider, file_path)
+        tf_config_inspect_command = "terraform-config-inspect --json --metadata %s" % (
+            terraform_provider
         )
     else:
-        os.system("terraform-config-inspect --json > %s" % (file_path))
+        tf_config_inspect_command = "terraform-config-inspect --json"
+
+    proc = Popen(tf_config_inspect_command, stdout=PIPE, stderr=PIPE, shell=True)
+    output, error = proc.communicate()
+
+    if proc.returncode != 0:
+        print(error)
+        sys.exit(proc.returncode)
+    else:
+        with open(file_path, "wb") as binary_file:
+            binary_file.write(output)
 
 
 def remove_tf_IBM_provider():
