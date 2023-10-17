@@ -147,13 +147,6 @@ repos:
       language: python
       files: "README.md"
       pass_filenames: false
-    - id: terraform-config-inspect
-      name: Generate terraform module metadata
-      description: Extracting high-level metadata about Terraform modules
-      entry: python3 ci/terraformConfigInspect.py
-      language: python
-      files: '\.tf'
-      pass_filenames: false
     - id: go-mod-module-repository
       name: Add module repository to go.mod
       description: Adding module repository to go.mod file

@@ -518,28 +518,6 @@ if [[ "$OC_VERSION" != "$INSTALLED_OC_VERSION" ]]; then
 else
   echo "${BINARY} cli ${OC_VERSION} already installed - skipping install"
 fi
-#######################################
-# terraform config inspect
-#######################################
-
- # renovate: datasource=github-releases depName=IBM-Cloud/terraform-config-inspect
-TERRAFORM_CONFIG_INSPECT_VERSION=v1.0.0-beta4
-# Not possible to check the version of this yet https://github.com/hashicorp/terraform-config-inspect/issues/88
-TERRAFORM_CONFIG_INSPECT_VERSION_NUMBER="${TERRAFORM_CONFIG_INSPECT_VERSION:1}"
-BINARY=terraform-config-inspect
-FILE_NAME="terraform-config-inspect_${TERRAFORM_CONFIG_INSPECT_VERSION_NUMBER}_${OS}_amd64.zip"
-URL="https://github.com/IBM-Cloud/terraform-config-inspect/releases/download/${TERRAFORM_CONFIG_INSPECT_VERSION}"
-SUMFILE="terraform-config-inspect_${TERRAFORM_CONFIG_INSPECT_VERSION_NUMBER}_checksums.txt"
-TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
-
-echo
-echo "-- Installing ${BINARY} ${TERRAFORM_CONFIG_INSPECT_VERSION}..."
-
-download ${BINARY} ${TERRAFORM_CONFIG_INSPECT_VERSION} ${URL} "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
-verify "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
-unzip "${TMP_DIR}/${FILE_NAME}" -d "${TMP_DIR}" > /dev/null
-copy_replace_binary ${BINARY} "${TMP_DIR}"
-clean "${TMP_DIR}"
 
 #######################################
 # jq
