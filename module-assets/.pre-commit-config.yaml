@@ -42,6 +42,7 @@ repos:
   hooks:
     - id: terraform_fmt
     - id: terraform_validate
+      # only scan directories which has provider config in them due to limitation https://github.com/hashicorp/terraform/issues/28490
       files: ^examples/|^patterns/|^solutions/
       args:
         - --hook-config=--retry-once-with-cleanup=true
