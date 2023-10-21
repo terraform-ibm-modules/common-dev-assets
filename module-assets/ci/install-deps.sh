@@ -242,7 +242,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.52.3
+TERRAGRUNT_VERSION=v0.52.4
 BINARY=terragrunt
 set +e
 INSTALLED_TERRAGRUNT_VERSION="$(terragrunt --version | head -1 | cut -d' ' -f3)"
@@ -354,7 +354,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v1.54.2
+GOLANGCI_LINT_VERSION=v1.55.0
 BINARY=golangci-lint
 set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"
@@ -464,7 +464,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.28.2
+KUBECTL_VERSION=v1.28.3
 BINARY=kubectl
 set +e
 INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml --client | grep "gitVersion" | cut -d' ' -f4)"
