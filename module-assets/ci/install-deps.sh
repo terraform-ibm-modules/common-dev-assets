@@ -471,7 +471,7 @@ INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml --client | grep "gitV
 set -e
 if [[ "$KUBECTL_VERSION" != "$INSTALLED_KUBECTL_VERSION" ]]; then
   FILE_NAME="kubectl"
-  URL="https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/${OS}/amd64"
+  URL="https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/${OS}/amd64/kubectl"
   SUMFILE="kubectl.sha256"
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
 
