@@ -11,6 +11,13 @@ else
   mkdir -p "${DIRECTORY}"
 fi
 
+# Optionally specify the directory to run tfswitch in. If not speciffied it will run in repo root dir
+if [[ -z "${TFSWITCH_DIRECTORY}" ]]; then
+  TFSWITCH_DIR="."
+else
+  TFSWITCH_DIR="${TFSWITCH_DIRECTORY}"
+fi
+
 # Determine OS type
 if [[ $OSTYPE == 'darwin'* ]]; then
   OS="darwin"
@@ -138,7 +145,7 @@ fi
 #######################################
 
  # renovate: datasource=github-tags depName=pre-commit/pre-commit
-PRE_COMMIT_VERSION=v3.3.3
+PRE_COMMIT_VERSION=v3.5.0
 PACKAGE=pre-commit
 set +e
 INSTALLED_PRE_COMMIT_VERSION="$(${PYTHON} -m pip show pre-commit | grep Version: | cut -d' ' -f2)"
@@ -207,8 +214,8 @@ fi
 # terraform
 #######################################
 
- # renovate: datasource=github-releases depName=hashicorp/terraform
-TERRAFORM_VERSION=v1.5.4
+# Locking into last version that is not BSL
+TERRAFORM_VERSION=v1.5.7
 BINARY=terraform
 
 TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
@@ -225,7 +232,7 @@ ${arg} rm -f "${DIRECTORY}/${BINARY}"
 
 # If a .tf file with the terraform constrain is detected in the current directory, it should automatically download or switch to the latest terraform version in the defined range.
 # Otherwise it will default to TERRAFORM_VERSION value defined above
-tfswitch --default "${TERRAFORM_VERSION:1}" --bin "${TMP_DIR}/${BINARY}"
+tfswitch --default "${TERRAFORM_VERSION:1}" --bin "${TMP_DIR}/${BINARY}" --chdir "${TFSWITCH_DIR}"
 actual_binary_location=$(which "${TMP_DIR}/${BINARY}")
 copy_replace_binary ${BINARY} "$(dirname "${actual_binary_location}")"
 clean "${TMP_DIR}"
@@ -235,7 +242,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.48.6
+TERRAGRUNT_VERSION=v0.53.0
 BINARY=terragrunt
 set +e
 INSTALLED_TERRAGRUNT_VERSION="$(terragrunt --version | head -1 | cut -d' ' -f3)"
@@ -290,7 +297,7 @@ fi
 # tflint
 #######################################
  # renovate: datasource=github-releases depName=terraform-linters/tflint
-TFLINT_VERSION=v0.47.0
+TFLINT_VERSION=v0.48.0
 BINARY=tflint
 set +e
 INSTALLED_TFLINT_VERSION="$(tflint --version | grep "TFLint version " |cut -d' ' -f3)"
@@ -318,7 +325,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=aquasecurity/tfsec
-TFSEC_VERSION=v1.28.1
+TFSEC_VERSION=v1.28.4
 BINARY=tfsec
 set +e
 INSTALLED_TFSEC_VERSION="$(tfsec --version)"
@@ -347,7 +354,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v1.53.3
+GOLANGCI_LINT_VERSION=v1.55.1
 BINARY=golangci-lint
 set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"
@@ -430,7 +437,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v3.12.2
+HELM_VERSION=v3.13.1
 BINARY=helm
 set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"
@@ -457,7 +464,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.27.4
+KUBECTL_VERSION=v1.28.3
 BINARY=kubectl
 set +e
 INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml --client | grep "gitVersion" | cut -d' ' -f4)"
@@ -511,28 +518,6 @@ if [[ "$OC_VERSION" != "$INSTALLED_OC_VERSION" ]]; then
 else
   echo "${BINARY} cli ${OC_VERSION} already installed - skipping install"
 fi
-#######################################
-# terraform config inspect
-#######################################
-
- # renovate: datasource=github-releases depName=IBM-Cloud/terraform-config-inspect
-TERRAFORM_CONFIG_INSPECT_VERSION=v1.0.0-beta4
-# Not possible to check the version of this yet https://github.com/hashicorp/terraform-config-inspect/issues/88
-TERRAFORM_CONFIG_INSPECT_VERSION_NUMBER="${TERRAFORM_CONFIG_INSPECT_VERSION:1}"
-BINARY=terraform-config-inspect
-FILE_NAME="terraform-config-inspect_${TERRAFORM_CONFIG_INSPECT_VERSION_NUMBER}_${OS}_amd64.zip"
-URL="https://github.com/IBM-Cloud/terraform-config-inspect/releases/download/${TERRAFORM_CONFIG_INSPECT_VERSION}"
-SUMFILE="terraform-config-inspect_${TERRAFORM_CONFIG_INSPECT_VERSION_NUMBER}_checksums.txt"
-TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
-
-echo
-echo "-- Installing ${BINARY} ${TERRAFORM_CONFIG_INSPECT_VERSION}..."
-
-download ${BINARY} ${TERRAFORM_CONFIG_INSPECT_VERSION} ${URL} "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
-verify "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
-unzip "${TMP_DIR}/${FILE_NAME}" -d "${TMP_DIR}" > /dev/null
-copy_replace_binary ${BINARY} "${TMP_DIR}"
-clean "${TMP_DIR}"
 
 #######################################
 # jq

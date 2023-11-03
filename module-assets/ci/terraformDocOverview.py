@@ -125,9 +125,6 @@ def main():
         # add last heading of README (contributing (external) or developing (internal)) to overview
         overview.append(get_main_readme_headings())
 
-        # use repo name for heading lvl 2
-        overview.append(("\n## {}").format(repo_name))
-
         # create markdown
         terraformDocsUtils.create_markdown(overview, overivew_markdown)
 

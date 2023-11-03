@@ -17,7 +17,7 @@ repos:
       pass_filenames: false
       description: This hook ensures that a file named LICENSE exists for any repo (on github.com) which contains .tf files in the root directory of the repo
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.4.0
+  rev: v4.5.0
   hooks:
     - id: check-yaml
       exclude: chart/|metadata.yaml
@@ -37,18 +37,15 @@ repos:
   rev: v2.12.0
   hooks:
     - id: hadolint
-- repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
-  rev: v9.5.0
-  hooks:
-    - id: commitlint
-      stages: [commit-msg]
-      additional_dependencies: ['@commitlint/config-angular']
 - repo: https://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.81.0
+  rev: v1.83.5
   hooks:
     - id: terraform_fmt
     - id: terraform_validate
+      # only scan directories which has provider config in them due to limitation https://github.com/hashicorp/terraform/issues/28490
       files: ^examples/|^patterns/|^solutions/
+      args:
+        - --hook-config=--retry-once-with-cleanup=true
     - id: terraform_tflint
       args:
         - --args=--enable-rule=terraform_unused_declarations
@@ -69,10 +66,12 @@ repos:
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 2.3.358
+  rev: 3.0.13
   hooks:
     - id: checkov
       args:
+        # chart is owned by community
+        - --skip-path=chart/external-secrets
         - --skip-path=.scv
         - --skip-path=Dockerfile
         - --skip-path=module-metadata.json
@@ -113,7 +112,7 @@ repos:
     args: ["--profile", "black", "--filter-files"]
 # black
 - repo: https://github.com/ambv/black
-  rev: 23.7.0
+  rev: 23.10.1
   hooks:
   - id: black
     args: # arguments to configure black
@@ -127,13 +126,7 @@ repos:
       types: [go]
       language: golang
       pass_filenames: false
-    - id: build_module_template
-      name: Build module template
-      description: Build module template (module template repos only)
-      entry: python3 ci/module-template-automation/moduleTemplateBuilder.py
-      language: python
-      files: "README.md"
-      pass_filenames: false
+      # This will be going away once the metadata for the "add_overview" hook is rolled out to all repos
     - id: add_examples_modules
       name: Add examples section to README
       description: Add examples section to README
@@ -154,13 +147,6 @@ repos:
       entry: python3 ci/terraformDocOverview.py
       language: python
       files: "README.md"
-      pass_filenames: false
-    - id: terraform-config-inspect
-      name: Generate terraform module metadata
-      description: Extracting high-level metadata about Terraform modules
-      entry: python3 ci/terraformConfigInspect.py
-      language: python
-      files: '\.tf'
       pass_filenames: false
     - id: go-mod-module-repository
       name: Add module repository to go.mod

@@ -13,6 +13,10 @@ activityTrackerFrankfurtRegion: "eu-de"
 
 # cis
 cisInstanceId: "crn:v1:bluemix:public:internet-svcs:global:a/abac0df06b644a9cabc6e44f55b3880e:59aa1a88-ac47-45e4-bd96-2bc778d26ca7::"
+cisInstanceName: "geretain-permanent-cis"
+
+# geretain-test-permanent resource group ID
+resourceGroupTestPermanentId: 6deff3aad31a48b696cb1b173e54c41d # pragma: allowlist secret
 
 # secrets manager public cert engine
 certificateAuthorityName: geretain-acme-ca-config
@@ -25,14 +29,16 @@ sdnlbServiceIdName: "geretain - sDNLB-ServiceID - DO NOT DELETE"
 dedicatedHostCrn: "crn:v1:bluemix:public:cloudantnosqldb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:7c88e3f2-4412-4f45-b613-bae10b1e103c::"
 
 # HyperProtect Crypto Instances and Root Keys
+# hpcs_east instance id
 hpcs_east: "bc07f975-0b8c-47a3-9c10-fffa60f483f1"
 hpcs_name_east: "geretain-hyper-protect-crypto-us-east"
 hpcs_rg_east: "Default"
-hpcs_east_root_key_crn: "crn:v1:bluemix:public:hs-crypto:us-east:a/abac0df06b644a9cabc6e44f55b3880e:bc07f975-0b8c-47a3-9c10-fffa60f483f1:key:ab15dcaf-39e5-4a6b-b97a-8c807c6b9145"
+hpcs_east_root_key_crn: "crn:v1:bluemix:public:hs-crypto:us-east:a/abac0df06b644a9cabc6e44f55b3880e:bc07f975-0b8c-47a3-9c10-fffa60f483f1:key:5d1f4bb9-9981-4577-a5a6-a65f7bc28bc9"
+# hpcs_south instance id
 hpcs_south: "e6dce284-e80f-46e1-a3c1-830f7adff7a9"
 hpcs_name_south: "geretain-hyper-protect-crypto-us-south"
 hpcs_rg_south: "Default"
-hpcs_south_root_key_crn: "crn:v1:bluemix:public:hs-crypto:us-south:a/abac0df06b644a9cabc6e44f55b3880e:e6dce284-e80f-46e1-a3c1-830f7adff7a9:key:1368d2eb-3ed0-4a8b-b09c-2155895f01ea"
+hpcs_south_root_key_crn: "crn:v1:bluemix:public:hs-crypto:us-south:a/abac0df06b644a9cabc6e44f55b3880e:e6dce284-e80f-46e1-a3c1-830f7adff7a9:key:76170fae-4e0c-48c3-8ebe-326059ebb533"
 
 # vpc crn from GE staging account for transit gateway crossaccount connection tests
 gestaging_vpc_crn: "crn:v1:bluemix:public:is:eu-gb:a/e185552d5fed42c68b77567836d13963::vpc:r018-2e2e57ed-07d1-4381-943d-08e3ddcd4ae4"
@@ -53,3 +59,10 @@ postgresqlPITRRegion: "us-south"
 enterpriseDbPITRCrn: "crn:v1:bluemix:public:databases-for-enterprisedb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:3d3077b9-fcc0-427f-a877-d7af3830ca5e::"
 enterpriseDbPITRVersion: 12
 enterpriseDbPITRRegion: "us-south"
+
+# permanent resources for eso module tests
+acme_letsencrypt_private_key_sm_id: "79c6d411-c18f-4670-b009-b0044a238667"
+acme_letsencrypt_private_key_secret_id: "80060526-1a80-8b0b-1c6d-b941799e9b08"
+imported_certificate_intermediate_secret_id: "1a5dba6b-eec7-578d-0973-26994233ab5c"
+imported_certificate_public_secret_id: "029457f1-e9f6-ff13-4afa-ffe7f14d29bc"
+imported_certificate_private_secret_id: "c54fb897-8737-46d3-d8f3-3b59fc32f38d"
