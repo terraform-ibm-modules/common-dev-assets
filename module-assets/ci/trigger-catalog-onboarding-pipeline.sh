@@ -98,7 +98,7 @@ for offering in "${offerings_array[@]}"; do
                     --arg gitUrl "${GITHUB_URL}" \
                     --arg gitOrg "${GITHUB_ORG}" \
                     --arg offering "${offering}" \
-                    '{"repo-name":$repoName, 
+                    '{"repo-name":$repoName,
                         "git-url":$gitUrl,
                         "git-org": $gitOrg,
                         "offering-name": $offering
@@ -120,7 +120,7 @@ for offering in "${offerings_array[@]}"; do
       properties_object=$(jq -c -n --argjson properties "${properties}" '{"properties":$properties}')
       payload=$(echo "${payload} ${properties_object}" | jq -c -s add)
     fi
-    
+
     # Trigger pipeline
     echo
     echo "Kicking off tekton pipeline for ${offering} .."
