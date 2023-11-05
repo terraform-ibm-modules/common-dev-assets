@@ -26,9 +26,6 @@
 - name: syd04
   useForTest: true
   testPriority: 9
-- name: dal12
-  useForTest: false
-  testPriority: 10
 - name: sao01
   useForTest: true
-  testPriority: 11
+  testPriority: 10
