@@ -2,10 +2,10 @@
 - name: tor01
   useForTest: true
   testPriority: 1
-- name: lon06
+- name: eu-de-2
   useForTest: true
   testPriority: 2
-- name: syd05
+- name: sao01
   useForTest: true
   testPriority: 3
 - name: eu-de-1
