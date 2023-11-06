@@ -124,7 +124,7 @@ for offering in "${offerings_array[@]}"; do
     # Trigger pipeline
     echo
     echo "Kicking off tekton pipeline for ${offering} .."
-    curl -X POST \
+    curl -fLsS -X POST \
       "$CATALOG_TEKTON_WEBHOOK_URL" \
       -H "Content-Type: application/json" \
       -H "token: ${CATALOG_TEKTON_WEBHOOK_TOKEN}" \
