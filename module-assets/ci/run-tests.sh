@@ -79,7 +79,8 @@ if [ ${IS_PR} == true ]; then
                          "pvs.preset.json"
                          ".fileignore"
                          "cra-config.yaml"
-                         "LICENSE")
+                         "LICENSE"
+                         ".catalog-onboard-pipeline.yaml")
 
   # Determine all files being changed in the PR, and add it to array
   changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
