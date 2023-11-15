@@ -20,7 +20,7 @@ repos:
   rev: v4.5.0
   hooks:
     - id: check-yaml
-      exclude: chart/|metadata.yaml
+      exclude: chart/|metadata.yaml|tests/
     - id: check-json
       types: [file]
       files: \.(json|releaserc)$
@@ -70,8 +70,8 @@ repos:
   hooks:
     - id: checkov
       args:
-        # chart is owned by community
-        - --skip-path=chart/external-secrets
+        # ignore files in test samples directory
+        - --skip-path=tests/samples
         - --skip-path=.scv
         - --skip-path=Dockerfile
         - --skip-path=module-metadata.json
