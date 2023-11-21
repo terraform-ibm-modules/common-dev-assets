@@ -10,19 +10,22 @@
   testPriority: 3
 - name: jp-osa
   useForTest: true
-  testPriority: 8
+  testPriority: 9
 - name: jp-tok
   useForTest: true
-  testPriority: 9
+  testPriority: 10
 - name: eu-de
   useForTest: true
   testPriority: 4
-- name: eu-gb
+- name: eu-es
   useForTest: true
   testPriority: 5
-- name: us-east
+- name: eu-gb
   useForTest: true
   testPriority: 6
-- name: us-south
+- name: us-east
   useForTest: true
   testPriority: 7
+- name: us-south
+  useForTest: true
+  testPriority: 8
