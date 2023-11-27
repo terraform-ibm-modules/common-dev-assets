@@ -144,7 +144,7 @@ APIKEY=$5
 IGNORE_CONFIG_ISSUES=$6
 IAM_API_URL='https://iam.cloud.ibm.com/identity/token'
 CONTAINER_REGISTRY_URL="https://${REGISTRY_DNS_NAME}/"
-VA_IMAGE_REPORT_API_ENDPOINT='va/api/v3/report/image/'
+VA_IMAGE_REPORT_API_ENDPOINT='va/api/v4/report/image/'
 CONTAINER_REGISTRY="${REGISTRY_DNS_NAME}/${NAMESPACE}"
 CLOUD_VA_REPORT_URL="https://cloud.ibm.com/containers-kubernetes/registry/images/${NAMESPACE}/<image>/<version>/detail/issues?region=ibm:yp:us-south"
 LOCAL_REPORT="/tmp/${IMAGE}-va-report.json"
