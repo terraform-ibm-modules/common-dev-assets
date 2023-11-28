@@ -12,6 +12,10 @@ set -o pipefail
 
 # Determine if PR
 IS_PR=false
+# Extracting environment-specific variables
+COMMIT_ID=""
+PIPELINE_ID=""
+ENV_TAG=""
 
 # GitHub Actions (see https://docs.github.com/en/actions/learn-github-actions/environment-variables)
 if [ "${GITHUB_ACTIONS}" == "true" ]; then
@@ -22,6 +26,9 @@ if [ "${GITHUB_ACTIONS}" == "true" ]; then
     PR_NUM=$(echo "$GITHUB_REF" | awk -F/ '{print $3}')
   fi
   REPO_NAME="$(basename "${GITHUB_REPOSITORY}")"
+  COMMIT_ID="${GITHUB_SHA}"
+  PIPELINE_ID="${GITHUB_RUN_ID}"
+  ENV_TAG="github-actions"
 
 # Travis (see https://docs.travis-ci.com/user/environment-variables)
 elif [ "${TRAVIS}" == "true" ]; then
@@ -32,6 +39,9 @@ elif [ "${TRAVIS}" == "true" ]; then
     PR_NUM="${TRAVIS_PULL_REQUEST}"
   fi
   REPO_NAME="$(basename "${TRAVIS_REPO_SLUG}")"
+  COMMIT_ID="${TRAVIS_COMMIT}"
+  PIPELINE_ID="${TRAVIS_BUILD_ID}"
+  ENV_TAG="travis-ci"
 
 # Tekton Toolchain (see https://cloud.ibm.com/docs/devsecops?topic=devsecops-devsecops-pipelinectl)
 elif [ -n "${PIPELINE_RUN_ID}" ]; then
@@ -41,6 +51,9 @@ elif [ -n "${PIPELINE_RUN_ID}" ]; then
     PR_NUM="$(basename "${PR_URL}")"
   fi
   REPO_NAME="$(load_repo app-repo path)"
+  COMMIT_ID="$(load_repo app-repo commit)"
+  PIPELINE_ID="${PIPELINE_RUN_ID}"
+  ENV_TAG="tekton"
 else
   echo "Could not determine CI runtime environment. Script only support tekton, travis or github actions."
   exit 1
@@ -127,7 +140,7 @@ if [ ${IS_PR} == true ]; then
       fi
       log_location="$MZ_LOG_DIRS/test.log"
       # Assign tags
-      export MZ_TAGS="$REPO_NAME-PR$PR_NUM"
+      export MZ_TAGS="${REPO_NAME}-PR${PR_NUM},commit-${COMMIT_ID},pipeline-${PIPELINE_ID},env-${ENV_TAG}"
       # Exclude extra logs
       export MZ_EXCLUSION_REGEX_RULES="/var/log/*"
 
