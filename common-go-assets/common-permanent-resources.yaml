@@ -69,3 +69,12 @@ imported_certificate_sm_region: "us-south"
 imported_certificate_intermediate_secret_id: "1a5dba6b-eec7-578d-0973-26994233ab5c"
 imported_certificate_public_secret_id: "029457f1-e9f6-ff13-4afa-ffe7f14d29bc"
 imported_certificate_private_secret_id: "c54fb897-8737-46d3-d8f3-3b59fc32f38d"
+
+# GE Ops Account Id
+ge_ops_account_id: "9f9af00a96104f49b6509aa715f9d6a5" # pragma: allowlist secret
+
+# GE Ops KP Instance and Root Keys
+kp_us_south_guid: "44f9c10d-99f5-4547-9e9f-2a1c84b5f0a4"
+kp_us_south_name: "perm-KP-base-ocp"
+kp_us_south_rg: "Default"
+kp_us_south_root_key_crn: "crn:v1:bluemix:public:kms:us-south:a/9f9af00a96104f49b6509aa715f9d6a5:44f9c10d-99f5-4547-9e9f-2a1c84b5f0a4:key:f6c9f6d0-92f6-437a-b97c-4b617cb3d320"
