@@ -66,7 +66,6 @@ def update_docs():
         sys.exit(proc.returncode)
 
     # remove all temp markdowns
-    print(temp_markdowns)
     for markdown in temp_markdowns:
         terraformDocsUtils.remove_markdown(markdown)
 
