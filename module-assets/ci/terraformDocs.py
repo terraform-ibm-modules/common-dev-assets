@@ -28,6 +28,7 @@ def modify_temp_markdown_files(temp_markdown):
                 with open(markdown_path, "rt") as reader:
                     with open(new_markdown_path, "wt") as writer:
                         for line in reader:
+                            # recursive flag adds BEGIN_TF_DOCS and END_TF_DOCS metatags to a markdown content by default. We do not need this, since we have own metatag
                             if not ("BEGIN_TF_DOCS" in line or "END_TF_DOCS" in line):
                                 writer.write(line.replace("##", "###"))
     return temp_markdowns
