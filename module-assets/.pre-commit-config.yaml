@@ -141,6 +141,7 @@ repos:
       language: python
       files: "README.md"
       pass_filenames: true
+      always_run: true
     - id: add_overview
       name: Add overview section to README
       description: Add overview section to README
