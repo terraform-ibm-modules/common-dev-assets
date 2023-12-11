@@ -69,9 +69,6 @@ repos:
   rev: 3.1.30
   hooks:
     - id: checkov
-      # workaround for https://github.com/bridgecrewio/checkov/issues/5841
-      additional_dependencies:
-        - "cyclonedx-python-lib==5.2.0"
       args:
         # ignore files in test samples directory
         - --skip-path=tests/samples
