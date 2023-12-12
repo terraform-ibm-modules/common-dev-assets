@@ -79,6 +79,8 @@ repos:
         - --skip-framework=github_actions
         # see https://github.ibm.com/GoldenEye/issues/issues/5317
         - --skip-check=CKV_TF_1
+        # see https://github.com/bridgecrewio/checkov/issues/5855
+        - --skip-check=CKV2_IBM_6
 - repo: https://github.com/syntaqx/git-hooks
   rev: v0.0.18
   hooks:
