@@ -74,7 +74,6 @@ repos:
         - --skip-path=tests/samples
         - --skip-path=.scv
         - --skip-path=Dockerfile
-        - --skip-path=module-metadata.json
         - --skip-path=ibm_catalog.json
         - --skip-framework=github_actions
         # see https://github.ibm.com/GoldenEye/issues/issues/5317
@@ -93,7 +92,7 @@ repos:
   hooks:
   - id: detect-secrets
     args: ['--baseline', '.secrets.baseline', '--fail-on-unaudited', '--use-all-plugins']
-    exclude: go.sum|module-metadata.json
+    exclude: go.sum
 # flake8
 - repo: https://github.com/pycqa/flake8
   rev: 6.1.0
