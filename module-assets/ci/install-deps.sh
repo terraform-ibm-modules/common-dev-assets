@@ -242,7 +242,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.54.5
+TERRAGRUNT_VERSION=v0.54.10
 BINARY=terragrunt
 set +e
 INSTALLED_TERRAGRUNT_VERSION="$(terragrunt --version | head -1 | cut -d' ' -f3)"
@@ -270,7 +270,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=terraform-docs/terraform-docs
-TERRAFORM_DOCS_VERSION=v0.16.0
+TERRAFORM_DOCS_VERSION=v0.17.0
 BINARY=terraform-docs
 set +e
 INSTALLED_TERRADOCS_VERSION="$(terraform-docs --version | head -1 | cut -d' ' -f3)"
