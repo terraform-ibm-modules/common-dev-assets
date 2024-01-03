@@ -115,6 +115,9 @@ if [ ${IS_PR} == true ]; then
     fi
   done
 
+  # TODO remove this
+  echo "testing"
+
   # If there are no files in the commit, skip tests
   if [ "${#file_array[@]}" -ne 0 ]; then
     # If there are any files being updated in the PR that are not in the skip list, then run the tests
