@@ -99,6 +99,11 @@ if [ ${IS_PR} == true ]; then
   changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
   mapfile -t file_array <<< "${changed_files}"
 
+  # If there are no files in the commit, skip tests
+  if [ "${#file_array[@]}" -eq 0 ]; then
+    match=true
+  fi
+
   # Check if any file in skip_array matches any of the files being updated in the PR
   for f in "${file_array[@]}"; do
     match=false
@@ -115,82 +120,74 @@ if [ ${IS_PR} == true ]; then
     fi
   done
 
-  # TODO remove this
-  echo "testing"
-
-  # If there are no files in the commit, skip tests
-  if [ "${#file_array[@]}" -ne 0 ]; then
-    # If there are any files being updated in the PR that are not in the skip list, then run the tests
-    if [ "${match}" == "false" ]; then
-      cd tests
-      test_arg=""
-      # If pr_test.go exists, only execute those tests
-      pr_test_file=pr_test.go
-      if test -f "${pr_test_file}"; then
-          test_arg=${pr_test_file}
-      fi
-      test_cmd="go test ${test_arg} -count=1 -v -timeout=300m -parallel=10"
-      if [[ "$MZ_INGESTION_KEY" ]] ; then
-        # Assign location to be observed by logdna-agent
-        if [ -z "$MZ_LOG_DIRS" ]; then
-          export MZ_LOG_DIRS="/tmp"
-        fi
-        #lookback strategy determines how the agent handles existing files on agent startup
-        if [ -z "$LOGDNA_LOOKBACK" ]; then
-          export LOGDNA_LOOKBACK="smallfiles"
-        fi
-        # This is required to send logs to logdna-agent instance
-        if [ -z "$MZ_HOST" ]; then
-          export MZ_HOST="logs.us-south.logging.cloud.ibm.com"
-        fi
-        log_location="$MZ_LOG_DIRS/test.log"
-        # Assign tags
-        export MZ_TAGS="${REPO_NAME}-PR${PR_NUM},commit-${COMMIT_ID},pipeline-${PIPELINE_ID},env-${ENV_TAG}"
-        # Exclude extra logs
-        export MZ_EXCLUSION_REGEX_RULES="/var/log/*"
-
-        ## Retry running logdna if fails to run and adding more logs
-
-        MAX_RETRY_LOGDNA=3
-        LOGDNA_RUN_ATTEMPT=1
-
-        while [ "$LOGDNA_RUN_ATTEMPT" -le "$MAX_RETRY_LOGDNA" ]; do
-            echo "Starting logdna-agent: [$LOGDNA_RUN_ATTEMPT/$MAX_RETRY_LOGDNA]"
-            set +e
-            systemctl start logdna-agent
-            RESULT_LOGDNA_START=$?
-            set -e
-
-            if [ $RESULT_LOGDNA_START -eq 0 ]; then
-                echo "Logdna-agent started successfully"
-                break
-            else
-                echo "Logdna-agent start command exit status: $RESULT_LOGDNA_START"
-                echo "Logdna-agent Tag added: $MZ_TAGS"
-                set +e
-                echo "Logdna-agent Status: $(systemctl status logdna-agent)"
-                LOGDNA_RUN_ATTEMPT=$((LOGDNA_RUN_ATTEMPT+1))
-                echo "=================================================== Logdna-agent: Service Log ==================================================="
-                  tail -n 20 /var/log/journal/logdna-agent.service.log
-                echo "================================================================================================================================="
-                if [ $LOGDNA_RUN_ATTEMPT -le $MAX_RETRY_LOGDNA ]; then
-                  echo "Retrying..."
-                fi
-                set -e
-            fi
-        done
-
-        $test_cmd 2>&1 | tee "$log_location"
-
-      else
-        $test_cmd
-      fi
-      cd ..
-    else
-      echo "No file changes detected to trigger tests"
+  # If there are any files being updated in the PR that are not in the skip list, then run the tests
+  if [ "${match}" == "false" ]; then
+    cd tests
+    test_arg=""
+    # If pr_test.go exists, only execute those tests
+    pr_test_file=pr_test.go
+    if test -f "${pr_test_file}"; then
+        test_arg=${pr_test_file}
     fi
+    test_cmd="go test ${test_arg} -count=1 -v -timeout=300m -parallel=10"
+    if [[ "$MZ_INGESTION_KEY" ]] ; then
+      # Assign location to be observed by logdna-agent
+      if [ -z "$MZ_LOG_DIRS" ]; then
+        export MZ_LOG_DIRS="/tmp"
+      fi
+      #lookback strategy determines how the agent handles existing files on agent startup
+      if [ -z "$LOGDNA_LOOKBACK" ]; then
+        export LOGDNA_LOOKBACK="smallfiles"
+      fi
+      # This is required to send logs to logdna-agent instance
+      if [ -z "$MZ_HOST" ]; then
+        export MZ_HOST="logs.us-south.logging.cloud.ibm.com"
+      fi
+      log_location="$MZ_LOG_DIRS/test.log"
+      # Assign tags
+      export MZ_TAGS="${REPO_NAME}-PR${PR_NUM},commit-${COMMIT_ID},pipeline-${PIPELINE_ID},env-${ENV_TAG}"
+      # Exclude extra logs
+      export MZ_EXCLUSION_REGEX_RULES="/var/log/*"
+
+      ## Retry running logdna if fails to run and adding more logs
+
+      MAX_RETRY_LOGDNA=3
+      LOGDNA_RUN_ATTEMPT=1
+
+      while [ "$LOGDNA_RUN_ATTEMPT" -le "$MAX_RETRY_LOGDNA" ]; do
+          echo "Starting logdna-agent: [$LOGDNA_RUN_ATTEMPT/$MAX_RETRY_LOGDNA]"
+          set +e
+          systemctl start logdna-agent
+          RESULT_LOGDNA_START=$?
+          set -e
+
+          if [ $RESULT_LOGDNA_START -eq 0 ]; then
+              echo "Logdna-agent started successfully"
+              break
+          else
+              echo "Logdna-agent start command exit status: $RESULT_LOGDNA_START"
+              echo "Logdna-agent Tag added: $MZ_TAGS"
+              set +e
+              echo "Logdna-agent Status: $(systemctl status logdna-agent)"
+              LOGDNA_RUN_ATTEMPT=$((LOGDNA_RUN_ATTEMPT+1))
+              echo "=================================================== Logdna-agent: Service Log ==================================================="
+                tail -n 20 /var/log/journal/logdna-agent.service.log
+              echo "================================================================================================================================="
+              if [ $LOGDNA_RUN_ATTEMPT -le $MAX_RETRY_LOGDNA ]; then
+                echo "Retrying..."
+              fi
+              set -e
+          fi
+      done
+
+      $test_cmd 2>&1 | tee "$log_location"
+
+    else
+      $test_cmd
+    fi
+    cd ..
   else
-    echo "No files in commit"
+    echo "No file changes detected to trigger tests"
   fi
 else
   echo "Not running tests in merge pipeline"
