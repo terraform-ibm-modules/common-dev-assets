@@ -99,6 +99,11 @@ if [ ${IS_PR} == true ]; then
   changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
   mapfile -t file_array <<< "${changed_files}"
 
+  # If there are no files in the commit, skip tests
+  if [ "${#file_array[@]}" -eq 0 ]; then
+    match=true
+  fi
+
   # Check if any file in skip_array matches any of the files being updated in the PR
   for f in "${file_array[@]}"; do
     match=false
