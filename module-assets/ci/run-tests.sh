@@ -7,7 +7,7 @@
 # Approach based on https://dev.to/ahferroin7/skip-ci-stages-in-travis-based-on-what-files-changed-3a4k
 #
 
-set -ex
+set -e
 set -o pipefail
 
 # Determine if PR
