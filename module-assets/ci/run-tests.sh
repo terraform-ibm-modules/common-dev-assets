@@ -104,7 +104,7 @@ if [ ${IS_PR} == true ]; then
   echo "****DEBUG*** Content of file_array count: ${#file_array[@]}"
 
   # If there are no files in the commit, skip tests
-  if [ "${#file_array[@]}" -eq 0 ]; then
+  if [ "${file_array[*]}" == "" ]; then
     match=true
   fi
 
