@@ -104,8 +104,9 @@ if [ ${IS_PR} == true ]; then
   echo "****DEBUG*** Content of file_array count: ${#file_array[@]}"
 
   # If there are no files in the commit, skip tests
-  if [ "${#file_array[@]}" -eq 0 ]; then
-    match=true
+  if [ "${file_array[*]}" == "" ]; then
+    # match=true
+    echo "***DEBUG*** entered if statement"
   fi
 
   # Check if any file in skip_array matches any of the files being updated in the PR
