@@ -101,7 +101,11 @@ if [ ${IS_PR} == true ]; then
 
   # If there are no files in the commit, skip tests
   if [ "${#file_array[@]}" -eq 0 ]; then
+    echo "match set to true"
+    echo "file count: ${#file_array[@]}"
     match=true
+  else
+    echo " file count: ${#file_array[@]}"
   fi
 
   # Check if any file in skip_array matches any of the files being updated in the PR
@@ -119,6 +123,8 @@ if [ ${IS_PR} == true ]; then
       break
     fi
   done
+
+  echo "match=$match"
 
   # If there are any files being updated in the PR that are not in the skip list, then run the tests
   if [ "${match}" == "false" ]; then
