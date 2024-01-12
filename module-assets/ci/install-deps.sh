@@ -242,7 +242,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.54.12
+TERRAGRUNT_VERSION=v0.54.17
 BINARY=terragrunt
 set +e
 INSTALLED_TERRAGRUNT_VERSION="$(terragrunt --version | head -1 | cut -d' ' -f3)"
@@ -297,7 +297,7 @@ fi
 # tflint
 #######################################
  # renovate: datasource=github-releases depName=terraform-linters/tflint
-TFLINT_VERSION=v0.50.0
+TFLINT_VERSION=v0.50.1
 BINARY=tflint
 set +e
 INSTALLED_TFLINT_VERSION="$(tflint --version | grep "TFLint version " |cut -d' ' -f3)"
