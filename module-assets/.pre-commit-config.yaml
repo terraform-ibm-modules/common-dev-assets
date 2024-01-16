@@ -66,7 +66,8 @@ repos:
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 3.1.60
+  # Locking into 3.1.55 due to this bug -> https://github.com/bridgecrewio/checkov/issues/5945
+  rev: 3.1.55
   hooks:
     - id: checkov
       args:
