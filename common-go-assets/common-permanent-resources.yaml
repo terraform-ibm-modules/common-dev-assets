@@ -39,7 +39,7 @@ hpcs_south: "e6dce284-e80f-46e1-a3c1-830f7adff7a9"
 hpcs_name_south: "geretain-hyper-protect-crypto-us-south"
 hpcs_rg_south: "Default"
 hpcs_south_root_key_crn: "crn:v1:bluemix:public:hs-crypto:us-south:a/abac0df06b644a9cabc6e44f55b3880e:e6dce284-e80f-46e1-a3c1-830f7adff7a9:key:76170fae-4e0c-48c3-8ebe-326059ebb533"
-hpcs_south__root_key_id: "76170fae-4e0c-48c3-8ebe-326059ebb533"
+hpcs_south_root_key_id: "76170fae-4e0c-48c3-8ebe-326059ebb533"
 
 
 # vpc crn from GE staging account for transit gateway crossaccount connection tests
