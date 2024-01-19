@@ -242,7 +242,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.54.17
+TERRAGRUNT_VERSION=v0.54.20
 BINARY=terragrunt
 set +e
 INSTALLED_TERRAGRUNT_VERSION="$(terragrunt --version | head -1 | cut -d' ' -f3)"
@@ -325,7 +325,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=aquasecurity/tfsec
-TFSEC_VERSION=v1.28.4
+TFSEC_VERSION=v1.28.5
 BINARY=tfsec
 set +e
 INSTALLED_TFSEC_VERSION="$(tfsec --version)"
@@ -437,7 +437,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v3.13.3
+HELM_VERSION=v3.14.0
 BINARY=helm
 set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"
@@ -464,7 +464,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.29.0
+KUBECTL_VERSION=v1.29.1
 BINARY=kubectl
 set +e
 INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml --client | grep "gitVersion" | cut -d' ' -f4)"
