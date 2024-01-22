@@ -70,34 +70,32 @@ def update_docs():
     # list of subfolders to be scanned and modified by tf_docs
     subfolders = find_subfolders()
 
+    # use recursive flag to check for changes inside subfolder
     for subfolder in subfolders:
-        # if subfolder exists then use recursive flag to check for changes inside subfolder
-        subfolder_exists = os.path.isdir(subfolder)
-        if subfolder_exists:
-            # create temp markdowns for all README tf docs inside subfolder
-            command = f"terraform-docs --hide providers markdown table --recursive --recursive-path {subfolder} --output-file {temp_markdown} ."
-            proc = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
-            proc.communicate()
+        # create temp markdowns for all README tf docs inside subfolder
+        command = f"terraform-docs --hide providers markdown table --recursive --recursive-path {subfolder} --output-file {temp_markdown} ."
+        proc = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
+        proc.communicate()
 
-            # hard fail if error
-            if proc.returncode != 0:
-                print(f"Error creating temp markdowns: {proc.communicate()[1]}")
-                sys.exit(proc.returncode)
+        # hard fail if error
+        if proc.returncode != 0:
+            print(f"Error creating temp markdowns: {proc.communicate()[1]}")
+            sys.exit(proc.returncode)
 
-            # modify temp markdown files
-            temp_markdowns = modify_temp_markdown_files(temp_markdown)
+        # modify temp markdown files
+        temp_markdowns = modify_temp_markdown_files(temp_markdown)
 
-            # add temp markdown content to README files
-            command = f"terraform-docs -c common-dev-assets/module-assets/.terraform-docs-config.yaml --recursive --recursive-path {subfolder} ."
-            proc = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
-            proc.communicate()
+        # add temp markdown content to README files
+        command = f"terraform-docs -c common-dev-assets/module-assets/.terraform-docs-config.yaml --recursive --recursive-path {subfolder} ."
+        proc = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
+        proc.communicate()
 
-            # hard fail if error
-            if proc.returncode != 0:
-                print(f"Error adding content to README: {proc.communicate()[1]}")
-                for markdown in temp_markdowns:
-                    terraformDocsUtils.remove_markdown(markdown)
-                sys.exit(proc.returncode)
+        # hard fail if error
+        if proc.returncode != 0:
+            print(f"Error adding content to README: {proc.communicate()[1]}")
+            for markdown in temp_markdowns:
+                terraformDocsUtils.remove_markdown(markdown)
+            sys.exit(proc.returncode)
 
     # if any subfolder does not exist, then we need to run tf docs on main README root. If subfolder exists, then main README root is already scanned as a part of a recursive flag
     if not subfolders:
