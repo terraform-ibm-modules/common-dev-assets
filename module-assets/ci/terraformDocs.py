@@ -2,6 +2,7 @@
 
 import os
 import sys
+from pathlib import Path
 from subprocess import PIPE, Popen
 
 import terraformDocsUtils
@@ -34,24 +35,45 @@ def modify_temp_markdown_files(temp_markdown):
     return temp_markdowns
 
 
+# Check if README has pre-commit hook metadata
+def has_pre_commit_hook_metadata(readme_file):
+    has_metadata = False
+    with open(readme_file, "r") as reader:
+        for line in reader:
+            if "<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->" in line:
+                has_metadata = True
+                break
+    return has_metadata
+
+
+# Find all subfolders that has README.md and contains PRE-COMMIT-TERRAFORM DOCS HOOK
+def find_subfolders():
+    subfolders = {}
+    dir = os.getcwd()
+    for readme_file in Path(dir).rglob("README.md"):
+        path = str(readme_file)
+        if not ("/.") in path and has_pre_commit_hook_metadata(readme_file):
+            # extract subfolder name
+            subfolder = str(readme_file.parent).replace(f"{dir}/", "").split("/")[0]
+            if subfolder != "":
+                subfolders[subfolder] = subfolder
+    return subfolders.keys()
+
+
 def update_docs():
     # temp markdown name
     temp_markdown = "temp-tf-docs.md"
-
-    # root README file is scanned and modified (if needed) as a part of subfolder recursive scan
-    root_readme_modified = False
 
     # list of temporary markdown files
     temp_markdowns = []
 
     # list of subfolders to be scanned and modified by tf_docs
-    subfolders = ["modules", "solutions"]
+    subfolders = find_subfolders()
 
     for subfolder in subfolders:
         # if subfolder exists then use recursive flag to check for changes inside subfolder
         subfolder_exists = os.path.isdir(subfolder)
         if subfolder_exists:
-            root_readme_modified = True
             # create temp markdowns for all README tf docs inside subfolder
             command = f"terraform-docs --hide providers markdown table --recursive --recursive-path {subfolder} --output-file {temp_markdown} ."
             proc = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
@@ -77,8 +99,8 @@ def update_docs():
                     terraformDocsUtils.remove_markdown(markdown)
                 sys.exit(proc.returncode)
 
-    # if any subfolder does not exist, then we need to run tf docs on main README root. If any subfolder exists, then main README root is already scanned as a part of a recursive flag
-    if not root_readme_modified:
+    # if any subfolder does not exist, then we need to run tf docs on main README root. If subfolder exists, then main README root is already scanned as a part of a recursive flag
+    if not subfolders:
         # create temp markdowns for all README tf docs inside subfolder
         command = f"terraform-docs --hide providers markdown table --output-file {temp_markdown} ."
         proc = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
