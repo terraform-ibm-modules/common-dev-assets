@@ -35,36 +35,74 @@ def modify_temp_markdown_files(temp_markdown):
 
 
 def update_docs():
-    #  if modules folder exists then use recursive flag to check for changes inside submodules
-    modules_exists = os.path.isdir("modules")
-
     # temp markdown name
     temp_markdown = "temp-tf-docs.md"
 
-    # create temp markdowns for all README tf docs
-    command = f"terraform-docs --hide providers markdown table {'--recursive' if modules_exists else ''} --output-file {temp_markdown} ."
-    proc = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
-    proc.communicate()
+    # root README file is scanned and modified (if needed) as a part of subfolder recursive scan
+    root_readme_modified = False
 
-    # hard fail if error
-    if proc.returncode != 0:
-        print(f"Error creating temp markdowns: {proc.communicate()[1]}")
-        sys.exit(proc.returncode)
+    # list of temporary markdown files
+    temp_markdowns = []
 
-    # modify temp markdown files
-    temp_markdowns = modify_temp_markdown_files(temp_markdown)
+    # list of subfolders to be scanned and modified by tf_docs
+    subfolders = ["modules", "solutions"]
 
-    # add temp markdown content to README files
-    command = f"terraform-docs -c common-dev-assets/module-assets/.terraform-docs-config.yaml {'--recursive ' if modules_exists else ''}."
-    proc = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
-    proc.communicate()
+    for subfolder in subfolders:
+        # if subfolder exists then use recursive flag to check for changes inside subfolder
+        subfolder_exists = os.path.isdir(subfolder)
+        if subfolder_exists:
+            root_readme_modified = True
+            # create temp markdowns for all README tf docs inside subfolder
+            command = f"terraform-docs --hide providers markdown table --recursive --recursive-path {subfolder} --output-file {temp_markdown} ."
+            proc = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
+            proc.communicate()
 
-    # hard fail if error
-    if proc.returncode != 0:
-        print(f"Error adding content to README: {proc.communicate()[1]}")
-        for markdown in temp_markdowns:
-            terraformDocsUtils.remove_markdown(markdown)
-        sys.exit(proc.returncode)
+            # hard fail if error
+            if proc.returncode != 0:
+                print(f"Error creating temp markdowns: {proc.communicate()[1]}")
+                sys.exit(proc.returncode)
+
+            # modify temp markdown files
+            temp_markdowns = modify_temp_markdown_files(temp_markdown)
+
+            # add temp markdown content to README files
+            command = f"terraform-docs -c common-dev-assets/module-assets/.terraform-docs-config.yaml --recursive --recursive-path {subfolder} ."
+            proc = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
+            proc.communicate()
+
+            # hard fail if error
+            if proc.returncode != 0:
+                print(f"Error adding content to README: {proc.communicate()[1]}")
+                for markdown in temp_markdowns:
+                    terraformDocsUtils.remove_markdown(markdown)
+                sys.exit(proc.returncode)
+
+    # if any subfolder does not exist, then we need to run tf docs on main README root. If any subfolder exists, then main README root is already scanned as a part of a recursive flag
+    if not root_readme_modified:
+        # create temp markdowns for all README tf docs inside subfolder
+        command = f"terraform-docs --hide providers markdown table --output-file {temp_markdown} ."
+        proc = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
+        proc.communicate()
+
+        # hard fail if error
+        if proc.returncode != 0:
+            print(f"Error creating temp markdowns: {proc.communicate()[1]}")
+            sys.exit(proc.returncode)
+
+        # modify temp markdown files
+        temp_markdowns = modify_temp_markdown_files(temp_markdown)
+
+        # add temp markdown content to README files
+        command = "terraform-docs -c common-dev-assets/module-assets/.terraform-docs-config.yaml ."
+        proc = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
+        proc.communicate()
+
+        # hard fail if error
+        if proc.returncode != 0:
+            print(f"Error adding content to README: {proc.communicate()[1]}")
+            for markdown in temp_markdowns:
+                terraformDocsUtils.remove_markdown(markdown)
+            sys.exit(proc.returncode)
 
     # remove all temp markdowns
     for markdown in temp_markdowns:
