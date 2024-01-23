@@ -81,7 +81,3 @@ kp_us_south_name: "perm-KP-base-ocp"
 kp_us_south_rg: "Default"
 kp_us_south_root_key_crn: "crn:v1:bluemix:public:kms:us-south:a/9f9af00a96104f49b6509aa715f9d6a5:44f9c10d-99f5-4547-9e9f-2a1c84b5f0a4:key:f6c9f6d0-92f6-437a-b97c-4b617cb3d320"
 kp_us_south_root_key_id: "f6c9f6d0-92f6-437a-b97c-4b617cb3d320"
-
-# COS for SCC instance
-cosInstanceCRN: "crn:v1:bluemix:public:cloud-object-storage:global:a/abac0df06b644a9cabc6e44f55b3880e:4f67d7e1-199e-4f20-8c46-c1cd5bd73ffa::"
-cosBucketName: "geretain-test-scc-bucket"
