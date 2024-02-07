@@ -59,6 +59,11 @@ postgresqlPITRCrn: "crn:v1:bluemix:public:databases-for-postgresql:us-south:a/ab
 postgresqlPITRVersion: 14
 postgresqlPITRRegion: "us-south"
 
+# mysql instance crn for PITR test
+mysqlPITRCrn: "crn:v1:bluemix:public:databases-for-mysql:us-south:a/abac0df06b644a9cabc6e44f55b3880e:0493008d-1399-440f-ba1a-89bb00e3ac10::"
+mysqlPITRVersion: "8.0"
+mysqlPITRRegion: "us-south"
+
 # Enterprise DB instance crn for PITR test
 enterpriseDbPITRCrn: "crn:v1:bluemix:public:databases-for-enterprisedb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:3d3077b9-fcc0-427f-a877-d7af3830ca5e::"
 enterpriseDbPITRVersion: 12
