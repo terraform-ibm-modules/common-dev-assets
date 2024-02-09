@@ -242,7 +242,7 @@ clean "${TMP_DIR}"
 #######################################
 
  # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.55.0
+TERRAGRUNT_VERSION=v0.55.1
 BINARY=terragrunt
 set +e
 INSTALLED_TERRAGRUNT_VERSION="$(terragrunt --version | head -1 | cut -d' ' -f3)"
@@ -297,7 +297,7 @@ fi
 # tflint
 #######################################
  # renovate: datasource=github-releases depName=terraform-linters/tflint
-TFLINT_VERSION=v0.50.2
+TFLINT_VERSION=v0.50.3
 BINARY=tflint
 set +e
 INSTALLED_TFLINT_VERSION="$(tflint --version | grep "TFLint version " |cut -d' ' -f3)"
@@ -354,7 +354,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v1.55.2
+GOLANGCI_LINT_VERSION=v1.56.1
 BINARY=golangci-lint
 set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"
