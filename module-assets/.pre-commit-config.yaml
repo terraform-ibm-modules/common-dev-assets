@@ -121,10 +121,10 @@ repos:
       - --line-length=88
 - repo: local
   hooks:
-    - id: golangci-lint
-      name: golangci-lint
+    - id: goimports-reviser
+      name: goimports-reviser
       description: Fast linters runner for Go.
-      entry: bash ci/golangci-lint.sh
+      entry: bash ci/goimports-reviser.sh
       types: [go]
       language: golang
       pass_filenames: false

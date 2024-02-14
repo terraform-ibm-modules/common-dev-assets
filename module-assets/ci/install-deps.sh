@@ -350,31 +350,31 @@ else
 fi
 
 #######################################
-# golangci-lint
+# goimports-reviser
 #######################################
 
- # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v1.56.1
-BINARY=golangci-lint
+ # renovate: datasource=github-releases depName=incu6us/goimports-reviser
+GOIMPORTS_REVISER_VERSION=3.6.4
+BINARY=goimports-reviser
 set +e
-INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"
+INSTALLED_GOIMPORTS_REVISER_VERSION="$(goimports-reviser -version | head -1 | cut -d' ' -f2)"
 set -e
-if [[ "$GOLANGCI_LINT_VERSION" != "v$INSTALLED_GOLANGCI_LINT_VERSION" ]]; then
-  FILE_NAME="golangci-lint-${GOLANGCI_LINT_VERSION//v/}-${OS}-amd64.tar.gz"
-  URL="https://github.com/golangci/golangci-lint/releases/download/${GOLANGCI_LINT_VERSION}"
-  SUMFILE="${BINARY}-${GOLANGCI_LINT_VERSION//v/}-checksums.txt"
+if [[ "$GOIMPORTS_REVISER_VERSION" != "$INSTALLED_GOIMPORTS_REVISER_VERSION" ]]; then
+  FILE_NAME="goimports-reviser_${GOIMPORTS_REVISER_VERSION}_${OS}_amd64.tar.gz"
+  URL="https://github.com/incu6us/goimports-reviser/releases/download/v${GOIMPORTS_REVISER_VERSION}"
+  SUMFILE="checksums.txt"
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
 
   echo
-  echo "-- Installing ${BINARY} ${GOLANGCI_LINT_VERSION}..."
+  echo "-- Installing ${BINARY} v${GOIMPORTS_REVISER_VERSION}..."
 
-  download ${BINARY} ${GOLANGCI_LINT_VERSION} ${URL} "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+  download ${BINARY} ${GOIMPORTS_REVISER_VERSION} ${URL} "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
   verify "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
   tar -xzf "${TMP_DIR}/${FILE_NAME}" -C "${TMP_DIR}"
-  copy_replace_binary ${BINARY} "${TMP_DIR}/golangci-lint-${GOLANGCI_LINT_VERSION//v/}-${OS}-amd64"
+  copy_replace_binary ${BINARY} "${TMP_DIR}"
   clean "${TMP_DIR}"
 else
-  echo "${BINARY} ${GOLANGCI_LINT_VERSION} already installed - skipping install"
+  echo "${BINARY} v${GOIMPORTS_REVISER_VERSION} already installed - skipping install"
 fi
 
 #######################################

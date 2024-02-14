@@ -5,7 +5,7 @@ set -o pipefail
 set -o nounset
 #set -o xtrace
 
-TO_REMOVE=( pre-commit terraform-docs tflint tfsec golangci-lint shellcheck hadolint )
+TO_REMOVE=( pre-commit terraform-docs tflint tfsec goimports-reviser shellcheck hadolint )
 
 for p in "${TO_REMOVE[@]}"; do
   if brew list "${p}" &>/dev/null; then
