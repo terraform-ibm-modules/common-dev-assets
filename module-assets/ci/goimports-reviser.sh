@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-NUM_GO_FILES=$(find . -maxdepth 1 -name 'tests/*.go' | wc -l)
+NUM_GO_FILES=$(find ./tests -maxdepth 1 -name '*.go' | wc -l)
 
 if [ "${NUM_GO_FILES}" -gt 0 ]; then
   # Ensure go.mod and go.sum files exist before attempting to run goimports-reviser
