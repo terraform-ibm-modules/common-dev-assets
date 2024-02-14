@@ -21,6 +21,8 @@ resourceGroupTestPermanentId: 6deff3aad31a48b696cb1b173e54c41d # pragma: allowli
 # secrets manager public cert engine
 certificateAuthorityName: geretain-acme-ca-config
 dnsProviderName: geretain-acme-dns-config
+dnsDelegatedCloudDomain: "goldeneye.appdomain.cloud" # https://github.ibm.com/CoreCloud/appdomain.cloud
+dnsDelegatedIBMDomain: "goldeneye.dev.cloud.ibm.com" # https://github.ibm.com/CoreCloud/cloud.ibm.com/issues/1244
 
 # IAM ServiceID for Service dnlb
 sdnlbServiceIdName: "geretain - sDNLB-ServiceID - DO NOT DELETE"
