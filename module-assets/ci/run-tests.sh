@@ -96,31 +96,34 @@ if [ ${IS_PR} == true ]; then
                          ".catalog-onboard-pipeline.yaml")
 
   # Determine if repo is a fork
-  repo_url=$(git config --get remote.origin.url)
-  github_url=(echo $REPO_URL |cut -d/ -f 3)
-  repo_org=$(echo $REPO_URL |cut -d/ -f 4)
-  if [ "$repo_org" != "Goldeneye" ] || [ "$repo_org" != "terraform-ibm-modules" ]; then
-    if [[ "$github_url" == "github.ibm.com" ]]; then
+  GHE_SSH_URI="git@github.com:"
+  GH_SSH_URI="git@github.ibm.com:"
+  REPO_URL=$(git config --get remote.origin.url)
+  GITHUB_URL=$(echo $REPO_URL | cut -d/ -f 3)
+  REPO_ORG=$(echo $REPO_URL | cut -d/ -f 4)
+  REPO_NAME=$(echo $REPO_URL | cut -d/ -f 5)
+  if [ "$REPO_ORG" != "Goldeneye" ] || [ "$REPO_ORG" != "terraform-ibm-modules" ]; then
+    if [[ "$GITHUB_URL" == "github.ibm.com" ]]; then
       echo "ghe config starting"
-      # Determine all files being changed in the PR, and add it to array
-      original-uri="${REPO_URL//${repo_org}/Goldeneye}"
-      git remote add original ${original-uri}
+      ORIGINAL_URI=$(echo "${REPO_URL//$repo_org/Goldeneye.git}")
+      ORIGINAL_URI="${GH_SSH_URI}Goldeneye/${REPO_NAME}.git"
+      git config --global url.$ORIGINAL_URI.insteadOf GITPUB
+      git remote add original GITPUB
       git fetch original
       changed_files="$(git diff --name-only "original/master..HEAD" --)"
       mapfile -t file_array <<< "${changed_files}"
-    elif [[ "$github_url" == "github.com" ]]; then
+    elif [[ "$GITHUB_URL" == "github.com" ]]; then
       echo "public github config starting"
-      # Determine all files being changed in the PR, and add it to array
-      original-uri="${REPO_URL//${repo_org}/terraform-ibm-modules}"
-      git remote add original ${original-uri}
+      ORIGINAL_URI="${GHE_SSH_URI}terraform-ibm-modules/${REPO_NAME}.git"
+      git config --global url.$ORIGINAL_URI.insteadOf GITPUB
+      git remote add original GITPUB
       git fetch original
       changed_files="$(git diff --name-only "original/main..HEAD" --)"
       mapfile -t file_array <<< "${changed_files}"
     else
-      echo "Failure determining github url ${github_url}"
+      echo "Failure determining github url ${GITHUB_URL}"
     fi
   else
-    # Determine all files being changed in the PR, and add it to array
     changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
     mapfile -t file_array <<< "${changed_files}"
   fi
