@@ -95,9 +95,37 @@ if [ ${IS_PR} == true ]; then
                          "LICENSE"
                          ".catalog-onboard-pipeline.yaml")
 
-  # Determine all files being changed in the PR, and add it to array
-  changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
-  mapfile -t file_array <<< "${changed_files}"
+  # Determine if repo is a fork
+  repo_url=$(git config --get remote.origin.url)
+  github_url=(echo $REPO_URL |cut -d/ -f 3)
+  repo_org=$(echo $REPO_URL |cut -d/ -f 4)
+  if [ "$repo_org" != "Goldeneye" ] || [ "$repo_org" != "terraform-ibm-modules" ]; then
+    if [[ "$github_url" == "github.ibm.com" ]]; then
+      echo "ghe config starting"
+      # Determine all files being changed in the PR, and add it to array
+      original-uri="${REPO_URL//${repo_org}/Goldeneye}"
+      git remote add original ${original-uri}
+      git fetch original
+      changed_files="$(git diff --name-only "original/master..HEAD" --)"
+      mapfile -t file_array <<< "${changed_files}"
+    elif [[ "$github_url" == "github.com" ]]; then
+      echo "public github config starting"
+      # Determine all files being changed in the PR, and add it to array
+      original-uri="${REPO_URL//${repo_org}/terraform-ibm-modules}"
+      git remote add original ${original-uri}
+      git fetch original
+      changed_files="$(git diff --name-only "original/main..HEAD" --)"
+      mapfile -t file_array <<< "${changed_files}"
+    else
+      echo "Failure determining github url ${github_url}"
+    fi
+  else
+    # Determine all files being changed in the PR, and add it to array
+    changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
+    mapfile -t file_array <<< "${changed_files}"
+  fi
+
+  echo "Changed files are ${changed_files}"
 
   # If there are no files in the commit, set match=true in order to skip tests.
   # NOTE: We can't use the size of the array in the logic here, as ${#file_array[@]}
