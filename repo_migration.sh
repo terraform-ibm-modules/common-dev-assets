@@ -72,7 +72,7 @@ function add_git_submodule() {
     git submodule add --force https://github.com/terraform-ibm-modules/common-dev-assets.git
     git add ".gitmodules"
     echo "Submodule Init"
-    git submodule update --init
+    git submodule update --init --remote
 
 }
 
