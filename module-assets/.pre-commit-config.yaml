@@ -62,7 +62,7 @@ repos:
       exclude: dynamic_values/ # Do not run tflint in dynamic_folders directory (temp solution for SLZ modules). Internal issue created to track better solution.
     - id: terragrunt_fmt
     - id: terragrunt_validate
-    - id: terraform_tfsec
+    - id: terraform_trivy
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
