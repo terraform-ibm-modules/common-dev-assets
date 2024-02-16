@@ -96,14 +96,13 @@ if [ ${IS_PR} == true ]; then
                          ".catalog-onboard-pipeline.yaml")
 
   # Determine if repo is a fork
-  current_branch=$(echo git rev-parse --abbrev-ref HEAD)
-  if [ "$current_branch" == "HEAD" ]; then
+  current_branch="$(git rev-parse --abbrev-ref HEAD)"
+  if [ "${current_branch}" == "HEAD" ]; then
     changed_files="$(git diff --name-only "HEAD..origin/main" --)"
   else
     changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
   fi
 
-  # Determine all files being changed in the PR, and add it to array
   mapfile -t file_array <<< "${changed_files}"
   echo "Changed files are ${changed_files}"
 
