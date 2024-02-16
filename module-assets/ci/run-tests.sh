@@ -98,7 +98,7 @@ if [ ${IS_PR} == true ]; then
   # Determine if repo is a fork
   current_branch="$(git rev-parse --abbrev-ref HEAD)"
   if [ "${current_branch}" == "HEAD" ]; then
-    changed_files="$(git diff --name-only "HEAD..origin/main" --)"
+    changed_files="$(git diff --name-only "HEAD..origin/HEAD" --)"
   else
     changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
   fi
