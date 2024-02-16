@@ -103,6 +103,7 @@ if [ ${IS_PR} == true ]; then
     changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
   fi
 
+  # Determine all files being changed in the PR, and add it to array
   mapfile -t file_array <<< "${changed_files}"
   echo "Changed files are ${changed_files}"
 
