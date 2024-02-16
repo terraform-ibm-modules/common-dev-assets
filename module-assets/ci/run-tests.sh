@@ -105,6 +105,7 @@ if [ ${IS_PR} == true ]; then
   # NOTE: We can't use the size of the array in the logic here, as ${#file_array[@]}
   # will return as 1 even when no files are commited in the PR.
   if [ "${file_array[*]}" == "" ]; then
+    echo "No files found in file array"
     match=true
   fi
 
@@ -118,6 +119,8 @@ if [ ${IS_PR} == true ]; then
         echo "File $f has matched one in the skip_array - break out of loop to try next file"
         match=true
         break
+      else
+        echo "File $f has not matched one in the skip_array"
       fi
     done
     if [ "${match}" == "false" ]; then
