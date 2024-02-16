@@ -82,7 +82,7 @@ function main() {
         cd "$(ls)"
 
         # get primary branch submodule version
-        git submodule update --init --remote
+        git submodule update --init
         submodule_version_main_branch=$(get_submodule_version ${git_submodule_name})
         echo "Primary branch submodule version: ${submodule_version_main_branch}"
 
