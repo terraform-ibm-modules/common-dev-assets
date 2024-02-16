@@ -321,32 +321,37 @@ else
 fi
 
 #######################################
-# tfsec
+# trivy
 #######################################
 
- # renovate: datasource=github-releases depName=aquasecurity/tfsec
-TFSEC_VERSION=v1.28.5
-BINARY=tfsec
+TRIVY_OS="Linux"
+if [[ $OSTYPE == 'darwin'* ]]; then
+  TRIVY_OS="macOS"
+fi
+
+# renovate: datasource=github-releases depName=aquasecurity/trivy
+TRIVY_VERSION=v0.49.1
+BINARY=trivy
 set +e
-INSTALLED_TFSEC_VERSION="$(tfsec --version)"
+INSTALLED_TRIVY_VERSION="$(trivy version)"
+INSTALLED_TRIVY_VERSION_EXTRACTED=("${INSTALLED_TRIVY_VERSION}")
 set -e
-if [[ "$TFSEC_VERSION" != "$INSTALLED_TFSEC_VERSION" ]]; then
-  FILE_NAME="tfsec-${OS}-amd64"
-  URL="https://github.com/aquasecurity/tfsec/releases/download/${TFSEC_VERSION}"
-  SUMFILE="tfsec_checksums.txt"
+if [[ "$TRIVY_VERSION" != "v${INSTALLED_TRIVY_VERSION_EXTRACTED[1]}" ]]; then
+  FILE_NAME="trivy_${TRIVY_VERSION:1}_${TRIVY_OS}-ARM64.tar.gz"
+  URL="https://github.com/aquasecurity/trivy/releases/download/${TRIVY_VERSION}"
+  SUMFILE="trivy_${TRIVY_VERSION:1}_checksums.txt"
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
 
   echo
-  echo "-- Installing ${BINARY} ${TFSEC_VERSION}..."
+  echo "-- Installing ${BINARY} ${TRIVY_VERSION}..."
 
-  download ${BINARY} ${TFSEC_VERSION} ${URL} ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
-  verify ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
-  # rename binary to tfsec
-  mv "${TMP_DIR}/${FILE_NAME}" "${TMP_DIR}/${BINARY}"
+  download ${BINARY} ${TRIVY_VERSION} ${URL} "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+  verify "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+  tar -xzf "${TMP_DIR}/${FILE_NAME}" -C "${TMP_DIR}"
   copy_replace_binary ${BINARY} "${TMP_DIR}"
   clean "${TMP_DIR}"
 else
-  echo "${BINARY} ${TFSEC_VERSION} already installed - skipping install"
+  echo "${BINARY} ${TRIVY_VERSION} already installed - skipping install"
 fi
 
 #######################################
