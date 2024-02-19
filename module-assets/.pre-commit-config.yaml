@@ -63,6 +63,7 @@ repos:
     - id: terragrunt_fmt
     - id: terragrunt_validate
     - id: terraform_trivy
+      verbose: true
       files: '\.tf'
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
