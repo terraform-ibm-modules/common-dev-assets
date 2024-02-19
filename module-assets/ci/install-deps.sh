@@ -337,7 +337,7 @@ INSTALLED_TRIVY_VERSION="$(trivy version)"
 INSTALLED_TRIVY_VERSION_EXTRACTED=("${INSTALLED_TRIVY_VERSION}")
 set -e
 if [[ "$TRIVY_VERSION" != "v${INSTALLED_TRIVY_VERSION_EXTRACTED[1]}" ]]; then
-  FILE_NAME="trivy_${TRIVY_VERSION:1}_${TRIVY_OS}-ARM64.tar.gz"
+  FILE_NAME="trivy_${TRIVY_VERSION:1}_${TRIVY_OS}-64bit.tar.gz"
   URL="https://github.com/aquasecurity/trivy/releases/download/${TRIVY_VERSION}"
   SUMFILE="trivy_${TRIVY_VERSION:1}_checksums.txt"
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
