@@ -332,7 +332,7 @@ if [[ $OSTYPE == 'darwin'* ]]; then
   if [[ "${ARCHITECTURE}" == 'machdep.cpu.brand_string: Intel'* ]]; then
     # macOS on Intel architecture
     TRIVY_ARCH="64bit"
-  else 
+  else
     # macOS on M1 architecture
     TRIVY_ARCH="ARM64"
   fi
