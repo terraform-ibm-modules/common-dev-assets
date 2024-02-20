@@ -65,7 +65,8 @@ repos:
     - id: terraform_trivy
       args:
         - --args=--skip-files="**/.terraform/**/*"
-        - --args=--skip-files="**/examples/**/*"
+        - --args=--skip-files="**/examples/**/*.yaml"
+        - --args=--skip-files="**/examples/**/*.yml"
         - --args=--skip-files="**/tests/**/*"
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
