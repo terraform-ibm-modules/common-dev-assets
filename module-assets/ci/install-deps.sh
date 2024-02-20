@@ -328,7 +328,14 @@ TRIVY_OS="Linux"
 TRIVY_ARCH="64bit"
 if [[ $OSTYPE == 'darwin'* ]]; then
   TRIVY_OS="macOS"
-  TRIVY_ARCH="ARM64"
+  ARCHITECTURE="$(sysctl -a | grep machdep.cpu.brand_string)"
+  if [[ "${ARCHITECTURE}" == 'machdep.cpu.brand_string: Intel'* ]]; then
+    # macOS on Intel architecture
+    TRIVY_ARCH="64bit"
+  else 
+    # macOS on M1 architecture
+    TRIVY_ARCH="ARM64"
+  fi
 fi
 
 # renovate: datasource=github-releases depName=aquasecurity/trivy
