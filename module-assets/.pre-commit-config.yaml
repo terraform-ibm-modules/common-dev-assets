@@ -62,11 +62,6 @@ repos:
       exclude: dynamic_values/ # Do not run tflint in dynamic_folders directory (temp solution for SLZ modules). Internal issue created to track better solution.
     - id: terragrunt_fmt
     - id: terragrunt_validate
-    - id: terraform_trivy
-      files: '\.tf'
-      args:
-        - >
-          --skip-dirs="**/.terraform"
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
   # Locking into 3.1.55 due to this bug -> https://github.com/bridgecrewio/checkov/issues/5945
@@ -160,6 +155,12 @@ repos:
       entry: python3 ci/terraformDocGoMod.py
       language: python
       files: "tests/go.mod"
+      pass_filenames: false
+    - id: trivy
+      name: trivy scanner
+      description: Scan files for vulnerabilities, misconfigurations and security issues
+      entry: ci/trivy.sh
+      language: script
       pass_filenames: false
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
