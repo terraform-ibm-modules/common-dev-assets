@@ -64,6 +64,9 @@ repos:
     - id: terragrunt_validate
     - id: terraform_trivy
       files: '\.tf'
+      args:
+        - >
+          --skip-dirs="**/.terraform"
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
   # Locking into 3.1.55 due to this bug -> https://github.com/bridgecrewio/checkov/issues/5945
