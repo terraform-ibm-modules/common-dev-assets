@@ -45,7 +45,7 @@ jobs:
           TFSWITCH_DIRECTORY: "test/example_tf"
         run: |
           make dependency-install-darwin-linux
-      
+
       # run pre-commit against all files
       - name: Pre-commit
         run: |
