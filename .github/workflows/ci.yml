@@ -39,6 +39,13 @@ jobs:
         run: |
           chown -R $(id -u):$(id -g) $PWD
 
+      # Install dependencies
+      - name: Install dependencies
+        env:
+          TFSWITCH_DIRECTORY: "test/example_tf"
+        run: |
+          make dependency-install-darwin-linux
+      
       # run pre-commit against all files
       - name: Pre-commit
         run: |
