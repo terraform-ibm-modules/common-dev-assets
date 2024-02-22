@@ -42,7 +42,7 @@ jobs:
       # Install dependencies
       - name: Install dependencies
         env:
-          TFSWITCH_DIRECTORY: "test/example_tf"
+          TFSWITCH_DIRECTORY: "examples/mock_tf_code"
         run: |
           make dependency-install-darwin-linux
 
