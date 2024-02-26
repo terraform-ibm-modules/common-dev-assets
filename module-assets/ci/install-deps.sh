@@ -11,18 +11,21 @@ else
   mkdir -p "${DIRECTORY}"
 fi
 
-# Optionally specify the directory to run tfswitch in. If not speciffied it will run in repo root dir
-if [[ -z "${TFSWITCH_DIRECTORY}" ]]; then
-  TFSWITCH_DIR="."
-else
-  TFSWITCH_DIR="${TFSWITCH_DIRECTORY}"
-fi
-
-# Determine OS type
+# Determine OS type and arch
 if [[ $OSTYPE == 'darwin'* ]]; then
   OS="darwin"
+  # Determine OS arch
+  mac_arch="$(sysctl -a | grep machdep.cpu.brand_string)"
+  if [[ "${mac_arch}" == 'machdep.cpu.brand_string: Intel'* ]]; then
+    # macOS on Intel architecture
+    ARCH="amd64"
+  else
+    # macOS on M1 architecture
+    ARCH="arm64"
+  fi
 else
   OS="linux"
+  ARCH="amd64"
 fi
 
 # Function to download files
@@ -193,7 +196,7 @@ set +e
 INSTALLED_TFSWITCH_VERSION="$(tfswitch --version | grep Version | awk '{ print $2 }')"
 set -e
 if [[ "$TFSWITCH_VERSION" != "$INSTALLED_TFSWITCH_VERSION" ]]; then
-  FILE_NAME="terraform-switcher_${TFSWITCH_VERSION}_${OS}_amd64.tar.gz"
+  FILE_NAME="terraform-switcher_${TFSWITCH_VERSION}_${OS}_${ARCH}.tar.gz"
   URL="https://github.com/warrensbox/terraform-switcher/releases/download/${TFSWITCH_VERSION}"
   SUMFILE="terraform-switcher_${TFSWITCH_VERSION}_checksums.txt"
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
@@ -218,53 +221,57 @@ fi
 TERRAFORM_VERSION=v1.5.7
 BINARY=terraform
 
-TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
-echo
-echo "-- Installing terraform ..."
-
-# Remove if binary already exists in /usr/local/bin
-arg=""
-if ! [ -w "${DIRECTORY}" ]; then
-  echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
-  arg=sudo
-fi
-${arg} rm -f "${DIRECTORY}/${BINARY}"
-
-# If a .tf file with the terraform constrain is detected in the current directory, it should automatically download or switch to the latest terraform version in the defined range.
-# Otherwise it will default to TERRAFORM_VERSION value defined above
-tfswitch --default "${TERRAFORM_VERSION:1}" --bin "${TMP_DIR}/${BINARY}" --chdir "${TFSWITCH_DIR}"
-actual_binary_location=$(which "${TMP_DIR}/${BINARY}")
-copy_replace_binary ${BINARY} "$(dirname "${actual_binary_location}")"
-clean "${TMP_DIR}"
-
-#######################################
-# terragrunt
-#######################################
-
- # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.55.9
-BINARY=terragrunt
 set +e
-INSTALLED_TERRAGRUNT_VERSION="$(terragrunt --version | head -1 | cut -d' ' -f3)"
+INSTALLED_TERRAFORM_VERSION="$(terraform --version | head -1 | cut -d' ' -f2)"
 set -e
-if [[ "$TERRAGRUNT_VERSION" != "$INSTALLED_TERRAGRUNT_VERSION" ]]; then
-  FILE_NAME="terragrunt_${OS}_amd64"
-  URL="https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}"
-  SUMFILE=SHA256SUMS
+if [[ "$TERRAFORM_VERSION" != "$INSTALLED_TERRAFORM_VERSION" ]]; then
+  # 'v' prefix required for renovate to query github.com for new release, but needs to be removed to pull from hashicorp.com
+  TERRAFORM_VERSION="${TERRAFORM_VERSION:1}"
+  FILE_NAME="terraform_${TERRAFORM_VERSION}_${OS}_${ARCH}.zip"
+  URL="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}"
+  SUMFILE="terraform_${TERRAFORM_VERSION}_SHA256SUMS"
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
 
   echo
-  echo "-- Installing ${BINARY} ${TERRAGRUNT_VERSION}..."
+  echo "-- Installing ${BINARY} ${TERRAFORM_VERSION}..."
 
-  download ${BINARY} ${TERRAGRUNT_VERSION} ${URL} ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
-  verify ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
-  # rename binary to terragrunt
-  mv "${TMP_DIR}/${FILE_NAME}" "${TMP_DIR}/${BINARY}"
+  download ${BINARY} "${TERRAFORM_VERSION}" "${URL}" "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+  verify "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+  unzip "${TMP_DIR}/${FILE_NAME}" -d "${TMP_DIR}" > /dev/null
   copy_replace_binary ${BINARY} "${TMP_DIR}"
   clean "${TMP_DIR}"
 else
-  echo "${BINARY} ${TERRAGRUNT_VERSION} already installed - skipping install"
+  echo "${BINARY} ${TERRAFORM_VERSION} already installed - skipping install"
 fi
+
+#######################################
+# tofu
+#######################################
+
+ # renovate: datasource=github-releases depName=opentofu/opentofu
+TOFU_VERSION=v1.6.2
+BINARY=tofu
+set +e
+INSTALLED_TOFU_VERSION="$(tofu --version | head -1 | cut -d' ' -f2)"
+set -e
+if [[ "$TOFU_VERSION" != "$INSTALLED_TOFU_VERSION" ]]; then
+  FILE_NAME="tofu_${TOFU_VERSION//v}_${OS}_${ARCH}.zip"
+  URL="https://github.com/opentofu/opentofu/releases/download/${TOFU_VERSION}"
+  SUMFILE="tofu_${TOFU_VERSION//v}_SHA256SUMS"
+  TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
+
+  echo
+  echo "-- Installing ${BINARY} ${TOFU_VERSION}..."
+
+  download ${BINARY} ${TOFU_VERSION} ${URL} "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+  verify "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+  unzip "${TMP_DIR}/${FILE_NAME}" -d "${TMP_DIR}" > /dev/null
+  copy_replace_binary ${BINARY} "${TMP_DIR}"
+  clean "${TMP_DIR}"
+else
+  echo "${BINARY} ${TOFU_VERSION} already installed - skipping install"
+fi
+
 #######################################
 # terraform-docs
 #######################################
@@ -276,7 +283,7 @@ set +e
 INSTALLED_TERRADOCS_VERSION="$(terraform-docs --version | head -1 | cut -d' ' -f3)"
 set -e
 if [[ "$TERRAFORM_DOCS_VERSION" != "$INSTALLED_TERRADOCS_VERSION" ]]; then
-  FILE_NAME="terraform-docs-${TERRAFORM_DOCS_VERSION}-${OS}-amd64.tar.gz"
+  FILE_NAME="terraform-docs-${TERRAFORM_DOCS_VERSION}-${OS}-${ARCH}.tar.gz"
   URL="https://github.com/terraform-docs/terraform-docs/releases/download/${TERRAFORM_DOCS_VERSION}"
   SUMFILE="terraform-docs-${TERRAFORM_DOCS_VERSION}.sha256sum"
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
@@ -303,7 +310,7 @@ set +e
 INSTALLED_TFLINT_VERSION="$(tflint --version | grep "TFLint version " |cut -d' ' -f3)"
 set -e
 if [[ "$TFLINT_VERSION" != "v$INSTALLED_TFLINT_VERSION" ]]; then
-  FILE_NAME="tflint_${OS}_amd64.zip"
+  FILE_NAME="tflint_${OS}_${ARCH}.zip"
   URL="https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}"
   SUMFILE="checksums.txt"
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
@@ -328,12 +335,7 @@ TRIVY_OS="Linux"
 TRIVY_ARCH="64bit"
 if [[ $OSTYPE == 'darwin'* ]]; then
   TRIVY_OS="macOS"
-  ARCHITECTURE="$(sysctl -a | grep machdep.cpu.brand_string)"
-  if [[ "${ARCHITECTURE}" == 'machdep.cpu.brand_string: Intel'* ]]; then
-    # macOS on Intel architecture
-    TRIVY_ARCH="64bit"
-  else
-    # macOS on M1 architecture
+  if [[ "${ARCH}" == "arm64" ]]; then
     TRIVY_ARCH="ARM64"
   fi
 fi
@@ -342,10 +344,9 @@ fi
 TRIVY_VERSION=v0.49.1
 BINARY=trivy
 set +e
-INSTALLED_TRIVY_VERSION="$(trivy version)"
-INSTALLED_TRIVY_VERSION_EXTRACTED=("${INSTALLED_TRIVY_VERSION}")
+INSTALLED_TRIVY_VERSION="$(trivy version | grep "Version:" | cut -d' ' -f2)"
 set -e
-if [[ "$TRIVY_VERSION" != "v${INSTALLED_TRIVY_VERSION_EXTRACTED[1]}" ]]; then
+if [[ "$TRIVY_VERSION" != "v${INSTALLED_TRIVY_VERSION}" ]]; then
   FILE_NAME="trivy_${TRIVY_VERSION:1}_${TRIVY_OS}-${TRIVY_ARCH}.tar.gz"
   URL="https://github.com/aquasecurity/trivy/releases/download/${TRIVY_VERSION}"
   SUMFILE="trivy_${TRIVY_VERSION:1}_checksums.txt"
@@ -374,7 +375,7 @@ set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"
 set -e
 if [[ "$GOLANGCI_LINT_VERSION" != "v$INSTALLED_GOLANGCI_LINT_VERSION" ]]; then
-  FILE_NAME="golangci-lint-${GOLANGCI_LINT_VERSION//v/}-${OS}-amd64.tar.gz"
+  FILE_NAME="golangci-lint-${GOLANGCI_LINT_VERSION//v/}-${OS}-${ARCH}.tar.gz"
   URL="https://github.com/golangci/golangci-lint/releases/download/${GOLANGCI_LINT_VERSION}"
   SUMFILE="${BINARY}-${GOLANGCI_LINT_VERSION//v/}-checksums.txt"
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
@@ -385,7 +386,7 @@ if [[ "$GOLANGCI_LINT_VERSION" != "v$INSTALLED_GOLANGCI_LINT_VERSION" ]]; then
   download ${BINARY} ${GOLANGCI_LINT_VERSION} ${URL} "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
   verify "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
   tar -xzf "${TMP_DIR}/${FILE_NAME}" -C "${TMP_DIR}"
-  copy_replace_binary ${BINARY} "${TMP_DIR}/golangci-lint-${GOLANGCI_LINT_VERSION//v/}-${OS}-amd64"
+  copy_replace_binary ${BINARY} "${TMP_DIR}/golangci-lint-${GOLANGCI_LINT_VERSION//v/}-${OS}-${ARCH}"
   clean "${TMP_DIR}"
 else
   echo "${BINARY} ${GOLANGCI_LINT_VERSION} already installed - skipping install"
@@ -457,9 +458,9 @@ set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"
 set -e
 if [[ "$HELM_VERSION" != "$INSTALLED_HELM_VERSION" ]]; then
-  FILE_NAME="helm-${HELM_VERSION}-${OS}-amd64.tar.gz"
+  FILE_NAME="helm-${HELM_VERSION}-${OS}-${ARCH}.tar.gz"
   URL="https://get.helm.sh"
-  SUMFILE="helm-${HELM_VERSION}-${OS}-amd64.tar.gz.sha256"
+  SUMFILE="helm-${HELM_VERSION}-${OS}-${ARCH}.tar.gz.sha256"
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
 
   echo
@@ -468,7 +469,7 @@ if [[ "$HELM_VERSION" != "$INSTALLED_HELM_VERSION" ]]; then
   download ${BINARY} ${HELM_VERSION} ${URL} ${FILE_NAME} "${SUMFILE}" "${TMP_DIR}"
   verify_alternative ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
   tar -xzf "${TMP_DIR}/${FILE_NAME}" -C "${TMP_DIR}"
-  copy_replace_binary ${BINARY} "${TMP_DIR}/${OS}-amd64"
+  copy_replace_binary ${BINARY} "${TMP_DIR}/${OS}-${ARCH}"
   clean "${TMP_DIR}"
 else
   echo "${BINARY} ${HELM_VERSION} already installed - skipping install"
@@ -485,7 +486,7 @@ INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml --client | grep "gitV
 set -e
 if [[ "$KUBECTL_VERSION" != "$INSTALLED_KUBECTL_VERSION" ]]; then
   FILE_NAME="kubectl"
-  URL="https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/${OS}/amd64"
+  URL="https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/${OS}/${ARCH}"
   SUMFILE="kubectl.sha256"
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
 
@@ -517,7 +518,7 @@ INSTALLED_OC_VERSION="$(oc version --client | grep "Client Version:" | cut -d' '
 set -e
 if [[ "$OC_VERSION" != "$INSTALLED_OC_VERSION" ]]; then
   FILE_NAME="openshift-client-${OC_OS}-${OC_VERSION}.tar.gz"
-  URL="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/${OC_VERSION}"
+  URL="https://mirror.openshift.com/pub/openshift-v4/${ARCH}/clients/ocp/${OC_VERSION}"
   SUMFILE="sha256sum.txt"
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
 
@@ -539,18 +540,18 @@ fi
 
 JQ_OS=${OS}
 if [[ $OSTYPE == 'darwin'* ]]; then
-  JQ_OS="osx-amd"
+  JQ_OS="macos"
 fi
 
- # renovate: datasource=github-releases depName=stedolan/jq
-JQ_VERSION=1.6
+ # renovate: datasource=github-releases depName=jqlang/jq
+JQ_VERSION=1.7.1
 BINARY=jq
 set +e
 INSTALLED_JQ_VERSION="$(jq --version | cut -c4-)"
 set -e
 if [[ "$JQ_VERSION" != "$INSTALLED_JQ_VERSION" ]]; then
-  FILE_NAME="jq-${JQ_OS}64"
-  URL="https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}"
+  FILE_NAME="jq-${JQ_OS}-${ARCH}"
+  URL="https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}"
   SUMFILE=""
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
 
