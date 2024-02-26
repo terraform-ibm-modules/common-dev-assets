@@ -218,53 +218,29 @@ fi
 TERRAFORM_VERSION=v1.5.7
 BINARY=terraform
 
-TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
-echo
-echo "-- Installing terraform ..."
-
-# Remove if binary already exists in /usr/local/bin
-arg=""
-if ! [ -w "${DIRECTORY}" ]; then
-  echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
-  arg=sudo
-fi
-${arg} rm -f "${DIRECTORY}/${BINARY}"
-
-# If a .tf file with the terraform constrain is detected in the current directory, it should automatically download or switch to the latest terraform version in the defined range.
-# Otherwise it will default to TERRAFORM_VERSION value defined above
-tfswitch --default "${TERRAFORM_VERSION:1}" --bin "${TMP_DIR}/${BINARY}" --chdir "${TFSWITCH_DIR}"
-actual_binary_location=$(which "${TMP_DIR}/${BINARY}")
-copy_replace_binary ${BINARY} "$(dirname "${actual_binary_location}")"
-clean "${TMP_DIR}"
-
-#######################################
-# terragrunt
-#######################################
-
- # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-TERRAGRUNT_VERSION=v0.55.9
-BINARY=terragrunt
 set +e
-INSTALLED_TERRAGRUNT_VERSION="$(terragrunt --version | head -1 | cut -d' ' -f3)"
+INSTALLED_TERRAFORM_VERSION="$(terraform --version | head -1 | cut -d' ' -f2)"
 set -e
-if [[ "$TERRAGRUNT_VERSION" != "$INSTALLED_TERRAGRUNT_VERSION" ]]; then
-  FILE_NAME="terragrunt_${OS}_amd64"
-  URL="https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}"
-  SUMFILE=SHA256SUMS
+if [[ "$TERRAFORM_VERSION" != "$INSTALLED_TERRAFORM_VERSION" ]]; then
+  # 'v' prefix required for renovate to query github.com for new release, but needs to be removed to pull from hashicorp.com
+  TERRAFORM_VERSION="${TERRAFORM_VERSION:1}"
+  FILE_NAME="terraform_${TERRAFORM_VERSION}_${OS}_amd64.zip"
+  URL="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}"
+  SUMFILE="terraform_${TERRAFORM_VERSION}_SHA256SUMS"
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
 
   echo
-  echo "-- Installing ${BINARY} ${TERRAGRUNT_VERSION}..."
+  echo "-- Installing ${BINARY} ${TERRAFORM_VERSION}..."
 
-  download ${BINARY} ${TERRAGRUNT_VERSION} ${URL} ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
-  verify ${FILE_NAME} ${SUMFILE} "${TMP_DIR}"
-  # rename binary to terragrunt
-  mv "${TMP_DIR}/${FILE_NAME}" "${TMP_DIR}/${BINARY}"
+  download ${BINARY} "${TERRAFORM_VERSION}" "${URL}" "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+  verify "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+  unzip "${TMP_DIR}/${FILE_NAME}" -d "${TMP_DIR}" > /dev/null
   copy_replace_binary ${BINARY} "${TMP_DIR}"
   clean "${TMP_DIR}"
 else
-  echo "${BINARY} ${TERRAGRUNT_VERSION} already installed - skipping install"
+  echo "${BINARY} ${TERRAFORM_VERSION} already installed - skipping install"
 fi
+
 #######################################
 # terraform-docs
 #######################################
