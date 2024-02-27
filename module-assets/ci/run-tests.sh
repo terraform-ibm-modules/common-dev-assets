@@ -93,7 +93,8 @@ if [ ${IS_PR} == true ]; then
                          ".fileignore"
                          "cra-config.yaml"
                          "LICENSE"
-                         ".catalog-onboard-pipeline.yaml")
+                         ".catalog-onboard-pipeline.yaml"
+                         ".trivyignore")
 
   # Determine all files being changed in the PR, and add it to array
   echo "Determining all files being changed in the PR on branch: ${TARGET_BRANCH}"
