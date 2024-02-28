@@ -117,11 +117,8 @@ if [ ${IS_PR} == true ]; then
     for s in "${skip_array[@]}"; do
       if [[ "$f" =~ $s ]]; then
         # File has matched one in the skip_array - break out of loop to try next file
-        echo "File $f has matched one in the skip_array - break out of loop to try next file"
         match=true
         break
-      else
-        echo "File $f has not matched one in the skip_array"
       fi
     done
     if [ "${match}" == "false" ]; then
