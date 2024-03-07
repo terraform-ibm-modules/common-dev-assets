@@ -14,7 +14,7 @@ if [ "${NUM_GO_FILES}" -gt 0 ]; then
 
   # golangci-lint must run in same directory as go.mod
   cd tests
-  GL_DEBUG="loader,env,gocritic" golangci-lint run --fix --timeout=5m
+  GL_DEBUG="loader,env,gocritic" golangci-lint run --fix --timeout=15m -v
   cd ..
 else
   echo "Found no go files in the tests directory - skipping linting checks"
