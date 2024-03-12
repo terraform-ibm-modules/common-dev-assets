@@ -69,8 +69,7 @@ repos:
         - --args=--skip-files="common-dev-assets/**/*"
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  # Locking into 3.1.55 due to this bug -> https://github.com/bridgecrewio/checkov/issues/5945
-  rev: 3.1.55
+  rev: 3.2.35
   hooks:
     - id: checkov
       args:
