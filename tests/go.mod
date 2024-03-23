@@ -1,3 +1,3 @@
 module github.com/terraform-ibm-modules/common-dev-assets
 
-go 1.21.4
+go 1.22.1
