@@ -24,6 +24,9 @@ dnsProviderName: geretain-acme-dns-config
 dnsDelegatedCloudDomain: "goldeneye.appdomain.cloud" # https://github.ibm.com/CoreCloud/appdomain.cloud
 dnsDelegatedIBMDomain: "goldeneye.dev.cloud.ibm.com" # https://github.ibm.com/CoreCloud/cloud.ibm.com/issues/1244
 
+# code engine public cert
+cePublicCertId: "78892bbb-ca34-2a1d-3f97-f3018348581a"
+
 # IAM ServiceID for Service dnlb
 sdnlbServiceIdName: "geretain - sDNLB-ServiceID - DO NOT DELETE"
 
