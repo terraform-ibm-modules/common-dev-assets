@@ -100,7 +100,7 @@ docker-run:
 # pre-commit for repos with terraform code
 pre-commit: ghe-netrc
 	@echo "Running terraform init .."
-	@terraform init
+	@tofu init
 	@echo
 	@echo "Running terragrunt run-all init .."
 	@terragrunt run-all init || echo 'Ignoring failure incase this is a non terragrunt project'

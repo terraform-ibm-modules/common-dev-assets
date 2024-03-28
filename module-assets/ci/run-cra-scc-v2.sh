@@ -58,6 +58,7 @@ failed_json="failed.json"
 plan_out="plan.out"
 plan_json="plan.json"
 profile_json="profile.json"
+iac_binary="tofu"
 
 # Get IAM token for authentication
 echo "Getting IAM token..."
@@ -68,11 +69,11 @@ echo "Getting Policy JSON for ID: $PROFILE_ID"
 curl -s --retry 3 -X GET "https://$SCC_REGION.compliance.cloud.ibm.com/instances/$SCC_INSTANCE_ID/v3/profiles/$PROFILE_ID" -H "Authorization: Bearer $IAM_TOKEN" -H "Content-Type: application/json" -o "$profile_json"
 
 # Initialize Terraform and run Terraform plan
-terraform init
-terraform plan --out "$plan_out"
+$iac_binary init
+$iac_binary plan --out "$plan_out"
 
 # Convert Terraform plan output to JSON format
-terraform show -json "$plan_out" | jq '.' > "$plan_json"
+$iac_binary show -json "$plan_out" | jq '.' > "$plan_json"
 
 # Login to IBM Cloud using API key and set the target region
 ibmcloud login --apikey "${TF_VAR_ibmcloud_api_key}" -r "$SCC_REGION"
