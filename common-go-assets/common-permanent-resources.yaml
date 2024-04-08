@@ -75,6 +75,14 @@ enterpriseDbPITRCrn: "crn:v1:bluemix:public:databases-for-enterprisedb:us-south:
 enterpriseDbPITRVersion: 12
 enterpriseDbPITRRegion: "us-south"
 
+# mongoDB instance crn for backup-restore test
+mongodbCrn: "crn:v1:bluemix:public:databases-for-mongodb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:10e1efff-d5fa-4d83-adef-f47f81ac5f00::"
+mongodbRegion: "us-south"
+
+# rabbitMQ instance crn for backup-restore test
+rabbitmqCrn: "crn:v1:bluemix:public:messages-for-rabbitmq:us-south:a/abac0df06b644a9cabc6e44f55b3880e:6b86d46e-8f2f-4508-82fb-3f1597f4035b::"
+rabbitmqRegion: "us-south"
+
 # permanent resources for eso module tests
 acme_letsencrypt_private_key_sm_id: "79c6d411-c18f-4670-b009-b0044a238667"
 acme_letsencrypt_private_key_sm_region: "us-south"
