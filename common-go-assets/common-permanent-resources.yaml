@@ -98,3 +98,12 @@ kp_us_south_root_key_id: "f6c9f6d0-92f6-437a-b97c-4b617cb3d320"
 # IBM MQ Queue Manager license and usage. More info: https://www.ibm.com/docs/en/ibm-mq/9.3?topic=mqibmcomv1beta1-licensing-reference
 ibm_mq_queue_manager_license: "L-AXAF-JLZ53A"
 ibm_mq_queue_manager_license_usage: "Development"
+
+# RAG DA resources
+cd_pipeline_id: "0a95b249-dbce-414c-8e95-a7921116220c"
+ci_pipeline_id: "ce03e537-9af5-4a01-9fdc-c90f9a899a6b"
+watson_assistant_instance_id: "4c1c8ac4-1d1a-4ddf-867e-6b1a241e4a06"
+watson_assistant_region: "us-south"
+watson_discovery_instance_id: "b4c89d19-0ba0-4681-93e0-aa82650c6e82"
+watson_discovery_region: "us-south"
+toolchain_region: "us-south"
