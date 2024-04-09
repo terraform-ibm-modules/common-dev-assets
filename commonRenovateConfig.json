@@ -65,16 +65,22 @@
       "prPriority": 100
     },
     {
-      "description": "Prioritise terraform module updates",
+      "description": "Allow the locked in provider version to be updated to the latest for deployable modules",
+      "enabled": true,
+      "matchFileNames": ["deployable/**"],
       "matchManagers": ["terraform"],
-      "matchDepTypes": ["module"],
-      "groupName": "terraform-module",
+      "matchDepTypes": ["required_provider"],
+      "rangeStrategy": "bump",
+      "semanticCommitType": "fix",
+      "group": true,
+      "groupName": "required_provider",
+      "commitMessageExtra": "to latest for deployable modules",
       "prPriority": 10
     },
     {
-      "description": "Prioritise terraform module updates for terragrunt",
-      "matchManagers": ["terragrunt"],
-      "matchDepTypes": ["gitTags"],
+      "description": "Prioritise terraform module updates",
+      "matchManagers": ["terraform"],
+      "matchDepTypes": ["module"],
       "groupName": "terraform-module",
       "prPriority": 10
     },
