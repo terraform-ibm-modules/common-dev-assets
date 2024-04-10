@@ -5,9 +5,3 @@ git subtree pull --prefix common-dev-assets https://github.com/terraform-ibm-mod
 
 # Add subtree changes
 git add common-dev-assets
-
-# if any changes exit with error code 1
-if [ -n "$(git status --porcelain)" ]; then
-  echo "common-dev-assets subtree has changes. Please commit the changes and push again."
-  exit 1
-fi
