@@ -1,0 +1,80 @@
+default_stages: [commit]
+repos:
+- repo: local
+  hooks:
+    - id: license-checker
+      name: License Checker
+      entry: ci/license_checker.sh
+      types: [file]
+      language: script
+      require_serial: true
+      pass_filenames: false
+      description: This hook ensures that a file named LICENSE exists for any repo (on github.com) which contains .tf files in the root directory of the repo
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.6.0
+  hooks:
+    - id: check-yaml
+      exclude: chart/|metadata.yaml|tests/
+    - id: check-json
+      types: [file]
+      files: \.(json|releaserc)$
+    - id: end-of-file-fixer
+      exclude: .svg
+    - id: trailing-whitespace
+    - id: check-merge-conflict
+    - id: detect-private-key
+      exclude: ibm_catalog.json
+    - id: mixed-line-ending
+      args: ['--fix=lf']
+      description: Forces to replace line ending by the UNIX 'lf' character.
+# checkov (does not require checkov to be installed locally to run)
+- repo: https://github.com/bridgecrewio/checkov.git
+  # Locking into 3.1.55 due to this bug -> https://github.com/bridgecrewio/checkov/issues/5945
+  rev: 3.1.55
+  hooks:
+    - id: checkov
+      args:
+        # ignore files in test samples directory
+        - --skip-path=tests/samples
+        - --skip-path=.scv
+        - --skip-path=Dockerfile
+        - --skip-path=ibm_catalog.json
+        - --skip-framework=github_actions
+        # see https://github.ibm.com/GoldenEye/issues/issues/5317
+        - --skip-check=CKV_TF_1
+        # see https://github.com/bridgecrewio/checkov/issues/5855
+        - --skip-check=CKV2_IBM_6
+- repo: https://github.com/syntaqx/git-hooks
+  rev: v0.0.18
+  hooks:
+  - id: forbid-binary
+    exclude: .png|.jpg|.pdf|.sdumodel
+  - id: shellcheck
+  - id: go-fmt
+- repo: https://github.com/ibm/detect-secrets
+  rev: 0.13.1+ibm.62.dss
+  hooks:
+  - id: detect-secrets
+    args: ['--baseline', '.secrets.baseline', '--fail-on-unaudited', '--use-all-plugins']
+    exclude: go.sum
+- repo: local
+  hooks:
+    - id: golangci-lint
+      name: golangci-lint
+      description: Fast linters runner for Go.
+      entry: bash ci/golangci-lint.sh
+      types: [go]
+      language: golang
+      pass_filenames: false
+    - id: go-mod-module-repository
+      name: Add module repository to go.mod
+      description: Adding module repository to go.mod file
+      entry: python3 ci/terraformDocGoMod.py
+      language: python
+      files: "tests/go.mod"
+      pass_filenames: false
+    - id: update-subtree
+      name: Update Subtree
+      description: Update the subtree in the repo
+      entry: bash ci/update_subtree.sh
+      language: script
