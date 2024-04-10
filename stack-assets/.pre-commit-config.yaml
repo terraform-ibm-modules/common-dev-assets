@@ -76,5 +76,6 @@ repos:
     - id: update-subtree
       name: Update Subtree
       description: Update the subtree in the repo
-      entry: bash ci/update_subtree.sh
+      entry: ci/update_subtree.sh
       language: script
+      pass_filenames: false
