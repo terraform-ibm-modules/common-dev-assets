@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
+# Stash any uncommitted changes
+git stash push -m "Pre-commit stash"
+
 # Update the common-dev-assets subtree
-output=$(git subtree pull --prefix common-dev-assets https://github.com/terraform-ibm-modules/common-dev-assets stacks --squash --allow-unrelated-histories 2>&1)
+output=$(git subtree pull --prefix common-dev-assets https://github.com/terraform-ibm-modules/common-dev-assets stacks --squash 2>&1)
+
+# Pop the previously stashed changes
+git stash pop
 
 # Check if the output contains the specific string using Bash string manipulation
 if [[ "$output" == *"Subtree is already at commit"* ]]; then
