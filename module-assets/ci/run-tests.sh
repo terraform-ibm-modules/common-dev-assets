@@ -97,10 +97,8 @@ if [ ${IS_PR} == true ]; then
                          ".trivyignore")
 
   # Determine all files being changed in the PR, and add it to array
-  echo "Determining all files being changed in the PR on branch: ${TARGET_BRANCH}"
   changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
   mapfile -t file_array <<< "${changed_files}"
-  echo "Changed files are ${changed_files}"
 
   # If there are no files in the commit, set match=true in order to skip tests.
   # NOTE: We can't use the size of the array in the logic here, as ${#file_array[@]}
@@ -111,7 +109,6 @@ if [ ${IS_PR} == true ]; then
   fi
 
   # Check if any file in skip_array matches any of the files being updated in the PR
-  echo "Checking if any file in skip_array matches any of the files being updated in the PR"
   for f in "${file_array[@]}"; do
     match=false
     for s in "${skip_array[@]}"; do
@@ -122,7 +119,6 @@ if [ ${IS_PR} == true ]; then
       fi
     done
     if [ "${match}" == "false" ]; then
-      echo "No need to iterate through any more files as PR contains a file not in skip_array"
       # No need to iterate through any more files as PR contains a file not in skip_array
       break
     fi
