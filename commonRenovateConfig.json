@@ -67,7 +67,7 @@
     {
       "description": "Allow the locked in provider version to be updated to the latest for deployable modules",
       "enabled": true,
-      "matchFileNames": ["deployable/**"],
+      "matchFileNames": ["deployable_modules/**"],
       "matchManagers": ["terraform"],
       "matchDepTypes": ["required_provider"],
       "rangeStrategy": "bump",
