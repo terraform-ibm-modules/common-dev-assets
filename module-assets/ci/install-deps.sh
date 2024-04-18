@@ -128,7 +128,7 @@ fi
 if python3 --version &> /dev/null; then
   PYTHON=python3
 elif python --version &> /dev/null; then
-  PYTHON=python3
+  PYTHON=python
 else
   echo "python or python3 not detected. Please install python, ensure it is on your \$PATH, and retry."
   exit 1
