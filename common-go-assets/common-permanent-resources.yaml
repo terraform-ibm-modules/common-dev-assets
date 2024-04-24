@@ -1,10 +1,15 @@
-# secrets-manager
+# secrets-manager geretain-permanent-sec-mgr
 secretsManagerGuid: 79c6d411-c18f-4670-b009-b0044a238667
 secretsManagerCRN: "crn:v1:bluemix:public:secrets-manager:us-south:a/abac0df06b644a9cabc6e44f55b3880e:79c6d411-c18f-4670-b009-b0044a238667::"
 secretsManagerRegion: us-south
 
 # secrets manager private cert engine
 privateCertTemplateName: geretain-cert-template
+
+# MAS Secrets
+masEntitlementKeySecretId: "f02d2a49-d411-a8ba-b42c-1b4a51df5fcc" # pragma: allowlist secret
+masLicenseSecretId: "c301bfaa-2586-c24b-886a-2fb576709af8" # pragma: allowlist secret
+masSlsLicenseIdSecretId: "fde9f9ae-7160-9a0d-515e-f66fbed162ea" # pragma: allowlist secret
 
 # activity-tracker
 activityTrackerFrankfurtCrn: "crn:v1:bluemix:public:logdnaat:eu-de:a/abac0df06b644a9cabc6e44f55b3880e:b1ef3365-dfbf-4d8f-8ac8-75f4f84d6f4a::"
