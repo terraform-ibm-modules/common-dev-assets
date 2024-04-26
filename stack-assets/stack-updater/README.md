@@ -42,7 +42,7 @@ python update_stack_definition.py --stack-definition <path_to_stack_definition_f
 Example:
 
 ```bash
-python update_stack_definition.py --stack path/to/stack.json --api-key your_api_key -d --debug
+python update_stack_definition.py --stack path/to/stack_definition.json --api-key your_api_key -d --debug
 ```
 
 
@@ -57,4 +57,4 @@ python update_stack_definition.py --stack path/to/stack.json --api-key your_api_
 
 ## Logging
 
-The script uses the `logging` module for logging messages. By default, the log level is set to `INFO`. You can enable more detailed logging by setting the log level to `DEBUG` using the `--debug` or `-d` flag.
+The script uses the `logging` module for logging messages. By default, the log level is set to `INFO`. You can enable more detailed logging by setting the log level to `DEBUG` using the `--debug` flag.
