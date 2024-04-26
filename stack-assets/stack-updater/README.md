@@ -10,12 +10,16 @@ This Python script updates the version locators of stack members in a stack defi
 
 ## Installation
 
-1. Clone the repository or download the script file.
+1. Clone the repository.
 
-2. Install the required Python packages using pip and the `requirements.txt` file:
+2. Create a Python virtual environment in the repository directory.
+
+3. Install the required Python packages using pip and the `requirements.txt` file:
 
 ```bash
-pip install -r requirements.txt
+python3 -m venv venv
+source venv/bin/activate
+python3 -m pip install -r requirements.txt
 ```
 
 ## Configuration
@@ -26,10 +30,16 @@ pip install -r requirements.txt
 
 ## Usage
 
+Ensure that you have activated the Python virtual environment before running the script.
+
+```bash
+source venv/bin/activate
+```
+
 Run the script using the following command:
 
 ```bash
-python update_stack_definition.py --stack-definition <path_to_stack_definition_file>
+python3 update_stack_definition.py --stack-definition <path_to_stack_definition_file>
 ```
 
 
@@ -42,7 +52,7 @@ python update_stack_definition.py --stack-definition <path_to_stack_definition_f
 Example:
 
 ```bash
-python update_stack_definition.py --stack path/to/stack_definition.json --api-key your_api_key -d --debug
+python3 update_stack_definition.py --stack path/to/stack_definition.json --api-key your_api_key --dry-run --debug
 ```
 
 
