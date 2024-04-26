@@ -53,7 +53,11 @@ def get_version_updates(offeringId, catalogId, kind, flavor, api_key):
         ).get_result()
         logging.debug(response)
         # filter updates by flavor name
-        response = [update for update in response if update["flavor"]["name"] == flavor]
+        response = [
+            update
+            for update in response
+            if "flavor" in update.keys() and update["flavor"]["name"] == flavor
+        ]
         logging.debug(f"filtered response: {response}")
         return response
     except KeyError as e:
@@ -191,12 +195,12 @@ if __name__ == "__main__":
                     offeringId, catalogId, kind, flavor, api_key
                 )
                 if updates is None:
-                    logging.error(f"Failed to get version updates for {offeringId}")
+                    logging.error(f"Failed to get version updates for {offeringId}\n")
                     failures.append(f"Failed to get version updates for {offeringId}")
                     continue
                 latest_version = get_latest_valid_version(updates)
                 if latest_version is None:
-                    logging.error(f"Failed to get latest valid version for {updates}")
+                    logging.error(f"Failed to get latest valid version for {updates}\n")
                     failures.append(f"Failed to get latest valid version for {updates}")
                     continue
                 latest_version_locator = latest_version.get("version_locator")
@@ -209,7 +213,11 @@ if __name__ == "__main__":
                 logging.info(f"latest version locator: {latest_version_locator}")
                 if current_version != latest_version_name:
                     logging.info(
-                        f"Updating {member['name']} to version {latest_version_name}"
+                        f"Updating {member['name']} to version {latest_version_name}\n"
+                    )
+                else:
+                    logging.info(
+                        f"{member['name']} is already up to date. No updates were made.\n"
                     )
                 # check if the version locator has changed
                 if member["version_locator"] != latest_version_locator:
@@ -217,16 +225,15 @@ if __name__ == "__main__":
                     member["version_locator"] = latest_version_locator
                     # set flag to True
                     updates_made = True
-                print()
+
             except Exception as e:
-                logging.error(f"Error updating member {member['name']}: {str(e)}")
+                logging.error(f"Error updating member {member['name']}: {str(e)}\n")
                 failures.append(f"Error updating member {member['name']}: {str(e)}")
 
     # write updated stack definition to file only if updates were made
     if updates_made:
         if args.dry_run:
             logging.info("Dry run mode, no updates were made to stack definition")
-            exit(0)
         else:
             with open(args.stack, "w") as f:
                 f.write(json.dumps(stack, indent=2))
@@ -236,7 +243,6 @@ if __name__ == "__main__":
 
     # Print summary of failures and exit with error code if any failures occurred
     if failures:
-        logging.error("\nSummary of failures:")
-        for failure in failures:
-            logging.error(failure)
+        failureString = "\n".join(failures)
+        logging.error(f"\nSummary of failures:\n{failureString}")
         exit(1)
