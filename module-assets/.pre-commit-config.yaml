@@ -88,7 +88,7 @@ repos:
   rev: v0.0.18
   hooks:
   - id: forbid-binary
-    exclude: .png|.jpg|.pdf|.sdumodel
+    exclude: .png|.jpg|.pdf|.sdumodel|.tar.gz
   - id: shellcheck
   - id: go-fmt
 - repo: https://github.com/ibm/detect-secrets
