@@ -133,7 +133,7 @@ if [ ${IS_PR} == true ]; then
     if test -f "${pr_test_file}"; then
         test_arg=${pr_test_file}
     fi
-    test_cmd="go test ${test_arg} -count=1 -v -timeout=300m -parallel=10"
+    test_cmd="go test ${test_arg} -count=1 -v -timeout=600m -parallel=10"
     if [[ "$MZ_INGESTION_KEY" ]] ; then
       # Assign location to be observed by logdna-agent
       if [ -z "$MZ_LOG_DIRS" ]; then
