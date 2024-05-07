@@ -248,8 +248,8 @@ fi
 # tofu
 #######################################
 
- # renovate: datasource=github-releases depName=opentofu/opentofu
-TOFU_VERSION=v1.7.0
+# Locking into latest version in the 1.6.x major until Terraform provider limitations are removed
+TOFU_VERSION=v1.6.2
 BINARY=tofu
 set +e
 INSTALLED_TOFU_VERSION="$(tofu --version | head -1 | cut -d' ' -f2)"
