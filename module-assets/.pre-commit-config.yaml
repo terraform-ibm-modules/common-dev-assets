@@ -153,6 +153,11 @@ repos:
       entry: python3 ci/terraformDocOverview.py
       language: python
       files: "README.md"
+    - id: validate_catalog
+      name: Validate catalogValidationValues.json.template file
+      description: Validate catalogValidationValues.json.template file
+      entry: python3 ci/validateCatalogTemplate.py
+      language: python
       pass_filenames: false
     - id: go-mod-module-repository
       name: Add module repository to go.mod
