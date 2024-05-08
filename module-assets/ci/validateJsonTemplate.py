@@ -65,7 +65,7 @@ def validate_inputs(root, temp_catalog_template_file):
     for catalog_template_key in catalog_template_keys:
         if catalog_template_key not in tf_inputs_name:
             validation_errors.append(
-                f"Key '{catalog_template_key}' in '{temp_catalog_template_file}' is not part of \"{root}\" tf inputs."
+                f"Key '{catalog_template_key}' defined in '{temp_catalog_template_file}' is not part of \"{root}\" tf inputs."
             )
 
     os.remove(
