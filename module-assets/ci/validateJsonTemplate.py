@@ -46,7 +46,7 @@ def create_tf_input_json(root, output_file):
 
 
 # validate catalogValidationValues.json.template keys
-def validate_inputs(root, temp_catalog_template_file):
+def validate_inputs(root, temp_catalog_template_file, original_catalog_template_file):
     temp_tf_inputs_json_file = "temp_tf_inputs.json"
     create_tf_input_json(root, temp_tf_inputs_json_file)
 
@@ -65,7 +65,7 @@ def validate_inputs(root, temp_catalog_template_file):
     for catalog_template_key in catalog_template_keys:
         if catalog_template_key not in tf_inputs_name:
             validation_errors.append(
-                f"Key '{catalog_template_key}' defined in '{temp_catalog_template_file}' is not part of \"{root}\" tf inputs."
+                f"'{catalog_template_key}' defined in '{original_catalog_template_file}' is not a valid input variable for the terraform in this directory."
             )
 
     os.remove(
@@ -80,15 +80,16 @@ for root, dirs, files in os.walk("."):
             if ".terraform" not in os.path.join(root, file):
 
                 # create a new temp catalogValidationValues.json.template file
+                original_catalog_file = os.path.join(root, file)
                 temp_catalog_file = create_temp_json(root, file)
 
                 # if catalogValidationValues.json.template is not valid JSON format then save the error
                 if not is_json(temp_catalog_file):
                     validation_errors.append(
-                        os.path.join(root, file) + " is not valid JSON format."
+                        original_catalog_file + " is not valid JSON format."
                     )
                 else:
-                    validate_inputs(root, temp_catalog_file)
+                    validate_inputs(root, temp_catalog_file, original_catalog_file)
 
                 os.remove(
                     temp_catalog_file
