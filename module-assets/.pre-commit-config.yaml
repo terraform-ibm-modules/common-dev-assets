@@ -88,7 +88,7 @@ repos:
   rev: v0.0.18
   hooks:
   - id: forbid-binary
-    exclude: .png|.jpg|.pdf|.sdumodel
+    exclude: .png|.jpg|.pdf|.sdumodel|.tar.gz
   - id: shellcheck
   - id: go-fmt
 - repo: https://github.com/ibm/detect-secrets
@@ -153,6 +153,11 @@ repos:
       entry: python3 ci/terraformDocOverview.py
       language: python
       files: "README.md"
+    - id: json_template_lint
+      name: Validate catalogValidationValues.json.template file
+      description: Validate catalogValidationValues.json.template file
+      entry: python3 ci/validateJsonTemplate.py
+      language: python
       pass_filenames: false
     - id: go-mod-module-repository
       name: Add module repository to go.mod

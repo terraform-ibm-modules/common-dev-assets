@@ -1,0 +1,10 @@
+formatter: "json"
+
+sections:
+  show:
+    - inputs
+
+output:
+  mode: replace
+  template: |-
+    {{ .Content }}
