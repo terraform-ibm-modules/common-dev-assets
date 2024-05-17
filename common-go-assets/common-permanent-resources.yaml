@@ -100,6 +100,9 @@ imported_certificate_intermediate_secret_id: "1a5dba6b-eec7-578d-0973-26994233ab
 imported_certificate_public_secret_id: "029457f1-e9f6-ff13-4afa-ffe7f14d29bc"
 imported_certificate_private_secret_id: "c54fb897-8737-46d3-d8f3-3b59fc32f38d"
 
+# GE Dev Account Id
+ge_dev_account_id: "abac0df06b644a9cabc6e44f55b3880e" # pragma: allowlist secret
+
 # GE Ops Account Id
 ge_ops_account_id: "9f9af00a96104f49b6509aa715f9d6a5" # pragma: allowlist secret
 
