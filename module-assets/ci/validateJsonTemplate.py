@@ -89,7 +89,7 @@ def validate_inputs(root, temp_catalog_template_file, original_catalog_template_
     # if '*.tf' and 'stack_definition.json' files do not exist then add validation error
     else:
         validation_errors.append(
-            f"'catalogValidationValues.json.template' shouldn't exists in '{root}' if 'variables.tf' or 'stack_definition.json' are not in this directory."
+            f"'catalogValidationValues.json.template' shouldn't exists in '{root}' if '*.tf' or 'stack_definition.json' files are not in this directory."
         )
 
     # validate only if terraform inputs exist
