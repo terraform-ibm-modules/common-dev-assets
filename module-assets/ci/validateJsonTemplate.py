@@ -45,7 +45,7 @@ def create_tf_input_json(root, output_file):
         sys.exit(proc.returncode)
 
 
-# get terraform inputs from 'variables.tf'
+# get terraform inputs from '*.tf'
 def get_tf_inputs_with_tf_docs(root):
     tf_inputs_name = []
     temp_tf_inputs_json_file = "temp_tf_inputs.json"
@@ -78,15 +78,15 @@ def validate_inputs(root, temp_catalog_template_file, original_catalog_template_
     tf_inputs_name = []
     stack_definition_json_file = "stack_definition.json"
 
-    # if 'variables.tf' file exists then get the terraform inputs using terraform-docs
-    if any(File == "variables.tf" for File in os.listdir(root)):
+    # if '*.tf' file exists then get the terraform inputs using terraform-docs
+    if any(File.endswith(".tf") for File in os.listdir(root)):
         tf_inputs_name = get_tf_inputs_with_tf_docs(root)
-    # if 'variables.tf' file does not exist then get the terraform inputs from 'stack_definition.json' file (Stack case)
+    # if '*.tf' file does not exist then get the terraform inputs from 'stack_definition.json' file (Stack case)
     elif any(File == stack_definition_json_file for File in os.listdir(root)):
         tf_inputs_name = get_tf_inputs_from_stack_definition(
             root, stack_definition_json_file
         )
-    # if 'variables.tf' and 'stack_definition.json' files do not exist then add validation error
+    # if '*.tf' and 'stack_definition.json' files do not exist then add validation error
     else:
         validation_errors.append(
             f"'catalogValidationValues.json.template' shouldn't exists in '{root}' if 'variables.tf' or 'stack_definition.json' are not in this directory."
