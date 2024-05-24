@@ -84,6 +84,7 @@ def validate_inputs(root, temp_catalog_template_file, original_catalog_template_
         tf_inputs_name = get_tf_inputs_with_tf_docs(root)
     # if '*.tf' file does not exist then get the terraform inputs from 'stack_definition.json' file (Stack case)
     elif any(File == stack_definition_json_file for File in os.listdir(root)):
+        is_stack = True
         tf_inputs_name = get_tf_inputs_from_stack_definition(
             root, stack_definition_json_file
         )
