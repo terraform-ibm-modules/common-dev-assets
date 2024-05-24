@@ -110,7 +110,7 @@ def validate_inputs(root, temp_catalog_template_file, original_catalog_template_
 
             if catalog_template_key not in tf_inputs_name:
                 validation_errors.append(
-                    f"'{catalog_template_key}' defined in '{original_catalog_template_file}' is not a valid input variable for the terraform in this directory."
+                    f"'{catalog_template_key}' defined in '{original_catalog_template_file}' is not a valid input variable."
                 )
 
 
