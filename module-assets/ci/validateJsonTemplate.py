@@ -77,6 +77,7 @@ def validate_inputs(root, temp_catalog_template_file, original_catalog_template_
     # terraform inputs
     tf_inputs_name = []
     stack_definition_json_file = "stack_definition.json"
+    is_stack = False
 
     # if '*.tf' file exists then get the terraform inputs using terraform-docs
     if any(File.endswith(".tf") for File in os.listdir(root)):
@@ -102,6 +103,11 @@ def validate_inputs(root, temp_catalog_template_file, original_catalog_template_
 
         # check if catalog_template key is part of terraform input variables of the same directory
         for catalog_template_key in catalog_template_keys:
+
+            # if 'ibmcloud_api_key' is defined in stack's json template then do not validate it
+            if is_stack is True and catalog_template_key == "ibmcloud_api_key":
+                continue
+
             if catalog_template_key not in tf_inputs_name:
                 validation_errors.append(
                     f"'{catalog_template_key}' defined in '{original_catalog_template_file}' is not a valid input variable for the terraform in this directory."
