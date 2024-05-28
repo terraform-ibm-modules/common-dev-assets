@@ -16,6 +16,11 @@ activityTrackerFrankfurtCrn: "crn:v1:bluemix:public:logdnaat:eu-de:a/abac0df06b6
 activityTrackerFrankfurtResourceKeyName: "geretain-permanent-eu-de-at-key"
 activityTrackerFrankfurtRegion: "eu-de"
 
+# sysdig
+sysdigFrankfurtCrn: "crn:v1:bluemix:public:sysdig-monitor:eu-de:a/abac0df06b644a9cabc6e44f55b3880e:85e32e8d-7c8e-4918-8f67-ae17fd5839d4::"
+sysdigFrankfurtResourceKeyName: "geretain-permanent-eu-de-minitoring-key"
+sysdigFrankfurtRegion: "eu-de"
+
 # cis
 cisInstanceId: "crn:v1:bluemix:public:internet-svcs:global:a/abac0df06b644a9cabc6e44f55b3880e:59aa1a88-ac47-45e4-bd96-2bc778d26ca7::"
 cisInstanceName: "geretain-permanent-cis"
