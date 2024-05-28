@@ -121,3 +121,6 @@ kp_us_south_root_key_id: "f6c9f6d0-92f6-437a-b97c-4b617cb3d320"
 # IBM MQ Queue Manager license and usage. More info: https://www.ibm.com/docs/en/ibm-mq/9.3?topic=mqibmcomv1beta1-licensing-reference
 ibm_mq_queue_manager_license: "L-AXAF-JLZ53A"
 ibm_mq_queue_manager_license_usage: "Development"
+
+# HPC
+reservation_id_secret_id: "efe3b366-ac99-b959-0d71-6918258e6209"
