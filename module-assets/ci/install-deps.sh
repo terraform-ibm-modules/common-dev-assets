@@ -217,8 +217,8 @@ fi
 # terraform
 #######################################
 
-# Locking into last version that is not BSL
-TERRAFORM_VERSION=v1.5.7
+# Locking into last version that is supported by Schematics
+TERRAFORM_VERSION=v1.6.6
 BINARY=terraform
 
 set +e
