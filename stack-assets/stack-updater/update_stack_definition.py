@@ -112,11 +112,10 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--debug",
-        type=str,
-        action="store",
-        dest="log_level",
-        help="Set log level to DEBUG",
-        required=False,
+        action="store_true",
+        dest="debug",
+        help="Set debug mode to True",
+        default=False,
     )
     parser.add_argument(
         "--dry-run",
@@ -236,7 +235,7 @@ if __name__ == "__main__":
             logging.info("Dry run mode, no updates were made to stack definition")
         else:
             with open(args.stack, "w") as f:
-                f.write(json.dumps(stack, indent=2))
+                f.write(json.dumps(stack, indent=2) + "\n")
             logging.info(f"Stack definition updated: {args.stack}")
     else:
         logging.info("Already up to date. No updates were made.")
