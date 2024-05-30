@@ -124,3 +124,6 @@ ibm_mq_queue_manager_license_usage: "Development"
 
 # HPC
 reservation_id_secret_id: "efe3b366-ac99-b959-0d71-6918258e6209"
+
+# Atracker Trusted Profile
+atracker_trusted_profile: "Profile-ca8f5fa4-d3ba-4973-a5de-660032e9a12b"
