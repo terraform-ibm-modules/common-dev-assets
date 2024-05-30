@@ -143,7 +143,7 @@ if __name__ == "__main__":
         exit(1)
 
     # switch log level to DEBUG if passed as argument
-    if args.log_level:
+    if args.debug:
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
