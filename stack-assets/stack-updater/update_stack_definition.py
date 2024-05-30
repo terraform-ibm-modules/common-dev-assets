@@ -114,7 +114,7 @@ if __name__ == "__main__":
         "--debug",
         action="store_true",
         dest="debug",
-        help="Set debug mode to True",
+        help="Enable debug logging",
         default=False,
     )
     parser.add_argument(
