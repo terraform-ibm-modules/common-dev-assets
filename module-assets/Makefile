@@ -102,8 +102,6 @@ pre-commit: ghe-netrc
 	@echo "Running terraform init .."
 	@terraform init
 	@echo
-	@echo "Running terragrunt run-all init .."
-	@terragrunt run-all init || echo 'Ignoring failure incase this is a non terragrunt project'
 	@echo "Running pre-commit hooks .."
 	@pre-commit run --all-files
 
