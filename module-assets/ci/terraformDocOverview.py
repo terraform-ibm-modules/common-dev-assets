@@ -81,7 +81,7 @@ def get_headings(folder_name):
                     readme_title = terraformDocsUtils.get_readme_title(path)
                     if readme_title:
                         data = "    * [{}](./{})".format(
-                            readme_title.replace("\n", "").replace("# ", ""),
+                            readme_title.strip().replace("\n", "").replace("# ", ""),
                             path.replace("/README.md", ""),
                         )
                 readme_headings.append(data)
