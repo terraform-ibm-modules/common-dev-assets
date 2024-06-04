@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import sys
 from subprocess import PIPE, Popen
 
@@ -13,12 +14,17 @@ def create_temp_json(root, file):
     with open(file_path, "rt") as fin:
         with open(temp_file, "wt") as fout:
             for line in fin:
-                if "$" in line:
-                    temp_value = '"temp_value",' if "," in line else '"temp_value"'
-                    mytext = line[: line.rindex("$")] + temp_value
-                    fout.write(mytext)
-                else:
-                    fout.write(line)
+                # it can happens that the content of catalogValidationValues.json.template is in one row only (not pretty print format), in that case we must split the line according the delimiter
+                multiple_lines = re.split("(,|{|})", line)
+                for each_line in multiple_lines:
+                    if "$" in each_line:
+                        temp_value = (
+                            '"temp_value",' if "," in each_line else '"temp_value"'
+                        )
+                        mytext = each_line[: each_line.rindex("$")] + temp_value
+                        fout.write(mytext)
+                    else:
+                        fout.write(each_line)
     return temp_file
 
 
