@@ -154,7 +154,7 @@ repos:
       description: Add overview section to README
       entry: python3 ci/terraformDocOverview.py
       language: python
-      files: "README.md"
+      pass_filenames: false
     - id: json_template_lint
       name: Validate catalogValidationValues.json.template file
       description: Validate catalogValidationValues.json.template file
