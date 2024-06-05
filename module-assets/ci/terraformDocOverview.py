@@ -42,6 +42,7 @@ def get_title(
 
 # get main readme headings
 def get_main_readme_headings():
+    data = ""
     with open("./README.md", "r") as f:
         code_block = False
         comment_block = False
