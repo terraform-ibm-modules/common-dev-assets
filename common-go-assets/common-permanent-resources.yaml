@@ -127,3 +127,9 @@ reservation_id_secret_id: "efe3b366-ac99-b959-0d71-6918258e6209"
 
 # Atracker Trusted Profile
 atracker_trusted_profile: "Profile-ca8f5fa4-d3ba-4973-a5de-660032e9a12b"
+
+# VSI Snapshot Consistency Group
+snapshot_group_au_syd_group_id: "r026-43d41ad0-88f4-4e99-8adf-0cae4a02710c"
+snapshot_group_au_syd_boot_id: "r026-88f05225-d0aa-4d4e-896f-0135ae569bcc"
+snapshot_group_au_syd_vol1_id: "r026-daf63a97-c445-4f9c-bb54-d6e371e95388"
+snapshot_group_au_syd_vol2_id: "r026-1518ae7d-319c-4164-a781-56067e9be451"
