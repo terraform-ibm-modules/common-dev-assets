@@ -3,7 +3,6 @@
 import argparse
 import concurrent.futures
 import json
-import logging
 import os
 import time
 from typing import Dict, List, Tuple
@@ -26,6 +25,7 @@ from common.helper import (  # set_authorization,
     string_to_state,
     string_to_state_code,
 )
+from common.logger import get_logger, setup_logger
 from constants import common_constants as const
 from constants import messages as logmsg
 from constants.common_constants import State, StateCode
@@ -113,7 +113,7 @@ def parse_params() -> Tuple[str, str, List[str], str, str, str, bool, bool, bool
         try:
             stack_inputs = json.loads(args.stack_inputs)
         except json.JSONDecodeError:
-            logging.error("Invalid stack inputs json")
+            get_logger().error("Invalid stack inputs json")
             exit(1)
 
     config_order = args.config_order
@@ -125,47 +125,52 @@ def parse_params() -> Tuple[str, str, List[str], str, str, str, bool, bool, bool
     api_key_env = None
     # load config from json file
     # { "project_name": "project_name", "stack_name": "stack_name", "config_order": ["config1", "config2"] }
-    if args.config_json_path:
+    if not args.config_json_path:
+        if os.environ.get(api_key_env) is None:
+            get_logger().error("Environment variable `stack_api_key_env` must be set")
+            exit(1)
+    else:
         try:
             with open(args.config_json_path) as f:
                 config = json.load(f)
         except FileNotFoundError:
-            logging.error(f"Config json file not found at: {args.config_json_path}")
+            get_logger().error(
+                f"Config json file not found at: {args.config_json_path}"
+            )
             exit(1)
         except json.JSONDecodeError:
-            logging.error(f"Invalid config json: {args.config_json_path}")
+            get_logger().error(f"Invalid config json: {args.config_json_path}")
             exit(1)
+        # Read values from config file.
+        stack_def_path = config.get("stack_def_path", stack_def_path)
+        api_key_env = config.get("stack_api_key_env", api_key_env)
+
         if not project_name:
             project_name = config.get("project_name", "")
+
         if not stack_name:
             stack_name = config.get("stack_name", "")
+
+        if not stack_inputs:
+            stack_inputs = config.get("stack_inputs", "")
 
         # if config_order is not provided, use the config_order from the config file, only if not in parralel
         if (not config_order or args.undeploy) and not args.parallel:
             config_order = config.get("config_order", [])
-        stack_def_path = config.get("stack_def_path", stack_def_path)
-        if not stack_inputs:
-            stack_inputs = config.get("stack_inputs", "")
-        api_key_env = config.get("stack_api_key_env", api_key_env)
 
     if not api_key_env:
         api_key_env = args.stack_api_key_env
 
-    # check api key env exists
-    if os.environ.get(api_key_env) is None:
-        logging.error(f"{api_key_env} environment variable must be set")
-        exit(1)
-
     # check stack_def_path exists
     if not stack_def_path or not os.path.exists(stack_def_path):
-        logging.error("Stack definition path must be provided and exist")
+        get_logger().error("Stack definition path must be provided and exist\n")
         # print argument help
         parser.print_help()
         exit(1)
 
     # error if project name, stack name or config name pattern is not provided
     if not project_name or not stack_name:
-        logging.error("Project name, stack name and config order must be provided")
+        get_logger().error("Project name, stack name and config order must be provided")
         # print argument help
         parser.print_help()
         exit(1)
@@ -197,13 +202,13 @@ def get_project_id(project_name: str) -> str:
     output, err = run_command(command)
     if err:
         raise Exception(f"Error: {err}")
-    logging.debug(f"Project list: {output}")
+    get_logger().debug(f"Project list: {output}")
     data = json.loads(output)
     projects = data.get("projects", [])
     for project in projects:
         # Check if 'metadata' exists in the project dictionary
         if "definition" in project and project["definition"]["name"] == project_name:
-            logging.debug(f'Project ID for {project_name} found: {project["id"]}')
+            get_logger().debug(f'Project ID for {project_name} found: {project["id"]}')
             return project["id"]
     raise ProjectNotFoundError(f"Project {project_name} not found")
 
@@ -222,7 +227,7 @@ def get_project_configs(project_id: str) -> list[dict]:
     output, err = run_command(command)
     if err:
         raise Exception(f"Error: {err}")
-    logging.debug(f"Project configs: {output}")
+    get_logger().debug(f"Project configs: {output}")
     data = json.loads(output)
     return data.get("configs", [])
 
@@ -239,7 +244,7 @@ def get_stack_id(project_id: str, stack_name: str) -> str:
     project_configs = get_project_configs(project_id)
     for config in project_configs:
         if "definition" in config and config["definition"]["name"] == stack_name:
-            logging.debug(f'Stack ID for {stack_name} found: {config["id"]}')
+            get_logger().debug(f'Stack ID for {stack_name} found: {config["id"]}')
             return config["id"]
     raise StackNotFoundError(f"Stack {stack_name} not found")
 
@@ -260,7 +265,7 @@ def get_config_ids_for_stack(project_id: str, stack_name: str) -> List[Dict]:
     output, err = run_command(command)
     if err:
         raise Exception(f"Error: {err}")
-    logging.debug(f"Project configs: {output}")
+    get_logger().debug(f"Project configs: {output}")
     data = json.loads(output)
 
     members = data.get("definition", {}).get("members", [])
@@ -287,9 +292,9 @@ def get_config_ids(
     for config in project_configs:
         # ignore if stack
         if config["deployment_model"] == "stack":
-            logging.debug(f"Skipping stack:\n{config}")
+            get_logger().debug(f"Skipping stack:\n{config}")
             continue
-        logging.debug(f"Checking Config:\n{config}")
+        get_logger().debug(f"Checking Config:\n{config}")
         # Check if 'definition' exists in the config dictionary
         # when deploying from tile the config name is in the format stack_name-config_name so strip the prefix
         stripped_stack_name = ""
@@ -323,13 +328,13 @@ def get_config_ids(
         # show missing configs
         for config in config_order:
             if config not in configs and f"{stack_name}-{config}" not in configs:
-                logging.error(f"Config {config} not found")
+                get_logger().error(f"Config {config} not found")
         if len(configs) < len(config_order):
-            logging.error(
+            get_logger().error(
                 f"Not all configs found, expected: {config_order}\nFound: {configs}"
             )
         if len(configs) > len(config_order):
-            logging.error(
+            get_logger().error(
                 f"Too many configs found, expected: {config_order}\nFound: {configs}"
             )
         raise ConfigNotFoundError("Config not found")
@@ -342,7 +347,7 @@ def get_config_ids(
             # assume the config name is in the format stack_name-config_name
             conf = f"{stack_name}-{conf}"
         sorted_confs.append(find_dict_with_key(configs, conf))
-    logging.debug(f"Config IDs: {sorted_confs}")
+    get_logger().debug(f"Config IDs: {sorted_confs}")
     return sorted_confs
 
 
@@ -363,9 +368,9 @@ def update_stack_definition(
     )
     output, err = run_command(command)
     if err:
-        logging.error(f"Error: {err}")
+        get_logger().error(f"Error: {err}")
         exit(1)
-    logging.debug(f"Stack definition updated: {output}")
+    get_logger().debug(f"Stack definition updated: {output}")
 
 
 def set_stack_inputs(
@@ -391,9 +396,9 @@ def set_stack_inputs(
     )
     output, err = run_command(command)
     if err:
-        logging.error(f"Error: {err}")
+        get_logger().error(f"Error: {err}")
         exit(1)
-    logging.debug(f"Stack inputs updated: {output}")
+    get_logger().debug(f"Stack inputs updated: {output}")
 
 
 def validate_config(project_id: str, config_id: str, timeout: str = "30m") -> None:
@@ -410,7 +415,7 @@ def validate_config(project_id: str, config_id: str, timeout: str = "30m") -> No
     config_name = get_config_name(project_id, config_id)
 
     if state in const.VALIDATION_STATES:
-        logging.info(f"[{config_name}] Already Validated Skipping: {config_id}")
+        get_logger().info(f"[{config_name}] Already Validated Skipping: {config_id}")
         return
 
     if state != State.VALIDATED:
@@ -419,20 +424,24 @@ def validate_config(project_id: str, config_id: str, timeout: str = "30m") -> No
         if err:
             raise Exception(f"Error: {err}")
 
-        logging.info(f"[{config_name}] Started validation for config {config_id}")
-        # state = get_config_state(project_id, config_id) #TODO: PRATEEK - Check if we really need this again?
+        get_logger().info(f"[{config_name}] Started validation for config {config_id}")
+        state = get_config_state(
+            project_id, config_id
+        )  # TODO: PRATEEK - Check if we really need this again?
         while state == State.VALIDATING and time.time() < end_time:
             time.sleep(30)
             state = get_config_state(project_id, config_id)
-            logging.info(f"[{config_name}] Validating {config_id}...")
-            logging.debug(f"[{config_name}] Validation state: {state}")
+            get_logger().info(f"[{config_name}] Validating {config_id}...")
+            get_logger().debug(f"[{config_name}] Validation state: {state}")
 
-        # state = get_config_state(project_id, config_id) #TODO: PRATEEK - Check if we really need this again?
+        state = get_config_state(
+            project_id, config_id
+        )  # TODO: PRATEEK - Check if we really need this again?
         if state != State.VALIDATED:
             raise ValidationError(
                 f"[{config_name}] Validation failed for config {config_id}"
             )
-    logging.debug(f"[{config_name}] Config validated successfully: {config_id}")
+    get_logger().debug(f"[{config_name}] Config validated successfully: {config_id}")
 
 
 def get_config_state(project_id: str, config_id: str) -> State:
@@ -448,11 +457,11 @@ def get_config_state(project_id: str, config_id: str) -> State:
     output, err = run_command(command)
     if err:
         raise Exception(f"Error: {err}")
-    logging.debug(f"Config state: {output}")
+    get_logger().debug(f"Config state: {output}")
     data = json.loads(output)
     state = data.get("state", "")
     if state == "":
-        logging.error(f"state not found for config {config_id}\n{data}")
+        get_logger().error(f"state not found for config {config_id}\n{data}")
         return State.UNKNOWN
     return string_to_state(state)
 
@@ -470,7 +479,7 @@ def get_config_state_code(project_id: str, config_id: str) -> StateCode:
     output, err = run_command(command)
     if err:
         raise Exception(f"Error: {err}")
-    logging.debug(f"Config state: {output}")
+    get_logger().debug(f"Config state: {output}")
     data = json.loads(output)
     state_code = data.get("state_code", "")
     if state_code == "":
@@ -491,7 +500,7 @@ def get_config_name(project_id: str, config_id: str) -> str:
     output, err = run_command(command)
     if err:
         raise Exception(f"Error: {err}")
-    logging.debug(f"Config name: {output}")
+    get_logger().debug(f"Config name: {output}")
     data = json.loads(output)
     name = data.get("definition", {}).get("name", "UNKNOWN")
     return name
@@ -510,7 +519,7 @@ def get_config_deployed_state(project_id: str, config_id: str) -> State:
     output, err = run_command(command)
     if err:
         raise Exception(f"Error: {err}")
-    logging.debug(f"Config deployed: {output}")
+    get_logger().debug(f"Config deployed: {output}")
     data = json.loads(output)
     state = data.get("deployed_version", {}).get("state", "")
     if state == "":
@@ -534,12 +543,12 @@ def approve_config(project_id: str, config_id: str) -> None:
         raise Exception(f"Error retrieving config state or name: {e}")
 
     if state in {State.DEPLOYED, State.DEPLOYING_FAILED}:
-        logging.info(f"[{config_name}] Already Approved Skipping: {config_id}")
+        get_logger().info(f"[{config_name}] Already Approved Skipping: {config_id}")
         return
 
     # only approve if not already approved and validated
     if state != State.APPROVED and state == State.VALIDATED:
-        logging.info(f"[{config_name}] Approving config: {config_id}")
+        get_logger().info(f"[{config_name}] Approving config: {config_id}")
         command = (
             f"ibmcloud project config-approve --project-id {project_id} "
             f'--id {config_id} --comment "Approved by script"'
@@ -549,25 +558,30 @@ def approve_config(project_id: str, config_id: str) -> None:
             raise ApprovalError(
                 f"[{config_name}] Error approving config {config_id}, error: {err}"
             )
-        # state = get_config_state(project_id, config_id) # TODO: PRATEEK - Do we really need it again?
+        state = get_config_state(
+            project_id, config_id
+        )  # TODO: PRATEEK - Do we really need it again?
         start_time = time.time()
         end_time = start_time + parse_time("5m")
 
         while state != State.APPROVED and time.time() < end_time:
             time.sleep(5)
             state = get_config_state(project_id, config_id)
-            logging.info(f"[{config_name}] Approving {config_id}...")
-            logging.debug(f"[{config_name}] Approve {config_id} state: {state}")
-        # state = get_config_state(project_id, config_id) # TODO: PRATEEK - Do we really need it again?
+            get_logger().info(f"[{config_name}] Approving {config_id}...")
+            get_logger().debug(f"[{config_name}] Approve {config_id} state: {state}")
+
+        state = get_config_state(
+            project_id, config_id
+        )  # TODO: PRATEEK - Do we really need it again?
 
         if state != State.APPROVED:
             raise ApprovalError(
                 f"[{config_name}] Approval failed for config {config_id}"
             )
-        logging.info(f"[{config_name}] Config Approved: {config_id}")
+        get_logger().info(f"[{config_name}] Config Approved: {config_id}")
 
     elif state == State.APPROVED:
-        logging.info(f"[{config_name}] Already Approved Skipping: {config_id}")
+        get_logger().info(f"[{config_name}] Already Approved Skipping: {config_id}")
 
     elif state != State.VALIDATED:
         raise ApprovalError(
@@ -576,11 +590,11 @@ def approve_config(project_id: str, config_id: str) -> None:
         )
 
     # TODO: PRATEEK - CHECK WHY WE HAVE REDUNDANT CODE AT SO MANY PLACES!
-    # state = get_config_state(project_id, config_id)
-    # if state != State.APPROVED:
-    #     raise ApprovalError(
-    #         f"Approval failed for config {config_id}, current state: {state}"
-    #     )
+    state = get_config_state(project_id, config_id)
+    if state != State.APPROVED:
+        raise ApprovalError(
+            f"Approval failed for config {config_id}, current state: {state}"
+        )
 
 
 def deploy_config(project_id: str, config_id: str, timeout: str = "2h") -> None:
@@ -601,7 +615,7 @@ def deploy_config(project_id: str, config_id: str, timeout: str = "2h") -> None:
         raise DeploymentError(f"Error retrieving config state or name: {e}")
 
     if state in {State.APPROVED, State.DEPLOYING_FAILED}:
-        logging.info(f"[{config_name}] Deploying config: {config_id}")
+        get_logger().info(f"[{config_name}] Deploying config: {config_id}")
         command = (
             f"ibmcloud project config-deploy --project-id {project_id} --id {config_id}"
         )
@@ -609,24 +623,28 @@ def deploy_config(project_id: str, config_id: str, timeout: str = "2h") -> None:
         if err:
             raise DeploymentError(f"[{config_name}] Error deploying config {config_id}")
 
-        # state = get_config_state(project_id, config_id) #TODO: PRATEEK - Redundant call?
+        state = get_config_state(
+            project_id, config_id
+        )  # TODO: PRATEEK - Redundant call?
         while state == State.DEPLOYING and time.time() < end_time:
             time.sleep(30)
             state = get_config_state(project_id, config_id)
-            logging.info(f"[{config_name}] Deploying {config_id}...")
-            logging.debug(f"[{config_name}] Deploy {config_id} state: {state}")
+            get_logger().info(f"[{config_name}] Deploying {config_id}...")
+            get_logger().debug(f"[{config_name}] Deploy {config_id} state: {state}")
 
-        # state = get_config_state(project_id, config_id) #TODO: PRATEEK - Redundant call?
+        state = get_config_state(
+            project_id, config_id
+        )  # TODO: PRATEEK - Redundant call?
 
         if state != State.DEPLOYED:
             # TODO: lookup deployment failure reason
             raise DeploymentError(
                 f"[{config_name}] Deployment failed for config {config_id}"
             )
-        logging.info(f"[{config_name}] Config Deployed: {config_id}")
+        get_logger().info(f"[{config_name}] Config Deployed: {config_id}")
 
     elif state == State.DEPLOYED:
-        logging.info(f"[{config_name}] Already Deployed Skipping: {config_id}")
+        get_logger().info(f"[{config_name}] Already Deployed Skipping: {config_id}")
         return
 
     elif state != State.APPROVED:
@@ -658,28 +676,32 @@ def undeploy_config(project_id: str, config_id: str, timeout: str = "2h") -> Non
 
     if state in const.DEPLOYABLE_STATES:
         if state != State.UNDEPLOYING:
-            logging.info(f"[{config_name}] Undeploying config: {config_id}")
+            get_logger().info(f"[{config_name}] Undeploying config: {config_id}")
             command = f"ibmcloud project config-undeploy --project-id {project_id} --id {config_id}"
             _, err = run_command(command)
             if err:
                 raise DeploymentError(
                     f"[{config_name}] Error undeploying config {config_id}"
                 )
-        # state = get_config_deployed_state(project_id, config_id) #TODO: PRATEEK - THIS IS NOT REQUIRED
+        state = get_config_deployed_state(
+            project_id, config_id
+        )  # TODO: PRATEEK - THIS IS NOT REQUIRED
         while state == State.UNDEPLOYING and time.time() < end_time:
             time.sleep(30)
             state = get_config_deployed_state(project_id, config_id)
-            logging.info(f"[{config_name}] Undeploying {config_id}...")
-            logging.debug(f"[{config_name}] Undeploy {config_id} state: {state}")
+            get_logger().info(f"[{config_name}] Undeploying {config_id}...")
+            get_logger().debug(f"[{config_name}] Undeploy {config_id} state: {state}")
 
-        # state = get_config_deployed_state(project_id, config_id) #TODO: PRATEEK CHECK WHY AGAIN IT IS NEEDED?
+        state = get_config_deployed_state(
+            project_id, config_id
+        )  # TODO: PRATEEK CHECK WHY AGAIN IT IS NEEDED?
         if state in {State.DEPLOYED, State.UNDEPLOYING_FAILED}:
             raise DeploymentError(
                 f"[{config_name}] Undeployment failed for config {config_id}"
             )
-        logging.info(f"[{config_name}] Config undeployed: {config_id}")
+        get_logger().info(f"[{config_name}] Config undeployed: {config_id}")
     else:
-        logging.info(
+        get_logger().info(
             f"[{config_name}] Config not deployed: {config_id} skipping undeploy, current state: {state}"
         )
 
@@ -696,16 +718,16 @@ def validate_approve_and_deploy(project_id: str, config_id: str) -> None:
         approve_config(project_id, config_id)
         deploy_config(project_id, config_id)
     except ValidationError as verr:
-        logging.error(f"Validation error: {verr}")
+        get_logger().error(f"Validation error: {verr}")
         raise verr
     except ApprovalError as aerr:
-        logging.error(f"Approval error: {aerr}")
+        get_logger().error(f"Approval error: {aerr}")
         raise aerr
     except DeploymentError as derr:
-        logging.error(f"Deployment error: {derr}")
+        get_logger().error(f"Deployment error: {derr}")
         raise derr
     except Exception as e:
-        logging.error(f"Error occurred during validation and deployment: {e}")
+        get_logger().error(f"Error occurred during validation and deployment: {e}")
         raise e
 
 
@@ -720,7 +742,7 @@ def initiate_parallel_execution(config_ids, project_id, error_messages):
             current_state_code = get_config_state_code(project_id, config_id)
 
             if current_state_code == StateCode.AWAITING_PREREQUISITE:
-                logging.info(
+                get_logger().info(
                     f"Config {config_name} ID: {config_id} has a prerequisite and cannot be validated or deployed"
                 )
                 return False
@@ -729,7 +751,7 @@ def initiate_parallel_execution(config_ids, project_id, error_messages):
                 config_ids.remove(config)
                 return False
 
-            logging.info(
+            get_logger().info(
                 f"Checking for config {config_name} ID: {list(config.values())[0]['config_id']} "
                 f"ready for validation and deployment"
             )
@@ -738,18 +760,18 @@ def initiate_parallel_execution(config_ids, project_id, error_messages):
                 current_state_code == StateCode.AWAITING_VALIDATION
                 and current_state == State.DRAFT
             ) or current_state in const.READY_STATE:
-                logging.info(
+                get_logger().info(
                     f"Config {config_name} ID: {config_id} is ready for validation and deployment, current state: {current_state}"
                 )
                 return True
             else:
-                logging.info(
+                get_logger().info(
                     f"Config {config_name} ID: {config_id} is not ready for validation and deployment, current state: {current_state}"
                 )
                 return False
 
         except Exception as err:
-            logging.info(
+            get_logger().info(
                 f"Config {config_name} ID: {config_id} no state found, trying to validate and deploy.\nException: {err}"
             )
             return True
@@ -758,12 +780,12 @@ def initiate_parallel_execution(config_ids, project_id, error_messages):
         ready_to_deploy = [config for config in config_ids if can_deploy(config)]
 
         if ready_to_deploy:
-            logging.info(
+            get_logger().info(
                 f"Configs ready for validation and deployment: {ready_to_deploy}"
             )
             deploy_configs_parallel(ready_to_deploy, project_id, error_messages)
         else:
-            logging.info("No configs ready for validation and deployment")
+            get_logger().info("No configs ready for validation and deployment")
 
 
 def deploy_configs_parallel(configs, project_id, error_messages):
@@ -781,7 +803,7 @@ def deploy_configs_parallel(configs, project_id, error_messages):
                     )
                 )
             except (IndexError, KeyError) as err:
-                logging.error(
+                get_logger().error(
                     f"{const.PDE}\nInvalid configuration format: {config} - Exception: {err}"
                 )
                 error_messages.append(
@@ -790,14 +812,14 @@ def deploy_configs_parallel(configs, project_id, error_messages):
                 error_occurred = True
                 break
             except (ValidationError, ApprovalError, DeploymentError) as err:
-                logging.error(
+                get_logger().error(
                     f"{const.PDE}\nValidation/Approval/Deployment error: \n{err}"
                 )
                 error_messages.append(str(err))
                 error_occurred = True
                 break
             except Exception as e:
-                logging.error(
+                get_logger().error(
                     f"{const.PDE}\nError occurred during validation and deployment: {e}"
                 )
                 error_messages.append(str(e))
@@ -808,7 +830,9 @@ def deploy_configs_parallel(configs, project_id, error_messages):
             concurrent.futures.wait(futures)  # wait for all futures to complete
             for future in futures:
                 if future.exception() is not None:
-                    logging.error(logmsg.ERR_FUTURE_EXCPN.format(future.exception()))
+                    get_logger().error(
+                        logmsg.ERR_FUTURE_EXCPN.format(future.exception())
+                    )
                     error_messages.append(str(future.exception()))
                     error_occurred = True
                     break
@@ -821,19 +845,19 @@ def sequential_deployment(config_ids, project_id, error_messages):
                 project_id, list(config.values())[0]["config_id"]
             )
         except ValidationError as verr:
-            logging.error(f"Validation error: {verr}")
+            get_logger().error(f"Validation error: {verr}")
             error_messages.append(str(verr))
             break
         except ApprovalError as aerr:
-            logging.error(f"Approval error: {aerr}")
+            get_logger().error(f"Approval error: {aerr}")
             error_messages.append(str(aerr))
             break
         except DeploymentError as derr:
-            logging.error(f"Deployment error: {derr}")
+            get_logger().error(f"Deployment error: {derr}")
             error_messages.append(str(derr))
             break
         except Exception as e:
-            logging.error(f"Error occurred during validation and deployment: {e}")
+            get_logger().error(f"Error occurred during validation and deployment: {e}")
             error_messages.append(str(e))
             break
 
@@ -855,15 +879,14 @@ def main() -> None:
         parallel,
         debug,
     ) = parse_params()
+
     if debug:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.INFO)
+        setup_logger("DEBUG")
 
     log_info = {
         "Project name": project_name,
         "Stack name": stack_name,
-        "API key environment variable": api_key_env,
+        "API key environment variable": "***MASKED***",
         "Config order": config_order,
         "Stack definition path": stack_def_path,
         "Undeploy": undeploy,
@@ -873,17 +896,20 @@ def main() -> None:
         "Debug": debug,
     }
     for key, value in log_info.items():
-        logging.info(f"{key}: {value}")
-    logging.debug(f"Stack inputs: {stack_inputs}")
+        get_logger().info(f"{key}: {value}")
+
+    get_logger().debug("\nStack inputs:\n")
+    for k, v in stack_inputs.items():
+        get_logger().debug(f"{k}: ***MASKED***" if "_key" in k.lower() else f"{k}: {v}")
 
     missing = check_require_tools()
 
     if missing["tools"]:
-        logging.error(logmsg.ERR_NO_TOOLS.format(missing["tools"]))
+        get_logger().error(logmsg.ERR_NO_TOOLS.format(missing["tools"]))
         exit(1)
 
     if missing["plugins"]:
-        logging.error(logmsg.ERR_NO_PLUGINS.format(missing["plugins"]))
+        get_logger().error(logmsg.ERR_NO_PLUGINS.format(missing["plugins"]))
         exit(1)
 
     if not is_logged_in():
@@ -902,17 +928,17 @@ def main() -> None:
             try:
                 undeploy_config(project_id, list(config.values())[0]["config_id"])
             except DeploymentError as derr:
-                logging.error(f"Un-deployment error: {derr}")
+                get_logger().error(f"Un-deployment error: {derr}")
                 error_messages.append(str(derr))
     else:
         if stack_def_update:
-            logging.info(f"Updating stack definition for stack {stack_name}")
+            get_logger().info(f"Updating stack definition for stack {stack_name}")
             update_stack_definition(project_id, stack_id, stack_def_path)
         if not skip_stack_inputs and stack_inputs:
             #  TODO: check if this is needed
-            # logging.info(f'Setting authorization for stack {stack_name}')
+            # get_logger().info(f'Setting authorization for stack {stack_name}')
             # set_authorization(project_id, stack_id, api_key_env)
-            logging.info(f"Setting stack inputs for stack {stack_name}")
+            get_logger().info(f"Setting stack inputs for stack {stack_name}")
             set_stack_inputs(project_id, stack_id, stack_inputs, api_key_env)
 
         if parallel:
@@ -922,9 +948,9 @@ def main() -> None:
 
     # At the end of the script, print the error messages if any
     if error_messages:
-        logging.info(logmsg.MSG_LIST_ERRS)
+        get_logger().info(logmsg.MSG_LIST_ERRS)
         for msg in error_messages:
-            logging.error(msg)
+            get_logger().error(msg)
 
 
 if __name__ == "__main__":

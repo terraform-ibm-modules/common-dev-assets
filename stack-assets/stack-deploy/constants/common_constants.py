@@ -52,6 +52,8 @@ READY_STATE = {
     State.APPROVED,
 }
 
+LOG_FORMAT = "%(message)s"
+DATE_FORMAT = "[%X]"
 NOT_LOG_IN = "Not logged in"
 TLS_TIMEOUT = "tls handshake timeout"
 MAX_RETRY_COUNT = 5

@@ -1,14 +1,16 @@
 import argparse
 import json
-import logging
 import os
 import subprocess
 import time
 from dataclasses import fields
 from typing import Dict, List, Optional, Tuple
 
+from common.logger import get_logger
 from constants import commands as cmd
 from constants import common_constants as const
+
+# logr = logger() # TODO:PRATEEK - Move to a property to store the correct log level as set in main()
 
 
 def string_to_state(state_str: str) -> const.State:
@@ -25,20 +27,26 @@ def string_to_state_code(state_code_str: str) -> const.StateCode:
         raise ValueError(f"Invalid state code: {state_code_str}")
 
 
-def login_ibmcloud(api_key_env: str) -> None:
+def login_ibmcloud(api_key_env: str, region: str = "--no-region") -> None:
     """
     Login to IBM Cloud.
     Args:
         api_key_env (str): API key environment variable name.
+        region (str): Valid IBM Cloud region.
     """
+
     command = cmd.LOGIN.format(
-        api_key=os.environ.get(api_key_env), region="--no-region"
+        # api_key = os.environ.get(api_key_env), #TODO: WHY GETTING VALUE FROM ENV here when already passing?
+        api_key=api_key_env,
+        region=region,
     )
+
     output, err = run_command(command)
+
     if err:
-        logging.error(f"Error: {err}")
+        get_logger().error(f"IBM Cloud Login Failure: \n{err}")
         exit(1)
-    logging.debug(f"Login output: {output}")
+    get_logger().debug(f"Login output: {output}")
 
 
 def is_logged_in() -> bool:
@@ -49,7 +57,7 @@ def is_logged_in() -> bool:
     """
     try:
         result, err = run_command(cmd.SHOW_ACCOUNT)
-        logging.debug(f"Account show: {result}")
+        get_logger().debug(f"Account show: {result}")
         if "Not logged in" in result or "Not logged in" in err:
             return False
         return True
@@ -65,8 +73,8 @@ def run_command(command: str) -> Tuple[str, str]:
     Returns:
         The stdout and stderr output of the command.
     """
-    logging.debug(
-        f"Running command: {command}"
+    get_logger().debug(
+        f"===== Running command: {command} ====="
     )  # TODO: PRATEEK - mask sensitive information
 
     for i in range(const.MAX_RETRY_COUNT):
@@ -78,21 +86,31 @@ def run_command(command: str) -> Tuple[str, str]:
             universal_newlines=True,
         )
         output, error = process.communicate()
+
+        # mask the output that contains API keys
+        show_output = output.copy()
+        for k in show_output.keys():
+            if "_key" in k:
+                show_output[k] = "***MASKED***"
+
         # retry on tls handshake timeout
         if (
             "tls handshake timeout" in error.lower()
             or "tls handshake timeout" in output.lower()
         ):
-            logging.error(
+            get_logger().error(
                 f"Timeout error executing command {command}:\n"
-                f"Output: {output}\nError:{error}\nretrying in 30 seconds, attempt {i + 1}/{const.MAX_RETRY_COUNT}"
+                f"Output: {show_output}\nError:{error}\nretrying in 30 seconds, attempt {i + 1}/{const.MAX_RETRY_COUNT}"
             )
             time.sleep(30)
         elif process.returncode == 0:
-            return output, error
+            return (
+                output,
+                error,
+            )  # TODO: PRATEEK - Improve the output in console (\n is not honored)
         else:
-            logging.error(f"error executing command: {command}")
-            logging.error(f"Output: {output}\nError: {error}")
+            get_logger().error(f"error executing command: {command}")
+            get_logger().error(f"Output: {show_output}\nError: {error}")
             return output, error
 
 
@@ -108,13 +126,13 @@ def check_require_tools() -> Dict:
     for tool in tools:
         try:
             result = run_command(f"which {tool}")
-            logging.debug(f"{tool} path: {result}")
+            get_logger().debug(f"{tool} path: {result}")
         except FileNotFoundError:
             missing["tools"].append(tool)
     for plugin in ibmcloud_plugins:
         try:
             result = run_command(f"ibmcloud plugin show {plugin}")
-            logging.debug(f"{plugin} plugin: {result}")
+            get_logger().debug(f"{plugin} plugin: {result}")
         except subprocess.CalledProcessError:
             missing["plugins"].append(plugin)
 
@@ -156,7 +174,7 @@ def parse_time(time_str):
         try:
             parsed_time = int(time_str) * 1
         except ValueError:
-            logging.error(f"Invalid time string: {time_str}")
+            get_logger().error(f"Invalid time string: {time_str}")
             exit(1)
     return parsed_time
 
@@ -178,9 +196,9 @@ def set_authorization(project_id: str, stack_id: str, api_key_env: str) -> None:
     )
     output, err = run_command(command)
     if err:
-        logging.error(f"Error: {err}")
+        get_logger().error(f"Error: {err}")
         exit(1)
-    logging.debug("Authorization updated")
+    get_logger().debug("Authorization updated")
 
 
 def add_cli_arguments(parser: argparse.ArgumentParser, config_class) -> None:
