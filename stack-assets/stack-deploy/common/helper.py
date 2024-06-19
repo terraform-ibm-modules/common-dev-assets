@@ -87,12 +87,6 @@ def run_command(command: str) -> Tuple[str, str]:
         )
         output, error = process.communicate()
 
-        # mask the output that contains API keys
-        show_output = output.copy()
-        for k in show_output.keys():
-            if "_key" in k:
-                show_output[k] = "***MASKED***"
-
         # retry on tls handshake timeout
         if (
             "tls handshake timeout" in error.lower()
@@ -100,17 +94,17 @@ def run_command(command: str) -> Tuple[str, str]:
         ):
             get_logger().error(
                 f"Timeout error executing command {command}:\n"
-                f"Output: {show_output}\nError:{error}\nretrying in 30 seconds, attempt {i + 1}/{const.MAX_RETRY_COUNT}"
+                f"Output: {output}\nError:{error}\nretrying in 30 seconds, attempt {i + 1}/{const.MAX_RETRY_COUNT}"
             )
             time.sleep(30)
         elif process.returncode == 0:
             return (
                 output,
                 error,
-            )  # TODO: PRATEEK - Improve the output in console (\n is not honored)
+            )
         else:
             get_logger().error(f"error executing command: {command}")
-            get_logger().error(f"Output: {show_output}\nError: {error}")
+            get_logger().error(f"Output: {output}\nError: {error}")
             return output, error
 
 
