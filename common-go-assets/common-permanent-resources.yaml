@@ -40,6 +40,8 @@ cePublicCertCommonName: "geretain-code-engine-public-cert"
 
 # IAM ServiceID for Service dnlb
 sdnlbServiceIdName: "geretain - sDNLB-ServiceID - DO NOT DELETE"
+sdnlbSecretGroupID: "af88f28b-428c-e218-7999-5461e1dbaa38" # secret group in GEdev permenent SM instance
+sdnlbSecretID: "f6cc052f-0a47-c59a-ee59-7bc9cb18067b" # secret ID in GEdev permenent SM instance
 
 # Cloudant Dedicated Host
 dedicatedHostCrn: "crn:v1:bluemix:public:cloudantnosqldb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:7c88e3f2-4412-4f45-b613-bae10b1e103c::"
