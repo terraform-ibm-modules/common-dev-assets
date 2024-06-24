@@ -5,6 +5,7 @@ import os
 from typing import Any, Dict, List
 
 import requests
+import semver
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_platform_services.catalog_management_v1 import CatalogManagementV1
 
@@ -73,16 +74,27 @@ def get_version_updates(offeringId, catalogId, kind, flavor, api_key):
 
 def get_latest_valid_version(updates: List[Dict[str, Any]]):
     try:
-        # sort updates by state.current_entered
+        # sort updates by version
         updates = sorted(
-            updates, key=lambda x: x["state"]["current_entered"], reverse=True
+            updates,
+            key=lambda x: semver.VersionInfo.parse(x["version"].lstrip("v")),
+            reverse=True,
         )
         logging.debug(f"sorted updates: {updates}")
-        # get the latest version that is not deprecated and consumable
+        # get the latest version that is not deprecated, consumable and not a pre-release version
         for update in updates:
-            logging.debug(f"Checking update: {update}")
-            if update["can_update"] and update["state"]["current"] == "consumable":
-                return update
+            try:
+                version_info = semver.VersionInfo.parse(update["version"].lstrip("v"))
+                logging.debug(f"Checking update: {update}")
+                if (
+                    update["can_update"]
+                    and update["state"]["current"] == "consumable"
+                    and version_info.prerelease is None
+                ):
+                    return update
+            except ValueError:
+                logging.debug(f"Skipping invalid version format: {update['version']}")
+                continue
         return None
     except Exception as e:
         logging.error(f"Error getting latest valid version: {str(e)}")
@@ -211,6 +223,16 @@ if __name__ == "__main__":
                 logging.info(f"latest version: {latest_version_name}")
                 logging.info(f"latest version locator: {latest_version_locator}")
                 if current_version != latest_version_name:
+                    current_version_info = semver.VersionInfo.parse(
+                        current_version.lstrip("v")
+                    )
+                    latest_version_info = semver.VersionInfo.parse(
+                        latest_version_name.lstrip("v")
+                    )
+
+                    if latest_version_info.major > current_version_info.major:
+                        logging.warning("Major update detected!")
+
                     logging.info(
                         f"Updating {member['name']} to version {latest_version_name}\n"
                     )
