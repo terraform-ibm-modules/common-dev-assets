@@ -96,6 +96,17 @@ if [ ${IS_PR} == true ]; then
                          ".catalog-onboard-pipeline.yaml"
                          ".trivyignore")
 
+  # Remove `ibm_catalog.json` only if the repo name starts with `stack-`
+  if [[ $REPO_NAME == "stack-*" ]]; then
+    for f in "${!skip_array[@]}"; do
+      if [[ "${skip_array[$f]}" == "ibm_catalog.json" ]]; then
+        unset "skip_array[$f]"
+      fi
+    done
+    # reindex the array
+    skip_array=("${skip_array[@]}")
+  fi
+
   # Determine all files being changed in the PR, and add it to array
   changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
   mapfile -t file_array <<< "${changed_files}"
