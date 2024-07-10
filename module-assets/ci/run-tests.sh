@@ -98,9 +98,10 @@ if [ ${IS_PR} == true ]; then
 
   # Remove `ibm_catalog.json` only if the repo name starts with `stack-`
   if [[ $REPO_NAME == "stack-*" ]]; then
-    for f in "${!skip_array[@]}"; do
-      if [[ "${skip_array[$f]}" == "ibm_catalog.json" ]]; then
-        unset "skip_array[$f]"
+    for index in "${!skip_array[@]}"; do
+      if [[ "${skip_array[$index]}" == "ibm_catalog.json" ]]; then
+        unset "skip_array[$index]"
+        break
       fi
     done
     # reindex the array
@@ -119,10 +120,10 @@ if [ ${IS_PR} == true ]; then
     match=true
   else
     # Check if any file in skip_array matches any of the files being updated in the PR
-    for f in "${file_array[@]}"; do
+    for index in "${file_array[@]}"; do
       match=false
       for s in "${skip_array[@]}"; do
-        if [[ "$f" =~ $s ]]; then
+        if [[ "$index" =~ $s ]]; then
           # File has matched one in the skip_array - break out of loop to try next file
           match=true
           break
@@ -141,7 +142,7 @@ if [ ${IS_PR} == true ]; then
     test_arg=""
     # If pr_test.go exists, only execute those tests
     pr_test_file=pr_test.go
-    if test -f "${pr_test_file}"; then
+    if test -index "${pr_test_file}"; then
         test_arg=${pr_test_file}
     fi
     test_cmd="go test ${test_arg} -count=1 -v -timeout=600m -parallel=10"
