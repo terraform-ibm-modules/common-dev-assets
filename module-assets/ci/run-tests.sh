@@ -97,7 +97,7 @@ if [ ${IS_PR} == true ]; then
                          ".trivyignore")
 
   # Remove `ibm_catalog.json` only if the repo name starts with `stack-`
-  if [[ $REPO_NAME == "stack-*" ]]; then
+  if [[ $REPO_NAME == stack-* ]]; then
     for index in "${!skip_array[@]}"; do
       if [[ "${skip_array[$index]}" == "ibm_catalog.json" ]]; then
         unset "skip_array[$index]"
