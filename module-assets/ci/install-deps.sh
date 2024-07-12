@@ -190,7 +190,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=warrensbox/terraform-switcher
-TFSWITCH_VERSION=v1.2.1
+TFSWITCH_VERSION=v1.2.2
 BINARY=tfswitch
 set +e
 INSTALLED_TFSWITCH_VERSION="$(tfswitch --version | grep Version | awk '{ print $2 }')"
@@ -452,7 +452,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v3.15.2
+HELM_VERSION=v3.15.3
 BINARY=helm
 set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"
