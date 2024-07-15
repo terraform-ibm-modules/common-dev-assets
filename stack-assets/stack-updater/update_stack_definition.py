@@ -2,17 +2,16 @@ import argparse
 import json
 import logging
 import os
+from pathlib import Path
 from typing import Any, Dict, List
 
 import requests
 import semver
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_platform_services.catalog_management_v1 import CatalogManagementV1
-
-from sync_stack_definition import verify_config_file, sync_stack_definitions
-
 from ruamel.yaml import YAML
-from pathlib import Path
+from sync_stack_definition import sync_stack_definitions, verify_config_file
+
 
 def get_tokens(api_key: str) -> (str, str):
     try:
@@ -104,12 +103,14 @@ def get_latest_valid_version(updates: List[Dict[str, Any]]):
         logging.error(f"Error getting latest valid version: {str(e)}")
         return None
 
+
 def is_member_in_sub_stack(member_name, sub_stack_config_file):
     for stack in sub_stack_config_file["stacks"]:
         for member in stack["members"]:
             if member_name == member["to"]:
                 return True
     return False
+
 
 if __name__ == "__main__":
 
@@ -187,7 +188,7 @@ if __name__ == "__main__":
     failures = []  # List to track failures
 
     # load in sub stack config yaml
-    sub_stack_config_file = YAML(typ='safe').load(Path(args.config_file))
+    sub_stack_config_file = YAML(typ="safe").load(Path(args.config_file))
 
     # read stack definition json
     with open(args.stack, "r") as f:
@@ -198,30 +199,33 @@ if __name__ == "__main__":
         # get updates from sub stacks
         stack_updates_made = False
         config_updates_made = False
-        major_changes_made = False # changes that should block renovate
-        for sub_stack_config in sub_stack_config_file['stacks']:
-            with open(sub_stack_config['local-name'], "r") as f2:
+        for sub_stack_config in sub_stack_config_file["stacks"]:
+            with open(sub_stack_config["local-name"], "r") as f2:
                 sub_stack_json = f2.read()
                 sub_stack = json.loads(sub_stack_json)
 
                 # check if any definitions are missing from sub stack config file
-                verified_sub_stack_config = verify_config_file(sub_stack_config, sub_stack)
+                verified_sub_stack_config = verify_config_file(
+                    sub_stack_config, sub_stack
+                )
                 if verified_sub_stack_config is not None:
-                    logging.warn('Updated stack config file')
+                    logging.warn("Updated stack config file")
                     config_updates_made = True
-                    major_changes_made = True
+                    logging.warning("Major update detected!")
                     sub_stack_config = verified_sub_stack_config
                 # only proceed if config file was fine
                 else:
-                    synced_stack = sync_stack_definitions(stack, sub_stack, sub_stack_config)
+                    synced_stack = sync_stack_definitions(
+                        stack, sub_stack, sub_stack_config
+                    )
                     if synced_stack is not None:
-                        logging.warn('Stack modified from original definition')
+                        logging.warn("Stack modified from original definition")
                         stack_updates_made = True
                         stack = synced_stack
 
         # loop through each stack member
         for member in stack["members"]:
-            if is_member_in_sub_stack(member['name'], sub_stack_config_file):
+            if is_member_in_sub_stack(member["name"], sub_stack_config_file):
                 logging.info(f"Not updating {member['name']}, member of a sub stack.")
                 pass
             else:
@@ -256,13 +260,21 @@ if __name__ == "__main__":
                         offeringId, catalogId, kind, flavor, api_key
                     )
                     if updates is None:
-                        logging.error(f"Failed to get version updates for {offeringId}\n")
-                        failures.append(f"Failed to get version updates for {offeringId}")
+                        logging.error(
+                            f"Failed to get version updates for {offeringId}\n"
+                        )
+                        failures.append(
+                            f"Failed to get version updates for {offeringId}"
+                        )
                         continue
                     latest_version = get_latest_valid_version(updates)
                     if latest_version is None:
-                        logging.error(f"Failed to get latest valid version for {updates}\n")
-                        failures.append(f"Failed to get latest valid version for {updates}")
+                        logging.error(
+                            f"Failed to get latest valid version for {updates}\n"
+                        )
+                        failures.append(
+                            f"Failed to get latest valid version for {updates}"
+                        )
                         continue
                     latest_version_locator = latest_version.get("version_locator")
                     latest_version_name = latest_version.get("version")
@@ -306,9 +318,9 @@ if __name__ == "__main__":
         if args.dry_run:
             logging.info("Dry run mode, no updates were made to stack configuration")
         else:
-            with open(args.config_file, 'wb') as outfile:
+            with open(args.config_file, "wb") as outfile:
                 YAML().dump(sub_stack_config_file, outfile)
-            logging.info(f"Stack configuration updated.")
+            logging.info("Stack configuration updated.")
     else:
         logging.info("Already up to date. No updates were made.")
 
@@ -328,5 +340,3 @@ if __name__ == "__main__":
         failureString = "\n".join(failures)
         logging.error(f"\nSummary of failures:\n{failureString}")
         exit(1)
-
-#### TODO somehow surface renovate blocking flag to calling function
