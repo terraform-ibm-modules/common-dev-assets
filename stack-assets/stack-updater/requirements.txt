@@ -1,4 +1,6 @@
-requests==2.32.3
+requests==2.32.2
 ibm-cloud-sdk-core==3.20.1
 ibm-platform-services==0.54.2
 semver==3.0.2
+ruamel.yaml==0.18.6
+pathlib==1.0.1
