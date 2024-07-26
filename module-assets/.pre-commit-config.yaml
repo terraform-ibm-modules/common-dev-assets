@@ -70,6 +70,8 @@ repos:
         - --args=--skip-files="**/helm-charts/**/*"
         - --args=--skip-files="**/tests/**/*"
         - --args=--skip-files="common-dev-assets/**/*"
+        # workaround for https://github.com/antonbabenko/pre-commit-terraform/issues/691
+        - --hook-config=--parallelism-limit=1
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
   # Locking into 3.1.55 due to this bug -> https://github.com/bridgecrewio/checkov/issues/5945
