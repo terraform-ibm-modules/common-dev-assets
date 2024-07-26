@@ -3,7 +3,6 @@ import json
 import logging
 import os
 import sys
-
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -217,9 +216,7 @@ if __name__ == "__main__":
     with open(args.stack, "r") as f:
         stack_json = f.read()
         stack = json.loads(stack_json)
-
         logger.debug(f"Stack definition: {stack}")
-
         # get updates from sub stacks
         stack_updates_made = False
         config_updates_made = False
@@ -284,13 +281,21 @@ if __name__ == "__main__":
                         offeringId, catalogId, kind, flavor, api_key
                     )
                     if updates is None:
-                        logger.error(f"Failed to get version updates for {offeringId}\n")
-                        failures.append(f"Failed to get version updates for {offeringId}")
+                        logger.error(
+                            f"Failed to get version updates for {offeringId}\n"
+                        )
+                        failures.append(
+                            f"Failed to get version updates for {offeringId}"
+                        )
                         continue
                     latest_version = get_latest_valid_version(updates)
                     if latest_version is None:
-                        logger.error(f"Failed to get latest valid version for {updates}\n")
-                        failures.append(f"Failed to get latest valid version for {updates}")
+                        logger.error(
+                            f"Failed to get latest valid version for {updates}\n"
+                        )
+                        failures.append(
+                            f"Failed to get latest valid version for {updates}"
+                        )
                         continue
                     latest_version_locator = latest_version.get("version_locator")
                     latest_version_name = latest_version.get("version")
