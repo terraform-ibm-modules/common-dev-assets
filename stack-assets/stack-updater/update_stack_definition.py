@@ -3,12 +3,15 @@ import json
 import logging
 import os
 import sys
+from pathlib import Path
 from typing import Any, Dict, List
 
 import requests
 import semver
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_platform_services.catalog_management_v1 import CatalogManagementV1
+from ruamel.yaml import YAML
+from sync_stack_definition import sync_stack_definitions, verify_config_file
 
 # Get the root logger
 logger = logging.getLogger()
@@ -106,6 +109,14 @@ def get_latest_valid_version(updates: List[Dict[str, Any]]):
         return None
 
 
+def is_member_in_sub_stack(member_name, sub_stack_config_file):
+    for stack in sub_stack_config_file["stacks"]:
+        for member in stack["members"]:
+            if member_name == member["to"]:
+                return True
+    return False
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Update Stack Memeber Versions")
@@ -141,6 +152,14 @@ if __name__ == "__main__":
         dest="dry_run",
         help="Dry run mode, do not update stack definition",
         required=False,
+    )
+    parser.add_argument(
+        "--config-file",
+        "-c",
+        action="store",
+        dest="config_file",
+        help="Stack configution file yaml",
+        required=True,
     )
 
     args = parser.parse_args()
@@ -190,91 +209,143 @@ if __name__ == "__main__":
     catalogs = {}  # Cache catalogs to avoid multiple requests
     failures = []  # List to track failures
 
+    # load in sub stack config yaml
+    sub_stack_config_file = YAML(typ="safe").load(Path(args.config_file))
+
     # read stack definition json
     with open(args.stack, "r") as f:
         stack_json = f.read()
         stack = json.loads(stack_json)
         logger.debug(f"Stack definition: {stack}")
-        updates_made = False
-        #     loop through each stack member
-        for member in stack["members"]:
-            try:
-                logger.info(f"Updating {member['name']}")
-                # split locator on . first part is the catalog id second is the version id
-                version_locator = member["version_locator"]
-                catalogId, versionId = version_locator.split(".")
-                logger.debug(version_locator)
-                version = get_version(version_locator, api_key)
-                if version is None:
-                    logger.error(
-                        f"Failed to get version for {member['name']}: {version_locator}"
-                    )
-                    failures.append(
-                        f"Failed to get version for {member['name']}: {version_locator}"
-                    )
-                    continue
-                logger.debug(
-                    f"current version: {version.get('kinds', [])[0].get('versions')[0].get('version')}"
-                )
-                kind = version.get("kinds", [])[0].get("format_kind")
-                flavor = (
-                    version.get("kinds", [])[0]
-                    .get("versions")[0]
-                    .get("flavor")
-                    .get("name")
-                )
-                offeringId = version.get("id", {})
-                updates = get_version_updates(
-                    offeringId, catalogId, kind, flavor, api_key
-                )
-                if updates is None:
-                    logger.error(f"Failed to get version updates for {offeringId}\n")
-                    failures.append(f"Failed to get version updates for {offeringId}")
-                    continue
-                latest_version = get_latest_valid_version(updates)
-                if latest_version is None:
-                    logger.error(f"Failed to get latest valid version for {updates}\n")
-                    failures.append(f"Failed to get latest valid version for {updates}")
-                    continue
-                latest_version_locator = latest_version.get("version_locator")
-                latest_version_name = latest_version.get("version")
-                current_version = (
-                    version.get("kinds", [])[0].get("versions")[0].get("version")
-                )
-                logger.info(f"current version: {current_version}")
-                logger.info(f"latest version: {latest_version_name}")
-                logger.info(f"latest version locator: {latest_version_locator}")
-                if current_version != latest_version_name:
-                    current_version_info = semver.VersionInfo.parse(
-                        current_version.lstrip("v")
-                    )
-                    latest_version_info = semver.VersionInfo.parse(
-                        latest_version_name.lstrip("v")
-                    )
+        # get updates from sub stacks
+        stack_updates_made = False
+        config_updates_made = False
+        for sub_stack_config in sub_stack_config_file["stacks"]:
+            with open(sub_stack_config["local-name"], "r") as f2:
+                sub_stack_json = f2.read()
+                sub_stack = json.loads(sub_stack_json)
 
-                    if latest_version_info.major > current_version_info.major:
-                        logger.warning("Major update detected!")
-
-                    logger.info(
-                        f"Updating {member['name']} to version {latest_version_name}\n"
-                    )
+                # check if any definitions are missing from sub stack config file
+                verified_sub_stack_config = verify_config_file(
+                    sub_stack_config, sub_stack
+                )
+                if verified_sub_stack_config is not None:
+                    logger.warning("Updated stack config file")
+                    config_updates_made = True
+                    logger.warning("Major update detected!")
+                    sub_stack_config = verified_sub_stack_config
+                # only proceed if config file was fine
                 else:
-                    logger.info(
-                        f"{member['name']} is already up to date. No updates were made.\n"
+                    synced_stack = sync_stack_definitions(
+                        stack, sub_stack, sub_stack_config
                     )
-                # check if the version locator has changed
-                if member["version_locator"] != latest_version_locator:
-                    # update stack member with latest version locator
-                    member["version_locator"] = latest_version_locator
-                    # set flag to True
-                    updates_made = True
+                    if synced_stack is not None:
+                        logger.warn("Stack modified from original definition")
+                        stack_updates_made = True
+                        stack = synced_stack
 
-            except Exception as e:
-                logger.error(f"Error updating member {member['name']}: {str(e)}\n")
-                failures.append(f"Error updating member {member['name']}: {str(e)}")
+        # loop through each stack member
+        for member in stack["members"]:
+            if is_member_in_sub_stack(member["name"], sub_stack_config_file):
+                logger.info(f"Not updating {member['name']}, member of a sub stack.")
+                pass
+            else:
+                try:
+                    logger.info(f"Updating {member['name']}")
+                    # split locator on . first part is the catalog id second is the version id
+                    version_locator = member["version_locator"]
+                    catalogId, versionId = version_locator.split(".")
+                    logger.debug(version_locator)
+                    version = get_version(version_locator, api_key)
+                    if version is None:
+                        logger.error(
+                            f"Failed to get version for {member['name']}: {version_locator}"
+                        )
+                        failures.append(
+                            f"Failed to get version for {member['name']}: {version_locator}"
+                        )
+                        continue
+                    logger.debug(
+                        f"current version: {version.get('kinds', [])[0].get('versions')[0].get('version')}"
+                    )
+
+                    kind = version.get("kinds", [])[0].get("format_kind")
+                    flavor = (
+                        version.get("kinds", [])[0]
+                        .get("versions")[0]
+                        .get("flavor")
+                        .get("name")
+                    )
+                    offeringId = version.get("id", {})
+                    updates = get_version_updates(
+                        offeringId, catalogId, kind, flavor, api_key
+                    )
+                    if updates is None:
+                        logger.error(
+                            f"Failed to get version updates for {offeringId}\n"
+                        )
+                        failures.append(
+                            f"Failed to get version updates for {offeringId}"
+                        )
+                        continue
+                    latest_version = get_latest_valid_version(updates)
+                    if latest_version is None:
+                        logger.error(
+                            f"Failed to get latest valid version for {updates}\n"
+                        )
+                        failures.append(
+                            f"Failed to get latest valid version for {updates}"
+                        )
+                        continue
+                    latest_version_locator = latest_version.get("version_locator")
+                    latest_version_name = latest_version.get("version")
+                    current_version = (
+                        version.get("kinds", [])[0].get("versions")[0].get("version")
+                    )
+                    logger.info(f"current version: {current_version}")
+                    logger.info(f"latest version: {latest_version_name}")
+                    logger.info(f"latest version locator: {latest_version_locator}")
+                    if current_version != latest_version_name:
+                        current_version_info = semver.VersionInfo.parse(
+                            current_version.lstrip("v")
+                        )
+                        latest_version_info = semver.VersionInfo.parse(
+                            latest_version_name.lstrip("v")
+                        )
+                        if latest_version_info.major > current_version_info.major:
+                            logger.warning("Major update detected!")
+
+                        logger.info(
+                            f"Updating {member['name']} to version {latest_version_name}\n"
+                        )
+                    else:
+                        logger.info(
+                            f"{member['name']} is already up to date. No updates were made.\n"
+                        )
+                    # check if the version locator has changed
+                    if member["version_locator"] != latest_version_locator:
+                        # update stack member with latest version locator
+                        member["version_locator"] = latest_version_locator
+                        # set flag to True
+                        stack_updates_made = True
+
+                except Exception as e:
+                    logger.error(f"Error updating member {member['name']}: {str(e)}\n")
+                    failures.append(f"Error updating member {member['name']}: {str(e)}")
+
+    # write updated stack configuration to file only if updates were made
+    if config_updates_made:
+        if args.dry_run:
+            logger.info("Dry run mode, no updates were made to stack configuration")
+        else:
+            with open(args.config_file, "wb") as outfile:
+                YAML().dump(sub_stack_config_file, outfile)
+            logger.info("Stack configuration updated.")
+    else:
+        logger.info("Already up to date. No updates were made.")
 
     # write updated stack definition to file only if updates were made
-    if updates_made:
+    if stack_updates_made:
         if args.dry_run:
             logger.info("Dry run mode, no updates were made to stack definition")
         else:

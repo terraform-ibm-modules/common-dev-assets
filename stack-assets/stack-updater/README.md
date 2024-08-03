@@ -39,7 +39,7 @@ source venv/bin/activate
 Run the script using the following command:
 
 ```bash
-python3 update_stack_definition.py --stack-definition <path_to_stack_definition_file>
+python3 update_stack_definition.py --stack <path_to_stack_definition_file>
 ```
 
 
