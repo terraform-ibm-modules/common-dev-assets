@@ -65,16 +65,16 @@
       "prPriority": 100
     },
     {
-      "description": "Allow the locked in provider version to be updated to the latest for deployable modules / architectures",
+      "description": "Allow the locked in provider version to be updated to the latest for deployable architectures",
       "enabled": true,
-      "matchFileNames": ["deployable_modules/**", "solutions/**"],
+      "matchFileNames": ["solutions/**"],
       "matchManagers": ["terraform"],
       "matchDepTypes": ["required_provider"],
       "rangeStrategy": "bump",
       "semanticCommitType": "fix",
       "group": true,
       "groupName": "required_provider",
-      "commitMessageExtra": "to latest for deployable modules / architectures",
+      "commitMessageExtra": "to latest for deployable architectures",
       "prPriority": 10
     },
     {
