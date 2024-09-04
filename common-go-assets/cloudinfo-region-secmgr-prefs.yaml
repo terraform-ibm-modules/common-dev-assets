@@ -1,11 +1,11 @@
 ---
-- name: au-syd
-  useForTest: true
-  testPriority: 1
 - name: br-sao
   useForTest: true
-  testPriority: 2
+  testPriority: 1
 - name: ca-tor
+  useForTest: true
+  testPriority: 2
+- name: au-syd
   useForTest: true
   testPriority: 3
 - name: eu-de
