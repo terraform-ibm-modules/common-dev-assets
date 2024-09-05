@@ -85,6 +85,7 @@ repos:
         - --skip-path=Dockerfile
         - --skip-path=ibm_catalog.json
         - --skip-framework=github_actions
+        - --skip-framework=github_configuration
         - --skip-path=modules/logs-routing-module
         - --skip-path=helm-charts
         # see https://github.ibm.com/GoldenEye/issues/issues/5317
