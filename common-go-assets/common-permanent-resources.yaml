@@ -126,7 +126,7 @@ kp_us_south_root_key_crn: "crn:v1:bluemix:public:kms:us-south:a/9f9af00a96104f49
 kp_us_south_root_key_id: "f6c9f6d0-92f6-437a-b97c-4b617cb3d320"
 
 # IBM MQ on Cloud capacity instance (geretain-mqoc)
-# CRN: crn:v1:bluemix:public:mqcloud:us-east:a/abac0df06b644a9cabc6e44f55b3880e:9d9a3c00-2097-4da4-a5e4-78e06514b342::
+mq_capacity_crn: "crn:v1:bluemix:public:mqcloud:us-east:a/abac0df06b644a9cabc6e44f55b3880e:9d9a3c00-2097-4da4-a5e4-78e06514b342::"
 mq_capacity_guid: "9d9a3c00-2097-4da4-a5e4-78e06514b342"
 
 # IBM MQ Queue Manager license and usage. More info: https://www.ibm.com/docs/en/ibm-mq/9.3?topic=mqibmcomv1beta1-licensing-reference
