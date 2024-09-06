@@ -1,19 +1,13 @@
 ---
-- name: au-syd
-  useForTest: true
-  testPriority: 1
 - name: br-sao
   useForTest: true
-  testPriority: 2
+  testPriority: 1
 - name: ca-tor
   useForTest: true
+  testPriority: 2
+- name: au-syd
+  useForTest: true
   testPriority: 3
-- name: jp-osa
-  useForTest: true
-  testPriority: 9
-- name: jp-tok
-  useForTest: true
-  testPriority: 10
 - name: eu-de
   useForTest: true
   testPriority: 4
@@ -24,8 +18,14 @@
   useForTest: true
   testPriority: 6
 - name: us-east
-  useForTest: true
+  useForTest: false # we have been asked to not use us regions for test: https://ibm-cloudplatform.slack.com/archives/C010Z1DQ05N/p1724936766805639
   testPriority: 7
 - name: us-south
-  useForTest: true
+  useForTest: false # we have been asked to not use us regions for test: https://ibm-cloudplatform.slack.com/archives/C010Z1DQ05N/p1724936766805639
   testPriority: 8
+- name: jp-osa
+  useForTest: true
+  testPriority: 9
+- name: jp-tok
+  useForTest: true
+  testPriority: 10
