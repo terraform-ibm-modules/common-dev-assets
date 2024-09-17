@@ -40,13 +40,14 @@ cePublicCertCommonName: "geretain-code-engine-public-cert"
 
 # IAM ServiceID for Service dnlb
 sdnlbServiceIdName: "geretain - sDNLB-ServiceID - DO NOT DELETE"
-sdnlbSecretGroupID: "af88f28b-428c-e218-7999-5461e1dbaa38" # secret group in GEdev permenent SM instance
-sdnlbSecretID: "f6cc052f-0a47-c59a-ee59-7bc9cb18067b" # secret ID in GEdev permenent SM instance
+sdnlbServiceId: "ServiceId-1ed6ddfa-b4a0-4df7-86e0-461b8bb02d3d"
 
-# IAM ServiceID for Test Service dnlb
-sdnlbTestServiceName: "geretain-sDNLB-test-service-id - DO NOT DELETE"
-sdnlbTestSecretGroupID: "af88f28b-428c-e218-7999-5461e1dbaa38" # secret group in GEdev permenent SM instance
-sdnlbTestSecretID: "1c89d5af-7599-a502-0484-6735f5bad4a8" # secret ID in GEdev permenent SM instance
+
+# IAM ServiceID for PAG sDNLB user
+sdnlbPagServiceIdName: "geretain - sDNLB-PAG-service-id - DO NOT DELETE"
+sdnlbPagServiceId: "ServiceId-cf2df49b-fef5-4aeb-87a0-f3b1995d127a"
+sdnlbPagSecretGroupId: "f428b278-d638-8e84-a32d-eaa325b1106c" # secret group in GEdev permenent SM instance
+sdnlbPagSecretId: "a7ec0241-7ba6-dcd8-c43f-1ca0480e126a" # secret ID in GEdev permenent SM instance
 
 # Cloudant Dedicated Host
 dedicatedHostCrn: "crn:v1:bluemix:public:cloudantnosqldb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:7c88e3f2-4412-4f45-b613-bae10b1e103c::"
