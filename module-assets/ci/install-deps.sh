@@ -217,8 +217,9 @@ fi
 # terraform
 #######################################
 
-# Locking into last version that is supported by Schematics
-TERRAFORM_VERSION=v1.6.6
+# The rule in renovate.json will only allow patch updates. Minor version updates need to be done manually as we need to wait for Schematics to support it first before updating.
+  # renovate: datasource=github-releases depName=hashicorp/terraform
+TERRAFORM_VERSION=v1.9.6
 BINARY=terraform
 
 set +e
@@ -242,34 +243,6 @@ if [[ "$TERRAFORM_VERSION" != "$INSTALLED_TERRAFORM_VERSION" ]]; then
   clean "${TMP_DIR}"
 else
   echo "${BINARY} ${TERRAFORM_VERSION} already installed - skipping install"
-fi
-
-#######################################
-# tofu
-#######################################
-
-# Locking into latest version in the 1.6.x major until Terraform provider limitations are removed
-TOFU_VERSION=v1.6.2
-BINARY=tofu
-set +e
-INSTALLED_TOFU_VERSION="$(tofu --version | head -1 | cut -d' ' -f2)"
-set -e
-if [[ "$TOFU_VERSION" != "$INSTALLED_TOFU_VERSION" ]]; then
-  FILE_NAME="tofu_${TOFU_VERSION//v}_${OS}_${ARCH}.zip"
-  URL="https://github.com/opentofu/opentofu/releases/download/${TOFU_VERSION}"
-  SUMFILE="tofu_${TOFU_VERSION//v}_SHA256SUMS"
-  TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
-
-  echo
-  echo "-- Installing ${BINARY} ${TOFU_VERSION}..."
-
-  download ${BINARY} ${TOFU_VERSION} ${URL} "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
-  verify "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
-  unzip "${TMP_DIR}/${FILE_NAME}" -d "${TMP_DIR}" > /dev/null
-  copy_replace_binary ${BINARY} "${TMP_DIR}"
-  clean "${TMP_DIR}"
-else
-  echo "${BINARY} ${TOFU_VERSION} already installed - skipping install"
 fi
 
 #######################################
