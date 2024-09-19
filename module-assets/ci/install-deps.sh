@@ -217,8 +217,9 @@ fi
 # terraform
 #######################################
 
-# Locking into last version that is supported by Schematics
-TERRAFORM_VERSION=v1.6.6
+# The rule in renovate.json will only allow patch updates. Minor version updates need tobe done manually as we need to wait for Schematics to support it first before updating.
+  # renovate: datasource=github-releases depName=hashicorp/terraform
+TERRAFORM_VERSION=v1.9.6
 BINARY=terraform
 
 set +e
