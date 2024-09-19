@@ -22,6 +22,12 @@
       "description": "Ignore updates to checkov until https://github.com/bridgecrewio/checkov/issues/5945 is fixed",
       "matchPackageNames": ["bridgecrewio/checkov"],
       "enabled": false
+    },
+    {
+      "description": "Only allow patch updates for terraform version. Minor and Major updates need to be done manually to keep in sync with what Schematics supports.",
+      "matchPackageNames": ["hashicorp/terraform"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
     }
   ]
 }
