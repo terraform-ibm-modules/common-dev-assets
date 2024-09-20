@@ -40,7 +40,7 @@ repos:
   hooks:
     - id: hadolint
 - repo: https://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.95.0
+  rev: v1.96.1
   hooks:
     - id: terraform_fmt
     - id: terraform_validate
