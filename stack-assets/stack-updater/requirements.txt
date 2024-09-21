@@ -1,4 +1,4 @@
 requests==2.32.3
-ibm-cloud-sdk-core==3.20.6
-ibm-platform-services==0.57.0
+ibm-cloud-sdk-core==3.21.0
+ibm-platform-services==0.57.1
 semver==3.0.2
