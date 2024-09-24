@@ -62,6 +62,8 @@ fi
 if [ ${IS_PR} == true ]; then
 
   # Files that should not trigger tests
+  # NOTE: We are purposely running tests in PRs with 'common-dev-assets' GIT submodule updates since 
+  # terraform version can change, and we will want to run full set of tests if that happens)
   declare -a skip_array=(".drawio"
                          ".github/settings.yml"
                          ".github/workflows/ci.yml"
@@ -80,7 +82,6 @@ if [ ${IS_PR} == true ]; then
                          "Brewfile"
                          "CODEOWNERS"
                          "commitlint.config.js"
-                         "common-dev-assets"
                          "Makefile"
                          "renovate.json"
                          "catalogValidationValues.json.template"
