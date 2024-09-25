@@ -1,4 +1,5 @@
 import argparse
+import csv
 import json
 import logging
 import os
@@ -142,6 +143,14 @@ if __name__ == "__main__":
         help="Dry run mode, do not update stack definition",
         required=False,
     )
+    parser.add_argument(
+        "--output-file",
+        "-o",
+        action="store",
+        dest="output_file",
+        help="File to track all changes made",
+        required=False,
+    )
 
     args = parser.parse_args()
 
@@ -189,6 +198,7 @@ if __name__ == "__main__":
 
     catalogs = {}  # Cache catalogs to avoid multiple requests
     failures = []  # List to track failures
+    changelog = []  # list to track all updates
 
     # read stack definition json
     with open(args.stack, "r") as f:
@@ -264,6 +274,14 @@ if __name__ == "__main__":
                     )
                 # check if the version locator has changed
                 if member["version_locator"] != latest_version_locator:
+                    # add change to changelog
+                    changelog.append(
+                        {
+                            "name": member["name"],
+                            "from": current_version,
+                            "to": latest_version_name,
+                        }
+                    )
                     # update stack member with latest version locator
                     member["version_locator"] = latest_version_locator
                     # set flag to True
@@ -281,6 +299,14 @@ if __name__ == "__main__":
             with open(args.stack, "w") as f:
                 f.write(json.dumps(stack, indent=2) + "\n")
             logger.info(f"Stack definition updated: {args.stack}")
+            if args.output_file is not None:
+                with open(
+                    args.output_file, "w", encoding="utf8", newline=""
+                ) as output_file:
+                    f = csv.DictWriter(output_file, fieldnames=changelog[0].keys())
+                    f.writeheader()
+                    f.writerows(changelog)
+                logger.info(f"Changelog saved to: {args.output_file}")
     else:
         logger.info("Already up to date. No updates were made.")
 
