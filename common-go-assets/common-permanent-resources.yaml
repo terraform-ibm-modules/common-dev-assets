@@ -150,3 +150,6 @@ snapshot_group_au_syd_vol2_id: "r026-1518ae7d-319c-4164-a781-56067e9be451"
 etcd_crn: "crn:v1:bluemix:public:databases-for-etcd:us-south:a/abac0df06b644a9cabc6e44f55b3880e:0acee023-4933-4e3b-a7ed-118e2c79fcca::"
 etcd_version: 3.5
 etcd_region: "us-south"
+
+# secretID for the GitHub public token for Dev user stored in permanent secrets manager
+geretain-public-gh-token-dev-user: 825a3797-1bc8-f47a-611a-c9bd2b0ef846
