@@ -1,0 +1,107 @@
+configMap:
+  rules.yml:
+    groups:
+      - name: platform-metric-rate-rule
+        rules:
+        - record: ibm_metrics_router_successful_data_points
+          expr: ((ibm_internal_metrics_router_successful_data_points) - (ibm_internal_metrics_router_successful_data_points offset 1m) >= 0.00) or 0 * (ibm_internal_metrics_router_successful_data_points)
+        - record: ibm_metrics_router_for_services_ingest_failed_timeseries
+          expr: sum by(_account_, _storage_, ibm_ctype, ibm_location, ibm_metrics_router_for_services_service, ibm_metrics_router_reason_code, ibm_scope, ibm_service_name) (((ibm_internal_metrics_router_for_services_ingest_failed_timeseries) - (ibm_internal_metrics_router_for_services_ingest_failed_timeseries offset 1m) >= 0.00) or 0 * (ibm_internal_metrics_router_for_services_ingest_failed_timeseries))
+        - record: ibm_atracker_for_services_logdna_failures
+          expr: sum by(_account_, _storage_, ibm_ctype, ibm_location, ibm_atracker_for_services_service, ibm_scope, ibm_service_name) (((ibm_internal_atracker_for_services_logdna_failures) - (ibm_internal_atracker_for_services_logdna_failures offset 1m) >= 0.00) or 0 * (ibm_internal_atracker_for_services_logdna_failures))
+
+  prometheus.yml:
+    global:
+      scrape_interval: 60s
+      scrape_timeout: 10s
+      evaluation_interval: 60s
+      external_labels:
+        replica: $(POD_NAME)
+    rule_files:
+    - "/etc/prometheus/rules.yml"
+    scrape_configs:
+    - job_name: kubernetes-pods
+      metrics_path: '/metrics'
+      kubernetes_sd_configs:
+      - role: pod
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+      - action: keep
+        regex: (?i)(atracker|metrics-router)
+        source_labels:
+        - __meta_kubernetes_namespace
+      - action: keep
+        regex: (?i)(logrouter|mr-sender|mr-ingester)
+        source_labels:
+        - __meta_kubernetes_pod_label_component
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_pod_annotation_prometheus_io_port
+        target_label: __address__
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_name
+        target_label: kubernetes_pod_name
+      metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: (?i)(ibm_atracker_successful_events_by_target|ibm_atracker_failed_events_by_target|ibm_atracker_bad_config_discarded_events|ibm_atracker_target_mode|ibm_internal_atracker_for_services_logdna_failures|ibm_internal_metrics_router_successful_data_points|ibm_metrics_router_target_mode|ibm_metrics_router_for_services_sender_successful_timeseries|ibm_metrics_router_for_services_sender_failed_timeseries|ibm_internal_metrics_router_for_services_ingest_failed_timeseries|ibm_metrics_router_for_services_ingest_failed_timeseries)
+        action: keep
+    remote_write:
+    - url: "https://ingest.private.us-east.metrics-router.cloud.ibm.com/api/prometheus/write"
+      authorization:
+        type: Bearer
+        credentials_file: /shared-data/iam-token
+      headers:
+        IBMInstanceID: ""
+      queue_config:
+        batch_send_deadline: 60s
+      metadata_config:
+        send: false
+      send_exemplars: false
+      write_relabel_configs:
+        - source_labels: [__name__]
+          regex: (?i)(ibm_atracker_successful_events_by_target|ibm_atracker_failed_events_by_target|ibm_atracker_bad_config_discarded_events|ibm_atracker_target_mode|ibm_atracker_for_services_logdna_failures|ibm_metrics_router_successful_data_points|ibm_metrics_router_target_mode|ibm_metrics_router_for_services_sender_successful_timeseries|ibm_metrics_router_for_services_sender_failed_timeseries|ibm_metrics_router_for_services_ingest_failed_timeseries)
+          action: keep
+        - regex: app
+          action: labeldrop
+        - regex: component
+          action: labeldrop
+        - regex: controller_revision_hash
+          action: labeldrop
+        - regex: instance
+          action: labeldrop
+        - regex: istio_io_rev
+          action: labeldrop
+        - regex: kubernetes_pod_name
+          action: labeldrop
+        - regex: pod_template_hash
+          action: labeldrop
+        - regex: replica
+          action: labeldrop
+        - regex: security_istio_io_tlsMode
+          action: labeldrop
+        - regex: security_istio_io_canonical_name
+          action: labeldrop
+        - regex: service_istio_io_canonical_name
+          action: labeldrop
+        - regex: service_istio_io_canonical_revision
+          action: labeldrop
+        - regex: job
+          action: labeldrop
+        - regex: statefulset_kubernetes_io_pod_name
+          action: labeldrop
+        - regex: apps_kubernetes_io_pod_index
+          action: labeldrop
