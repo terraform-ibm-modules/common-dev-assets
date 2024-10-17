@@ -1,3 +1,4 @@
+# Test yaml for the Prometheus Agent DA tests (used for testing purpose only)
 configMap:
   rules.yml:
     groups:
