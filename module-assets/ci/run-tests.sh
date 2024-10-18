@@ -12,10 +12,6 @@ set -o pipefail
 
 # Determine if PR
 IS_PR=false
-# Extracting environment-specific variables
-COMMIT_ID=""
-PIPELINE_ID=""
-ENV_TAG=""
 
 # GitHub Actions (see https://docs.github.com/en/actions/learn-github-actions/environment-variables)
 if [ "${GITHUB_ACTIONS}" == "true" ]; then
@@ -23,12 +19,8 @@ if [ "${GITHUB_ACTIONS}" == "true" ]; then
   if [ -n "${GITHUB_HEAD_REF}" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/${GITHUB_BASE_REF}"
-    PR_NUM=$(echo "$GITHUB_REF" | awk -F/ '{print $3}')
   fi
   REPO_NAME="$(basename "${GITHUB_REPOSITORY}")"
-  COMMIT_ID="${GITHUB_SHA}"
-  PIPELINE_ID="${GITHUB_RUN_ID}"
-  ENV_TAG="github-actions"
 
 # Travis (see https://docs.travis-ci.com/user/environment-variables)
 elif [ "${TRAVIS}" == "true" ]; then
@@ -36,24 +28,17 @@ elif [ "${TRAVIS}" == "true" ]; then
   if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
     IS_PR=true
     TARGET_BRANCH="${TRAVIS_BRANCH}"
-    PR_NUM="${TRAVIS_PULL_REQUEST}"
   fi
   REPO_NAME="$(basename "${TRAVIS_REPO_SLUG}")"
-  COMMIT_ID="${TRAVIS_COMMIT}"
-  PIPELINE_ID="${TRAVIS_BUILD_ID}"
-  ENV_TAG="travis-ci"
 
 # Tekton Toolchain (see https://cloud.ibm.com/docs/devsecops?topic=devsecops-devsecops-pipelinectl)
 elif [ -n "${PIPELINE_RUN_ID}" ]; then
   if [ "$(get_env pipeline_namespace)" == "pr" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/$(get_env base-branch)"
-    PR_NUM="$(basename "${PR_URL}")"
   fi
   REPO_NAME="$(load_repo app-repo path)"
-  COMMIT_ID="$(load_repo app-repo commit)"
-  PIPELINE_ID="${PIPELINE_RUN_ID}"
-  ENV_TAG="tekton"
+
 else
   echo "Could not determine CI runtime environment. Script only support tekton, travis or github actions."
   exit 1
@@ -147,9 +132,6 @@ if [ ${IS_PR} == true ]; then
         test_arg=${pr_test_file}
     fi
     test_cmd="go test ${test_arg} -count=1 -v -timeout=600m -parallel=10"
-    # Assign tags
-    export ICL_TAGS="${REPO_NAME}-PR${PR_NUM},commit-${COMMIT_ID},pipeline-${PIPELINE_ID},env-${ENV_TAG}"
-    echo "$ICL_TAGS" # Keeping this for now as this information will be required when using ICL
     $test_cmd
     cd ..
   else
