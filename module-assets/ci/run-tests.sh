@@ -12,10 +12,6 @@ set -o pipefail
 
 # Determine if PR
 IS_PR=false
-# Extracting environment-specific variables
-COMMIT_ID=""
-PIPELINE_ID=""
-ENV_TAG=""
 
 # GitHub Actions (see https://docs.github.com/en/actions/learn-github-actions/environment-variables)
 if [ "${GITHUB_ACTIONS}" == "true" ]; then
@@ -23,12 +19,8 @@ if [ "${GITHUB_ACTIONS}" == "true" ]; then
   if [ -n "${GITHUB_HEAD_REF}" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/${GITHUB_BASE_REF}"
-    PR_NUM=$(echo "$GITHUB_REF" | awk -F/ '{print $3}')
   fi
   REPO_NAME="$(basename "${GITHUB_REPOSITORY}")"
-  COMMIT_ID="${GITHUB_SHA}"
-  PIPELINE_ID="${GITHUB_RUN_ID}"
-  ENV_TAG="github-actions"
 
 # Travis (see https://docs.travis-ci.com/user/environment-variables)
 elif [ "${TRAVIS}" == "true" ]; then
@@ -36,24 +28,17 @@ elif [ "${TRAVIS}" == "true" ]; then
   if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
     IS_PR=true
     TARGET_BRANCH="${TRAVIS_BRANCH}"
-    PR_NUM="${TRAVIS_PULL_REQUEST}"
   fi
   REPO_NAME="$(basename "${TRAVIS_REPO_SLUG}")"
-  COMMIT_ID="${TRAVIS_COMMIT}"
-  PIPELINE_ID="${TRAVIS_BUILD_ID}"
-  ENV_TAG="travis-ci"
 
 # Tekton Toolchain (see https://cloud.ibm.com/docs/devsecops?topic=devsecops-devsecops-pipelinectl)
 elif [ -n "${PIPELINE_RUN_ID}" ]; then
   if [ "$(get_env pipeline_namespace)" == "pr" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/$(get_env base-branch)"
-    PR_NUM="$(basename "${PR_URL}")"
   fi
   REPO_NAME="$(load_repo app-repo path)"
-  COMMIT_ID="$(load_repo app-repo commit)"
-  PIPELINE_ID="${PIPELINE_RUN_ID}"
-  ENV_TAG="tekton"
+
 else
   echo "Could not determine CI runtime environment. Script only support tekton, travis or github actions."
   exit 1
@@ -147,61 +132,7 @@ if [ ${IS_PR} == true ]; then
         test_arg=${pr_test_file}
     fi
     test_cmd="go test ${test_arg} -count=1 -v -timeout=600m -parallel=10"
-    if [[ "$MZ_INGESTION_KEY" ]] ; then
-      # Assign location to be observed by logdna-agent
-      if [ -z "$MZ_LOG_DIRS" ]; then
-        export MZ_LOG_DIRS="/tmp"
-      fi
-      #lookback strategy determines how the agent handles existing files on agent startup
-      if [ -z "$LOGDNA_LOOKBACK" ]; then
-        export LOGDNA_LOOKBACK="smallfiles"
-      fi
-      # This is required to send logs to logdna-agent instance
-      if [ -z "$MZ_HOST" ]; then
-        export MZ_HOST="logs.us-south.logging.cloud.ibm.com"
-      fi
-      log_location="$MZ_LOG_DIRS/test.log"
-      # Assign tags
-      export MZ_TAGS="${REPO_NAME}-PR${PR_NUM},commit-${COMMIT_ID},pipeline-${PIPELINE_ID},env-${ENV_TAG}"
-      # Exclude extra logs
-      export MZ_EXCLUSION_REGEX_RULES="/var/log/*"
-
-      ## Retry running logdna if fails to run and adding more logs
-
-      MAX_RETRY_LOGDNA=3
-      LOGDNA_RUN_ATTEMPT=1
-
-      while [ "$LOGDNA_RUN_ATTEMPT" -le "$MAX_RETRY_LOGDNA" ]; do
-          echo "Starting logdna-agent: [$LOGDNA_RUN_ATTEMPT/$MAX_RETRY_LOGDNA]"
-          set +e
-          systemctl start logdna-agent
-          RESULT_LOGDNA_START=$?
-          set -e
-
-          if [ $RESULT_LOGDNA_START -eq 0 ]; then
-              echo "Logdna-agent started successfully"
-              break
-          else
-              echo "Logdna-agent start command exit status: $RESULT_LOGDNA_START"
-              echo "Logdna-agent Tag added: $MZ_TAGS"
-              set +e
-              echo "Logdna-agent Status: $(systemctl status logdna-agent)"
-              LOGDNA_RUN_ATTEMPT=$((LOGDNA_RUN_ATTEMPT+1))
-              echo "=================================================== Logdna-agent: Service Log ==================================================="
-                tail -n 20 /var/log/journal/logdna-agent.service.log
-              echo "================================================================================================================================="
-              if [ $LOGDNA_RUN_ATTEMPT -le $MAX_RETRY_LOGDNA ]; then
-                echo "Retrying..."
-              fi
-              set -e
-          fi
-      done
-
-      $test_cmd 2>&1 | tee "$log_location"
-
-    else
-      $test_cmd
-    fi
+    $test_cmd
     cd ..
   else
     echo "No file changes detected to trigger tests"
