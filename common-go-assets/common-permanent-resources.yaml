@@ -55,6 +55,7 @@ dedicatedHostCrn: "crn:v1:bluemix:public:cloudantnosqldb:us-south:a/abac0df06b64
 # HyperProtect Crypto Instances and Root Keys
 # hpcs_east instance id
 hpcs_east: "bc07f975-0b8c-47a3-9c10-fffa60f483f1"
+hpcs_east_crn: "crn:v1:bluemix:public:hs-crypto:us-east:a/abac0df06b644a9cabc6e44f55b3880e:bc07f975-0b8c-47a3-9c10-fffa60f483f1::"
 hpcs_name_east: "geretain-hyper-protect-crypto-us-east"
 hpcs_rg_east: "Default"
 hpcs_east_root_key_crn: "crn:v1:bluemix:public:hs-crypto:us-east:a/abac0df06b644a9cabc6e44f55b3880e:bc07f975-0b8c-47a3-9c10-fffa60f483f1:key:5d1f4bb9-9981-4577-a5a6-a65f7bc28bc9"
