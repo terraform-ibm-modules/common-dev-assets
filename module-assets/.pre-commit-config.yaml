@@ -176,6 +176,6 @@ repos:
       pass_filenames: false
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
-  rev: v0.1.23
+  rev: v0.1.24
   hooks:
     - id: helmlint
