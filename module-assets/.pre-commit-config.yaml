@@ -179,3 +179,9 @@ repos:
   rev: v0.1.24
   hooks:
     - id: helmlint
+- repo: https://github.com/python-jsonschema/check-jsonschema
+  rev: 0.29.4
+  hooks:
+    - id: check-jsonschema
+      files: ibm_catalog.json
+      args: ["--schemafile", "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/heads/main/ibm_catalog-schema.json"]
