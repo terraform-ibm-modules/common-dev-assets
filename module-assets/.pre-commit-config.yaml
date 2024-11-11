@@ -185,4 +185,4 @@ repos:
   hooks:
     - id: check-jsonschema
       files: ibm_catalog.json
-      args: ["--schemafile", "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/heads/main/ibm_catalog-schema.json"]
+      args: ["--schemafile", "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.90/ibm_catalog-schema.json"]
