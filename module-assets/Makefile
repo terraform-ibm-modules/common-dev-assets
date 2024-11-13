@@ -125,7 +125,7 @@ run-tests: ghe-netrc
 
 # run tests for terraform repos locally
 run-tests-local:
-	cd ${GO_TEST_DIR} && go test -run ${RUN} -count=1 -v -timeout 600m
+	cd ${GO_TEST_DIR} && go test -run "^${RUN}$$" -count=1 -v -timeout 600m
 
 # run unit tests for golang projects
 run-go-module-tests:
