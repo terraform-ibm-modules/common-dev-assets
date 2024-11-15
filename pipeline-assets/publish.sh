@@ -15,7 +15,9 @@ if [ -n "$1" ];then
   EXTRA_TAGS="${EXTRA_TAGS},${1}"
 fi
 
-if "${ONE_PIPELINE_PATH}"/internal/pipeline/evaluator_ci; then
+#  ensure the pipeline is in a passing state before publishing
+ONE_PIPELINE_STATUS=$(get_env one-pipeline-status 0)
+if [ "$ONE_PIPELINE_STATUS" -eq 0 ]; then
 
   ibmcloud_api_key=$(get_env ciso-ibmcloud-api-key "")
   if [[ -z "$ibmcloud_api_key" ]]; then
