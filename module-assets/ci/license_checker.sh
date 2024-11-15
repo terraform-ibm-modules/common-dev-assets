@@ -8,7 +8,7 @@ if git remote -v | head -n 1 | grep -q "github.ibm"; then
 fi
 
 
-# ensure LICENSE file exists if .tf file is detected incd root directory
+# ensure LICENSE file exists if .tf file or ibm_catalog.json is detected in root directory
 
 var1=$(find ./*.tf 2>/dev/null | wc -l | xargs)
 var2=$(find ibm_catalog.json 2>/dev/null | wc -l | xargs)
