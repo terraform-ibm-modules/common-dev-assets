@@ -10,7 +10,9 @@ fi
 
 # ensure LICENSE file exists if .tf file is detected incd root directory
 
-count=$(find . -maxdepth 1 \( -name "*.tf" -o -name "ibm_catalog.json" \) 2>/dev/null | wc -l | xargs)
+var1=$(find ./*.tf 2>/dev/null | wc -l | xargs)
+var2=$(find ibm_catalog.json 2>/dev/null | wc -l | xargs)
+count=$((var1+var2))
 if [ "$count" != 0 ]; then
   if [[ ! -f "LICENSE" ]]; then
     echo "Required LICENSE file is missing. Please add it and try again."
