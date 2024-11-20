@@ -146,4 +146,4 @@ etcd_region: "us-south"
 geretain-public-gh-token-dev-user: 825a3797-1bc8-f47a-611a-c9bd2b0ef846
 
 # Enterprise Event Streams instance crn for Enterprise features testing
-es_us_south_crn: "crn:v1:bluemix:public:messagehub:us-south:a/abac0df06b644a9cabc6e44f55b3880e:3361b294-d812-4ead-9a54-cc41afb50b78::"
+event_streams_us_south_crn: "crn:v1:bluemix:public:messagehub:us-south:a/abac0df06b644a9cabc6e44f55b3880e:3361b294-d812-4ead-9a54-cc41afb50b78::"
