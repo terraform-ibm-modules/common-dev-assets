@@ -147,3 +147,8 @@ geretain-public-gh-token-dev-user: 825a3797-1bc8-f47a-611a-c9bd2b0ef846
 
 # Enterprise Event Streams instance crn for Enterprise features testing
 event_streams_us_south_crn: "crn:v1:bluemix:public:messagehub:us-south:a/abac0df06b644a9cabc6e44f55b3880e:3361b294-d812-4ead-9a54-cc41afb50b78::"
+
+# secretIDs for the subscriptionIDs to deploy EASE4J, MQ and DB2 services
+geretain-appmod-ease4j-subscription-id: 71363d27-db8d-dd07-c72b-59ecb3884a8f
+geretain-appmod-mq-subscription-id: 8253fc81-ae6e-29b9-fc8a-e110b51929de
+geretain-appmod-db2-subscription-id: 9133cdfc-f4ba-93b3-7487-d4cce64975a3
