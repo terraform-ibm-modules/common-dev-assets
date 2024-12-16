@@ -10,7 +10,6 @@ DA_FOLDER = "solutions"
 
 # get inputs for solution defined in ibm_catalog.json file
 def check_ibm_catalog_file(da_name):
-    print(da_name)
     inputs = []
     with open(IBM_CATALOG_FILE) as f:
         ibm_catalog = json.load(f)
