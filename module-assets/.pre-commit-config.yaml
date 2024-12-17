@@ -137,7 +137,7 @@ repos:
       description: Fast linters runner for Go.
       entry: bash ci/golangci-lint.sh
       types: [go]
-      language: golang
+      language: system # see https://github.com/pre-commit/pre-commit/issues/3219#issuecomment-2152312215
       pass_filenames: false
       # This will be going away once the metadata for the "add_overview" hook is rolled out to all repos
     - id: add_examples_modules
