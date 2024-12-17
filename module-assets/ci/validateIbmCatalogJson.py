@@ -15,7 +15,7 @@ def check_ibm_catalog_file(da_name):
         ibm_catalog = json.load(f)
     if ibm_catalog and "products" in ibm_catalog and ibm_catalog["products"]:
         for product in ibm_catalog["products"]:
-            if "flavors" in ibm_catalog["products"] and product["flavors"]:
+            if "flavors" in product and product["flavors"]:
                 for flavor in product["flavors"]:
                     if (
                         "working_directory" in flavor
