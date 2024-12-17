@@ -13,12 +13,14 @@ def check_ibm_catalog_file(da_name):
     inputs = []
     with open(IBM_CATALOG_FILE) as f:
         ibm_catalog = json.load(f)
-    if ibm_catalog and ibm_catalog["products"]:
+    if ibm_catalog and "products" in ibm_catalog and ibm_catalog["products"]:
         for product in ibm_catalog["products"]:
-            if product["flavors"]:
+            if "flavors" in ibm_catalog["products"] and product["flavors"]:
                 for flavor in product["flavors"]:
                     if (
-                        flavor["working_directory"]
+                        "working_directory" in flavor
+                        and "configuration" in flavor
+                        and flavor["working_directory"]
                         and flavor["working_directory"] == f"{DA_FOLDER}/{da_name}"
                         and flavor["configuration"]
                     ):
