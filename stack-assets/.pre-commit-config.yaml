@@ -76,7 +76,7 @@ repos:
       description: Fast linters runner for Go.
       entry: bash ci/golangci-lint.sh
       types: [go]
-      language: golang
+      language: system
       pass_filenames: false
     - id: go-mod-module-repository
       name: Add module repository to go.mod
