@@ -1,37 +1,109 @@
 import json
 import os
 import sys
-from pathlib import Path
 from subprocess import PIPE, Popen
 
 IBM_CATALOG_FILE = "ibm_catalog.json"
 DA_FOLDER = "solutions"
+ERRORS = []
+
+
+# Find duplicates in array
+def find_duplicates(array):
+    n = len(array)
+    duplicates = []
+    # Create a set to store the unique elements
+    unique = set()
+    # Iterate through each element
+    for i in range(n):
+        # If the element is already present, then add it to duplicates
+        # Else insert the element into the set
+        if array[i] in unique:
+            duplicates.append(array[i])
+        else:
+            unique.add(array[i])
+    return duplicates
+
+
+# Check for any error. If any error occurs, save it into global array and print it out at the end. We are checking if:
+# - input is not defined in ibm_catalog.json
+# - ibm_catalog.json has extra (not needed) inputs
+# - any duplicates exists in ibm_catalog.json
+def check_errors(
+    inputs_not_in_catalog, inputs_not_in_da, duplicates, working_directory
+):
+    error = False
+    errors = []
+    if len(inputs_not_in_catalog) > 0:
+        errors.append(
+            f"- the following inputs should be defined in ibm_catalog.json: {inputs_not_in_catalog}"
+        )
+        error = True
+    if len(inputs_not_in_da) > 0:
+        errors.append(
+            f"- the following inputs should not be defined in ibm_catalog.json: {inputs_not_in_da}"
+        )
+        error = True
+    if len(duplicates) > 0:
+        errors.append(f"- ibm_catalog.json has duplicates: {duplicates}")
+        error = True
+
+    if error:
+        errors.insert(0, f"\nFor '{working_directory}':")
+        for val in errors:
+            ERRORS.append(val)
 
 
 # get inputs for solution defined in ibm_catalog.json file
-def check_ibm_catalog_file(da_name):
-    inputs = []
+def check_ibm_catalog_file():
+    catalog_inputs = []
+
+    # read ibm_catalog.json content
     with open(IBM_CATALOG_FILE) as f:
         ibm_catalog = json.load(f)
+
+    # loop through flavors and check inputs for each solution defined in working_directory
     if ibm_catalog and "products" in ibm_catalog and ibm_catalog["products"]:
         for product in ibm_catalog["products"]:
             if "flavors" in product and product["flavors"]:
                 for flavor in product["flavors"]:
-                    if (
-                        "working_directory" in flavor
-                        and "configuration" in flavor
-                        and flavor["working_directory"]
-                        and flavor["working_directory"] == f"{DA_FOLDER}/{da_name}"
-                        and flavor["configuration"]
-                    ):
-                        inputs = [x["key"] for x in flavor["configuration"]]
-    return inputs
+                    if "working_directory" in flavor and flavor["working_directory"]:
+                        working_directory = flavor["working_directory"]
+
+                        da_path = f"{os.getcwd()}/{working_directory}"
+
+                        # check if DA defined in working_directory exists
+                        if not os.path.isdir(da_path):
+                            ERRORS.append(
+                                f"\nFor '{working_directory}':\n- solution does not exists"
+                            )
+                            continue
+
+                        # get input variable names of a solution
+                        da_inputs = get_inputs(da_path)
+
+                        # get inputs defined in ibm_catalog.json for working_directory
+                        if "configuration" in flavor and flavor["configuration"]:
+                            catalog_inputs = [x["key"] for x in flavor["configuration"]]
+
+                        # compare input variables defined in a solution with the one's defined in ibm_catalog.json
+                        inputs_not_in_catalog = check_inputs_missing(
+                            da_inputs, catalog_inputs
+                        )
+                        inputs_not_in_da = check_inputs_extra(da_inputs, catalog_inputs)
+                        duplicates = find_duplicates(catalog_inputs)
+
+                        check_errors(
+                            inputs_not_in_catalog,
+                            inputs_not_in_da,
+                            duplicates,
+                            working_directory,
+                        )
 
 
-# get inputs for solution defined in solutions folder
-def get_inputs(da_name):
+# get input variables for a solution
+def get_inputs(da_path):
     inputs = []
-    da_path = f"{os.getcwd()}/{DA_FOLDER}/{da_name}"
     command = f"terraform-docs --show inputs json {da_path}"
     proc = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
     output, error = proc.communicate()
@@ -64,34 +136,10 @@ def check_inputs_extra(da_inputs, catalog_inputs):
     return inputs_not_in_da
 
 
-# check solution inputs
-def check_da(da_names):
-    for da_name in da_names:
-        da_inputs = get_inputs(da_name)
-        catalog_inputs = check_ibm_catalog_file(da_name)
-        inputs_not_in_catalog = check_inputs_missing(da_inputs, catalog_inputs)
-        inputs_not_in_da = check_inputs_extra(da_inputs, catalog_inputs)
-
-        if len(inputs_not_in_catalog) > 0 or len(inputs_not_in_da):
-            print(
-                f"For solution '{da_name}' the following inputs should be defined in ibm_catalog.json: {inputs_not_in_catalog}"
-            )
-            print(
-                f"For solution '{da_name}' the following inputs should not be defined in ibm_catalog.json: {inputs_not_in_da}"
-            )
-            sys.exit(1)
-
-
-# get solutions
-def get_da_names():
-    da_names = ""
-    path = Path(DA_FOLDER)
-    da_names = os.listdir(path)
-    return da_names
-
-
 if __name__ == "__main__":
-
-    if os.path.isdir(DA_FOLDER) and os.path.isfile(IBM_CATALOG_FILE):
-        da_names = get_da_names()
-        check_da(da_names)
+    if os.path.isfile(IBM_CATALOG_FILE):
+        check_ibm_catalog_file()
+        if len(ERRORS) > 0:
+            for error in ERRORS:
+                print(error)
+            sys.exit(1)
