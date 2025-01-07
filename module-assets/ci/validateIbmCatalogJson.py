@@ -26,8 +26,8 @@ def find_duplicates(array):
 
 
 # Check for any error. If any error occurs, save it into global array and print it out at the end. We are checking if:
-# - input is not defined in ibm_catalog.json
-# - ibm_catalog.json has extra (not needed) inputs
+# - DA's input variable is not defined in ibm_catalog.json
+# - ibm_catalog.json has extra (not needed) input variables
 # - any duplicates exists in ibm_catalog.json
 def check_errors(
     inputs_not_in_catalog, inputs_not_in_da, duplicates, working_directory
@@ -62,7 +62,7 @@ def check_ibm_catalog_file():
     with open(IBM_CATALOG_FILE) as f:
         ibm_catalog = json.load(f)
 
-    # loop through flavors and check inputs for each solution defined in working_directory
+    # loop through flavors and check inputs for each solution defined in working_directory. Check only for "product_kind": "solution".
     if ibm_catalog and "products" in ibm_catalog and ibm_catalog["products"]:
         for product in ibm_catalog["products"]:
             if (
@@ -73,37 +73,42 @@ def check_ibm_catalog_file():
                 and product["product_kind"] == "solution"
             ):
                 for flavor in product["flavors"]:
+
+                    # if `working_directory` does not exist then default DA path to root
                     if "working_directory" in flavor and flavor["working_directory"]:
                         working_directory = flavor["working_directory"]
+                    else:
+                        working_directory = "./"
 
-                        da_path = f"{os.getcwd()}/{working_directory}"
+                    da_path = f"{os.getcwd()}/{working_directory}"
 
-                        if not os.path.isdir(da_path):
-                            ERRORS.append(
-                                f"\nFor '{working_directory}':\n- solution does not exists"
-                            )
-                            continue
-
-                        # get input variable names of a solution
-                        da_inputs = get_inputs(da_path)
-
-                        # get inputs defined in ibm_catalog.json for working_directory
-                        if "configuration" in flavor and flavor["configuration"]:
-                            catalog_inputs = [x["key"] for x in flavor["configuration"]]
-
-                        # compare input variables defined in a solution with the one's defined in ibm_catalog.json
-                        inputs_not_in_catalog = check_inputs_missing(
-                            da_inputs, catalog_inputs
+                    # if `working_directory` has a value of DA that does not exist, then add an error
+                    if not os.path.isdir(da_path):
+                        ERRORS.append(
+                            f"\nFor '{working_directory}':\n- solution does not exists"
                         )
-                        inputs_not_in_da = check_inputs_extra(da_inputs, catalog_inputs)
-                        duplicates = find_duplicates(catalog_inputs)
+                        continue
 
-                        check_errors(
-                            inputs_not_in_catalog,
-                            inputs_not_in_da,
-                            duplicates,
-                            working_directory,
-                        )
+                    # get input variable names of a solution
+                    da_inputs = get_inputs(da_path)
+
+                    # get inputs defined in ibm_catalog.json for working_directory
+                    if "configuration" in flavor and flavor["configuration"]:
+                        catalog_inputs = [x["key"] for x in flavor["configuration"]]
+
+                    # compare input variables defined in a solution with the one's defined in ibm_catalog.json
+                    inputs_not_in_catalog = check_inputs_missing(
+                        da_inputs, catalog_inputs
+                    )
+                    inputs_not_in_da = check_inputs_extra(da_inputs, catalog_inputs)
+                    duplicates = find_duplicates(catalog_inputs)
+
+                    check_errors(
+                        inputs_not_in_catalog,
+                        inputs_not_in_da,
+                        duplicates,
+                        working_directory,
+                    )
 
 
 # get input variables for a solution
