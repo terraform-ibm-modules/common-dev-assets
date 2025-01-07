@@ -65,14 +65,19 @@ def check_ibm_catalog_file():
     # loop through flavors and check inputs for each solution defined in working_directory
     if ibm_catalog and "products" in ibm_catalog and ibm_catalog["products"]:
         for product in ibm_catalog["products"]:
-            if "flavors" in product and product["flavors"]:
+            if (
+                "flavors" in product
+                and product["flavors"]
+                and "product_kind" in product
+                and product["product_kind"]
+                and product["product_kind"] == "solution"
+            ):
                 for flavor in product["flavors"]:
                     if "working_directory" in flavor and flavor["working_directory"]:
                         working_directory = flavor["working_directory"]
 
                         da_path = f"{os.getcwd()}/{working_directory}"
 
-                        # check if DA defined in working_directory exists
                         if not os.path.isdir(da_path):
                             ERRORS.append(
                                 f"\nFor '{working_directory}':\n- solution does not exists"
