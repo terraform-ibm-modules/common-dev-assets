@@ -20,7 +20,7 @@ repos:
   rev: v5.0.0
   hooks:
     - id: check-yaml
-      exclude: chart/|metadata.yaml|tests/
+      exclude: chart/|metadata.yaml|tests/|examples/charts/
       args:
         - --allow-multiple-documents
     - id: check-json
