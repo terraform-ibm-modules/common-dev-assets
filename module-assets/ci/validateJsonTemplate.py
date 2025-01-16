@@ -42,8 +42,7 @@ def is_json(myjson):
             # construct error message
             line_text = content[e.lineno - 1].replace("\n", "")
             pointer_line = "-" * (e.colno - 1) + "^"
-            expecting = "Expecting 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{..}', '[..]', '$', got 'undefined'"
-            error = line_text + "\n" + pointer_line + "\n" + expecting
+            error = line_text + "\n" + pointer_line + "\n" + str(e)
 
         return error
 
