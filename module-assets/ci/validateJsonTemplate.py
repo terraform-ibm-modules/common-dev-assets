@@ -30,12 +30,21 @@ def create_temp_json(root, file):
 
 # check if a file is valid JSON
 def is_json(myjson):
+    error = None
     with open(myjson) as json_file:
         try:
             json.load(json_file)
-        except ValueError:
-            return False
-        return True
+        except json.JSONDecodeError as e:
+            # read the JSON file content to get the lines for error printing
+            file = open(myjson)
+            content = file.readlines()
+
+            # construct error message
+            line_text = content[e.lineno - 1].replace("\n", "")
+            pointer_line = "-" * (e.colno - 1) + "^"
+            error = line_text + "\n" + pointer_line + "\n" + str(e)
+
+        return error
 
 
 # create 'temp_tf_inputs.json' file using terraform-docs to get all tf inputs
@@ -133,9 +142,13 @@ def main():
                     temp_catalog_file = create_temp_json(root, file)
 
                     # if catalogValidationValues.json.template is not valid JSON format then save the error
-                    if not is_json(temp_catalog_file):
+                    error = is_json(temp_catalog_file)
+                    if error is not None:
                         validation_errors.append(
-                            original_catalog_file + " is not valid JSON format."
+                            original_catalog_file
+                            + " is not valid JSON format."
+                            + "\n\n"
+                            + error
                         )
                     else:
                         validate_inputs(root, temp_catalog_file, original_catalog_file)
