@@ -30,7 +30,12 @@ def find_duplicates(array):
 # - ibm_catalog.json has extra (not needed) input variables
 # - any duplicates exists in ibm_catalog.json
 def check_errors(
-    inputs_not_in_catalog, inputs_not_in_da, duplicates, working_directory
+    inputs_not_in_catalog,
+    inputs_not_in_da,
+    duplicates,
+    working_directory,
+    flavor_label,
+    product_label,
 ):
     error = False
     errors = []
@@ -49,7 +54,10 @@ def check_errors(
         error = True
 
     if error:
-        errors.insert(0, f"\nFor '{working_directory}':")
+        errors.insert(
+            0,
+            f"\nproduct_label: '{product_label}'\nflavor_label: '{flavor_label}'\nworking_directory: '{working_directory}':\n",
+        )
         for val in errors:
             ERRORS.append(val)
 
@@ -72,7 +80,14 @@ def check_ibm_catalog_file():
                 and product["product_kind"]
                 and product["product_kind"] == "solution"
             ):
+                product_label = ""
+                if "label" in product and product["label"]:
+                    product_label = product["label"]
+
                 for flavor in product["flavors"]:
+                    flavor_label = ""
+                    if "label" in flavor and flavor["label"]:
+                        flavor_label = flavor["label"]
 
                     # if `working_directory` does not exist then default DA path to root
                     if "working_directory" in flavor and flavor["working_directory"]:
@@ -85,7 +100,7 @@ def check_ibm_catalog_file():
                     # if `working_directory` has a value of DA that does not exist, then add an error
                     if not os.path.isdir(da_path):
                         ERRORS.append(
-                            f"\nFor '{working_directory}':\n- solution does not exists"
+                            f"\nproduct_label: '{product_label}'\nflavor_label: '{flavor_label}'\nworking_directory: '{working_directory}':\n\n- solution does not exists"
                         )
                         continue
 
@@ -108,6 +123,8 @@ def check_ibm_catalog_file():
                         inputs_not_in_da,
                         duplicates,
                         working_directory,
+                        flavor_label,
+                        product_label,
                     )
 
 

@@ -145,6 +145,12 @@ reservation_id_secret_id: "efe3b366-ac99-b959-0d71-6918258e6209"
 
 # Atracker Trusted Profile
 atracker_trusted_profile: "Profile-ca8f5fa4-d3ba-4973-a5de-660032e9a12b"
+atracker_trusted_profile_iam_id: "iam-Profile-ca8f5fa4-d3ba-4973-a5de-660032e9a12b"
+
+# Account level tenant
+account_level_tenant_name: "geretain-us-east-tenant"
+account_level_tenant_id: "35daa2ef-759b-4189-8596-e7a0907e8582"
+account_level_tenant_crn: "crn:v1:bluemix:public:logs-router:us-east:a/abac0df06b644a9cabc6e44f55b3880e:35daa2ef-759b-4189-8596-e7a0907e8582::"
 
 # VSI Snapshot Consistency Group
 snapshot_group_au_syd_group_id: "r026-43d41ad0-88f4-4e99-8adf-0cae4a02710c"

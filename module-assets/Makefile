@@ -31,10 +31,6 @@ ifneq (,$(filter $(detected_OS), Darwin Linux))
 	.DEFAULT_GOAL = all
 endif
 
-ifndef DOCKER_ENV
-	DOCKER_ENV := common-dev-assets/module-assets/docker.env
-endif
-
 ifndef GO_TEST_DIR
 	GO_TEST_DIR := tests
 endif

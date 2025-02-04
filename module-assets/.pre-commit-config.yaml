@@ -74,8 +74,7 @@ repos:
         - --hook-config=--parallelism-limit=1
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  # Locking into 3.1.55 due to this bug -> https://github.com/bridgecrewio/checkov/issues/5945
-  rev: 3.1.55
+  rev: 3.2.357
   hooks:
     - id: checkov
       args:
@@ -90,8 +89,6 @@ repos:
         - --skip-path=helm-charts
         # see https://github.ibm.com/GoldenEye/issues/issues/5317
         - --skip-check=CKV_TF_1
-        # see https://github.com/bridgecrewio/checkov/issues/5855
-        - --skip-check=CKV2_IBM_6
 - repo: https://github.com/syntaqx/git-hooks
   rev: v0.0.18
   hooks:
