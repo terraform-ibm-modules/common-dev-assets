@@ -116,13 +116,13 @@ repos:
         - "--ignore=E203,E501,W503"
 # isort
 - repo: https://github.com/pycqa/isort
-  rev: 5.13.2
+  rev: 6.0.0
   hooks:
   - id: isort
     args: ["--profile", "black", "--filter-files"]
 # black
 - repo: https://github.com/ambv/black
-  rev: 24.10.0
+  rev: 25.1.0
   hooks:
   - id: black
     args: # arguments to configure black
