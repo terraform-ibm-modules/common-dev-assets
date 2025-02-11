@@ -173,3 +173,6 @@ event_streams_us_south_crn: "crn:v1:bluemix:public:messagehub:us-south:a/abac0df
 geretain-appmod-ease4j-subscription-id: 71363d27-db8d-dd07-c72b-59ecb3884a8f
 geretain-appmod-mq-subscription-id: 8253fc81-ae6e-29b9-fc8a-e110b51929de
 geretain-appmod-db2-subscription-id: 9133cdfc-f4ba-93b3-7487-d4cce64975a3
+
+# permanent cloud logs instance crn
+cloud_logs_instance_crn: "crn:v1:bluemix:public:logs:us-east:a/abac0df06b644a9cabc6e44f55b3880e:6e931667-0f47-4c59-be2e-fa9b9f13f1a4::"
