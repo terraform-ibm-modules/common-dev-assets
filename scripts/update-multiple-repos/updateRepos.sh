@@ -73,7 +73,7 @@ function path_exists(){
 }
 
 # create PR
-# additonally you can add body to commit as `gh pr create --title "${commit_message}" --body "$body"`
+# additionally you can add body to commit as `gh pr create --title "${commit_message}" --body "$body"`
 function create_pr {
     printf "\n#### CREATE NEW PR ####\n\n"
 
