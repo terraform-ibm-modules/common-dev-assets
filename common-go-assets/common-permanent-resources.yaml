@@ -37,7 +37,6 @@ cePublicCertCommonName: "geretain-code-engine-public-cert"
 sdnlbServiceIdName: "geretain - sDNLB-ServiceID - DO NOT DELETE"
 sdnlbServiceId: "ServiceId-1ed6ddfa-b4a0-4df7-86e0-461b8bb02d3d"
 
-
 # IAM ServiceID for PAG sDNLB user
 sdnlbPagServiceIdName: "geretain - sDNLB-PAG-service-id - DO NOT DELETE"
 sdnlbPagServiceId: "ServiceId-cf2df49b-fef5-4aeb-87a0-f3b1995d127a"
@@ -177,3 +176,18 @@ geretain-appmod-db2-subscription-id: 9133cdfc-f4ba-93b3-7487-d4cce64975a3
 
 # permanent cloud logs instance crn
 cloud_logs_instance_crn: "crn:v1:bluemix:public:logs:us-east:a/abac0df06b644a9cabc6e44f55b3880e:6e931667-0f47-4c59-be2e-fa9b9f13f1a4::"
+
+# General use COS instance
+general_test_storage_cos_instance_crn: "crn:v1:bluemix:public:cloud-object-storage:global:a/abac0df06b644a9cabc6e44f55b3880e:855ed836-05ce-4f39-98fa-508774f29323::"
+general_test_storage_cos_instance_name: "geretain-test-storage"
+general_test_storage_cos_instance_region: "us-south"
+general_test_storage_cos_instance_resource_group: "geretain-test-permanent"
+
+# RHEL-AI project test resources
+rhelai_image_cos_bucket_crn: "crn:v1:bluemix:public:cloud-object-storage:global:a/abac0df06b644a9cabc6e44f55b3880e:855ed836-05ce-4f39-98fa-508774f29323:bucket:geretain-rhelai-test-images"
+rhelai_image_cos_bucket_name: "geretain-rhelai-test-images"
+rhelai_image_cos_bucket_url: "cos://us-south/geretain-rhelai-test-images"
+
+rhelai_model_cos_bucket_crn: "crn:v1:bluemix:public:cloud-object-storage:global:a/abac0df06b644a9cabc6e44f55b3880e:855ed836-05ce-4f39-98fa-508774f29323:bucket:geretain-rhelai-test-models"
+rhelai_model_cos_bucket_name: "geretain-rhelai-test-models"
+rhelai_model_cos_bucket_url: "cos://us-south/geretain-rhelai-test-models"
