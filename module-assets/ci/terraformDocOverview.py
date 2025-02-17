@@ -68,8 +68,8 @@ def get_headings(folder_name):
     if os.path.isdir(folder_name.lower()):
 
         for readme_file_path in Path(folder_name.lower()).rglob("*"):
+            path = str(readme_file_path)
             regex_pattern = r"README.md"
-            path = str(readme_file_path).rstrip(os.sep)
 
             # Compile the regex pattern and ignore case
             regex = re.compile(regex_pattern, re.IGNORECASE)
@@ -81,7 +81,6 @@ def get_headings(folder_name):
             if not ("/.") in path and terraformDocsUtils.has_tf_files(
                 readme_file_path.parent
             ):
-
                 if "modules" == folder_name:
                     # for modules bullet point name is folder name
                     data = "    * [{}](./{})".format(
