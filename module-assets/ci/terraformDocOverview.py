@@ -4,7 +4,7 @@ import os
 import pathlib
 from pathlib import Path
 from typing import List, Tuple
-
+import re
 import terraformDocsUtils
 
 
@@ -69,28 +69,38 @@ def get_headings(folder_name):
         subfolders = [ f.path for f in os.scandir(folder_name.lower()) if f.is_dir() ]
         print('subfolders ', subfolders)
         
-        for readme_file_path in Path(folder_name.lower()).rglob("README.md") or Path(folder_name.lower()).rglob("README.MD"):
-            print(" readme_file_path ", readme_file_path)
+        for readme_file_path in Path(folder_name.lower()).rglob('*'):
+            
+            regex_pattern = r'README.md' 
             path = str(readme_file_path)
-            # ignore README file if it has dot(.) in a path or the parent path does not contain any tf file
-            if not ("/.") in path and terraformDocsUtils.has_tf_files(
-                readme_file_path.parent
-            ):
-                if "modules" == folder_name:
-                    # for modules bullet point name is folder name
-                    data = "    * [{}](./{})".format(
-                        path.replace("modules/", "").replace("/README.md", ""),
-                        path.replace("/README.md", ""),
-                    )
-                else:
-                    # for examples bullet point name is title in example's README
-                    readme_title = terraformDocsUtils.get_readme_title(path)
-                    if readme_title:
+            path = path.rstrip(os.sep)
+            # Compile the regex pattern
+            regex = re.compile(regex_pattern,  re.IGNORECASE)
+            
+            if regex.search(path):
+                print(" readme_file_path ", readme_file_path)
+                print(" path ", path)
+                
+                # ignore README file if it has dot(.) in a path or the parent path does not contain any tf file
+                if not ("/.") in path and terraformDocsUtils.has_tf_files(
+                    readme_file_path.parent
+                ):
+                    regex_pattern = r'/README.md|modules/'
+                    if "modules" == folder_name:
+                        # for modules bullet point name is folder name
                         data = "    * [{}](./{})".format(
-                            readme_title.strip().replace("\n", "").replace("# ", ""),
-                            path.replace("/README.md", ""),
+                            re.sub(regex_pattern, "", path, flags=re.IGNORECASE),
+                            re.sub(regex_pattern, "", path, flags=re.IGNORECASE), 
                         )
-                readme_headings.append(data)
+                    else:
+                        # for examples bullet point name is title in example's README
+                        readme_title = terraformDocsUtils.get_readme_title(path)
+                        if readme_title:
+                            data = "    * [{}](./{})".format(
+                                readme_title.strip().replace("\n", "").replace("# ", ""),
+                                re.sub(regex_pattern, "", path, flags=re.IGNORECASE),
+                            )
+                    readme_headings.append(data)
     return sorted(readme_headings)
 
 
