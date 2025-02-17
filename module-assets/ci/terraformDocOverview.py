@@ -148,7 +148,10 @@ def main():
         os.system(
             "terraform-docs -c common-dev-assets/module-assets/.terraform-docs-config-overview.yaml ."
         )
-
+        f = open(overivew_markdown, 'r')
+        file_contents = f.read()
+        print (file_contents)
+        f.close()
         terraformDocsUtils.remove_markdown(overivew_markdown)
 
 
