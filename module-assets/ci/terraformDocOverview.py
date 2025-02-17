@@ -116,13 +116,13 @@ def main():
         path = pathlib.PurePath(terraformDocsUtils.get_module_url())
         repo_name = path.name
         overview.append("* [{}](#{})".format(repo_name, repo_name))
-
+        print("overview 1 ", overview)
         # add modules to "overview"
         add_to_overview(overview, "Modules")
-
+        print("overview 2 ", overview)
         # add examples to "overview"
         add_to_overview(overview, "Examples")
-
+        print("overview 3 ", overview)
         # add last heading of README (contributing (external) or developing (internal)) to overview
         overview.append(get_main_readme_headings())
 

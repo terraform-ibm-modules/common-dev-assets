@@ -158,6 +158,7 @@ repos:
       entry: python3 ci/terraformDocOverview.py
       language: python
       pass_filenames: false
+      verbose: true
     - id: json_template_lint
       name: Validate catalogValidationValues.json.template file
       description: Validate catalogValidationValues.json.template file
