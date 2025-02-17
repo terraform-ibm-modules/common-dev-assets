@@ -65,7 +65,7 @@ def get_main_readme_headings():
 def get_headings(folder_name):
     readme_headings: List[str] = []
     if os.path.isdir(folder_name.lower()):
-        for readme_file_path in Path(folder_name.lower()).rglob("README.md"):
+        for readme_file_path in Path(folder_name.lower()).rglob("README.md") or Path(folder_name.lower()).rglob("README.MD"):
             print(" readme_file_path ", readme_file_path)
             path = str(readme_file_path)
             # ignore README file if it has dot(.) in a path or the parent path does not contain any tf file
