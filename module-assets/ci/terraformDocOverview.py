@@ -2,9 +2,10 @@
 
 import os
 import pathlib
+import re
 from pathlib import Path
 from typing import List, Tuple
-import re
+
 import terraformDocsUtils
 
 
@@ -65,39 +66,39 @@ def get_main_readme_headings():
 def get_headings(folder_name):
     readme_headings: List[str] = []
     if os.path.isdir(folder_name.lower()):
-        
-        subfolders = [ f.path for f in os.scandir(folder_name.lower()) if f.is_dir() ]
-        print('subfolders ', subfolders)
-        
-        for readme_file_path in Path(folder_name.lower()).rglob('*'):
-            
-            regex_pattern = r'README.md' 
-            path = str(readme_file_path)
-            path = path.rstrip(os.sep)
-            # Compile the regex pattern
-            regex = re.compile(regex_pattern,  re.IGNORECASE)
-            
+
+        for readme_file_path in Path(folder_name.lower()).rglob("*"):
+            regex_pattern = r"README.md"
+            path = str(readme_file_path).rstrip(os.sep)
+
+            # Compile the regex pattern and ignore case
+            regex = re.compile(regex_pattern, re.IGNORECASE)
+
             if regex.search(path):
-                print(" readme_file_path ", readme_file_path)
-                print(" path ", path)
-                
                 # ignore README file if it has dot(.) in a path or the parent path does not contain any tf file
                 if not ("/.") in path and terraformDocsUtils.has_tf_files(
                     readme_file_path.parent
                 ):
-                    regex_pattern = r'/README.md'
+
                     if "modules" == folder_name:
                         # for modules bullet point name is folder name
                         data = "    * [{}](./{})".format(
-                            re.sub(regex_pattern, "", path.replace("modules/", ""), flags=re.IGNORECASE),
-                            re.sub(regex_pattern, "", path, flags=re.IGNORECASE), 
+                            re.sub(
+                                regex_pattern,
+                                "",
+                                path.replace("modules/", ""),
+                                flags=re.IGNORECASE,
+                            ),
+                            re.sub(regex_pattern, "", path, flags=re.IGNORECASE),
                         )
                     else:
                         # for examples bullet point name is title in example's README
                         readme_title = terraformDocsUtils.get_readme_title(path)
                         if readme_title:
                             data = "    * [{}](./{})".format(
-                                readme_title.strip().replace("\n", "").replace("# ", ""),
+                                readme_title.strip()
+                                .replace("\n", "")
+                                .replace("# ", ""),
                                 re.sub(regex_pattern, "", path, flags=re.IGNORECASE),
                             )
                     readme_headings.append(data)
@@ -131,13 +132,13 @@ def main():
         path = pathlib.PurePath(terraformDocsUtils.get_module_url())
         repo_name = path.name
         overview.append("* [{}](#{})".format(repo_name, repo_name))
-        print("overview 1 ", overview)
+
         # add modules to "overview"
         add_to_overview(overview, "Modules")
-        print("overview 2 ", overview)
+
         # add examples to "overview"
         add_to_overview(overview, "Examples")
-        print("overview 3 ", overview)
+
         # add last heading of README (contributing (external) or developing (internal)) to overview
         overview.append(get_main_readme_headings())
 
@@ -148,9 +149,9 @@ def main():
         os.system(
             "terraform-docs -c common-dev-assets/module-assets/.terraform-docs-config-overview.yaml ."
         )
-        f = open(overivew_markdown, 'r')
+        f = open(overivew_markdown, "r")
         file_contents = f.read()
-        print (file_contents)
+        print(file_contents)
         f.close()
         terraformDocsUtils.remove_markdown(overivew_markdown)
 
