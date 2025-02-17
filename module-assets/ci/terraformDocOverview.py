@@ -74,34 +74,34 @@ def get_headings(folder_name):
             # Compile the regex pattern and ignore case
             regex = re.compile(regex_pattern, re.IGNORECASE)
 
-            if regex.search(path):
-                # ignore README file if it has dot(.) in a path or the parent path does not contain any tf file
-                if not ("/.") in path and terraformDocsUtils.has_tf_files(
-                    readme_file_path.parent
-                ):
+            if not regex.search(path):
+                continue
 
-                    if "modules" == folder_name:
-                        # for modules bullet point name is folder name
+            # ignore README file if it has dot(.) in a path or the parent path does not contain any tf file
+            if not ("/.") in path and terraformDocsUtils.has_tf_files(
+                readme_file_path.parent
+            ):
+
+                if "modules" == folder_name:
+                    # for modules bullet point name is folder name
+                    data = "    * [{}](./{})".format(
+                        re.sub(
+                            regex_pattern,
+                            "",
+                            path.replace("modules/", ""),
+                            flags=re.IGNORECASE,
+                        ),
+                        re.sub(regex_pattern, "", path, flags=re.IGNORECASE),
+                    )
+                else:
+                    # for examples bullet point name is title in example's README
+                    readme_title = terraformDocsUtils.get_readme_title(path)
+                    if readme_title:
                         data = "    * [{}](./{})".format(
-                            re.sub(
-                                regex_pattern,
-                                "",
-                                path.replace("modules/", ""),
-                                flags=re.IGNORECASE,
-                            ),
+                            readme_title.strip().replace("\n", "").replace("# ", ""),
                             re.sub(regex_pattern, "", path, flags=re.IGNORECASE),
                         )
-                    else:
-                        # for examples bullet point name is title in example's README
-                        readme_title = terraformDocsUtils.get_readme_title(path)
-                        if readme_title:
-                            data = "    * [{}](./{})".format(
-                                readme_title.strip()
-                                .replace("\n", "")
-                                .replace("# ", ""),
-                                re.sub(regex_pattern, "", path, flags=re.IGNORECASE),
-                            )
-                    readme_headings.append(data)
+                readme_headings.append(data)
     return sorted(readme_headings)
 
 
