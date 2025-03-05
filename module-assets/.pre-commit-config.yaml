@@ -68,6 +68,8 @@ repos:
         - --args=--skip-files="**/examples/**/*.yaml"
         - --args=--skip-files="**/examples/**/*.yml"
         - --args=--skip-files="**/helm-charts/**/*"
+        # workaround for https://github.com/antonbabenko/pre-commit-terraform/issues/833
+        - --args=--skip-files="**/scripts/*.yaml"
         - --args=--skip-files="**/tests/**/*"
         - --args=--skip-files="common-dev-assets/**/*"
         # workaround for https://github.com/antonbabenko/pre-commit-terraform/issues/691
