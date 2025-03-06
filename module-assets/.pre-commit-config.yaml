@@ -40,7 +40,7 @@ repos:
   hooks:
     - id: hadolint
 - repo: https://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.97.3
+  rev: v1.97.4
   hooks:
     - id: terraform_fmt
     - id: terraform_validate
@@ -69,13 +69,15 @@ repos:
         - --args=--skip-files="**/examples/**/*.yaml"
         - --args=--skip-files="**/examples/**/*.yml"
         - --args=--skip-files="**/helm-charts/**/*"
+        # workaround for https://github.com/antonbabenko/pre-commit-terraform/issues/833
+        - --args=--skip-files="**/scripts/*.yaml"
         - --args=--skip-files="**/tests/**/*"
         - --args=--skip-files="common-dev-assets/**/*"
         # workaround for https://github.com/antonbabenko/pre-commit-terraform/issues/691
         - --hook-config=--parallelism-limit=1
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 3.2.370
+  rev: 3.2.378
   hooks:
     - id: checkov
       args:
@@ -90,6 +92,8 @@ repos:
         - --skip-path=helm-charts
         # see https://github.ibm.com/GoldenEye/issues/issues/5317
         - --skip-check=CKV_TF_1
+        # see https://github.com/bridgecrewio/checkov/issues/7009
+        - --skip-check=CKV2_IBM_1
 - repo: https://github.com/syntaqx/git-hooks
   rev: v0.0.18
   hooks:
@@ -105,7 +109,7 @@ repos:
     exclude: go.sum
 # flake8
 - repo: https://github.com/pycqa/flake8
-  rev: 7.1.1
+  rev: 7.1.2
   hooks:
     - id: flake8
       args: # arguments to configure flake8
@@ -117,7 +121,7 @@ repos:
         - "--ignore=E203,E501,W503"
 # isort
 - repo: https://github.com/pycqa/isort
-  rev: 6.0.0
+  rev: 6.0.1
   hooks:
   - id: isort
     args: ["--profile", "black", "--filter-files"]
@@ -180,6 +184,6 @@ repos:
       pass_filenames: false
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
-  rev: v0.1.25
+  rev: v0.1.26
   hooks:
     - id: helmlint
