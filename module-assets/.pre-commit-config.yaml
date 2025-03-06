@@ -48,6 +48,7 @@ repos:
       files: ^examples/|^patterns/|^solutions/
       args:
         - --hook-config=--retry-once-with-cleanup=true
+        - --tf-init-args=-upgrade
     - id: terraform_tflint
       args:
         - --args=--enable-rule=terraform_unused_declarations
