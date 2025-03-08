@@ -187,3 +187,9 @@ repos:
   rev: v0.1.26
   hooks:
     - id: helmlint
+
+- repo: https://github.com/codespell-project/codespell
+  rev: v2.4.1
+  hooks:
+  - id: codespell
+    files: ^.*\.(sh|tf|md|yml)$
