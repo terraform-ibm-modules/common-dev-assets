@@ -2,6 +2,7 @@
 
 import os
 import pathlib
+import re
 from pathlib import Path
 from typing import List, Tuple
 
@@ -65,17 +66,32 @@ def get_main_readme_headings():
 def get_headings(folder_name):
     readme_headings: List[str] = []
     if os.path.isdir(folder_name.lower()):
-        for readme_file_path in Path(folder_name.lower()).rglob("README.md"):
+
+        for readme_file_path in Path(folder_name.lower()).rglob("*"):
             path = str(readme_file_path)
+            regex_pattern = r"README.md"
+
+            # Compile the regex pattern and ignore case
+            regex = re.compile(regex_pattern, re.IGNORECASE)
+
+            if not regex.search(path):
+                continue
+
             # ignore README file if it has dot(.) in a path or the parent path does not contain any tf file
             if not ("/.") in path and terraformDocsUtils.has_tf_files(
                 readme_file_path.parent
             ):
+                regex_pattern = r"/README.md"
                 if "modules" == folder_name:
                     # for modules bullet point name is folder name
                     data = "    * [{}](./{})".format(
-                        path.replace("modules/", "").replace("/README.md", ""),
-                        path.replace("/README.md", ""),
+                        re.sub(
+                            regex_pattern,
+                            "",
+                            path.replace("modules/", ""),
+                            flags=re.IGNORECASE,
+                        ),
+                        re.sub(regex_pattern, "", path, flags=re.IGNORECASE),
                     )
                 else:
                     # for examples bullet point name is title in example's README
@@ -83,7 +99,7 @@ def get_headings(folder_name):
                     if readme_title:
                         data = "    * [{}](./{})".format(
                             readme_title.strip().replace("\n", "").replace("# ", ""),
-                            path.replace("/README.md", ""),
+                            re.sub(regex_pattern, "", path, flags=re.IGNORECASE),
                         )
                 readme_headings.append(data)
     return sorted(readme_headings)
