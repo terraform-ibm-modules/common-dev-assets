@@ -180,17 +180,18 @@ cloud_logs_instance_crn: "crn:v1:bluemix:public:logs:us-east:a/abac0df06b644a9ca
 # General use COS instance
 general_test_storage_cos_instance_crn: "crn:v1:bluemix:public:cloud-object-storage:global:a/abac0df06b644a9cabc6e44f55b3880e:855ed836-05ce-4f39-98fa-508774f29323::"
 general_test_storage_cos_instance_name: "geretain-test-storage"
-general_test_storage_cos_instance_region: "us-south"
 general_test_storage_cos_instance_resource_group: "geretain-test-permanent"
 
 # RHEL-AI project test resources
 rhelai_image_cos_bucket_crn: "crn:v1:bluemix:public:cloud-object-storage:global:a/abac0df06b644a9cabc6e44f55b3880e:855ed836-05ce-4f39-98fa-508774f29323:bucket:geretain-rhelai-test-images"
 rhelai_image_cos_bucket_name: "geretain-rhelai-test-images"
 rhelai_image_cos_bucket_url: "cos://us-south/geretain-rhelai-test-images"
+rhelai_image_cos_bucket_region: "us-south"
 
 rhelai_model_cos_bucket_crn: "crn:v1:bluemix:public:cloud-object-storage:global:a/abac0df06b644a9cabc6e44f55b3880e:855ed836-05ce-4f39-98fa-508774f29323:bucket:geretain-rhelai-test-models"
 rhelai_model_cos_bucket_name: "geretain-rhelai-test-models"
 rhelai_model_cos_bucket_url: "cos://us-south/geretain-rhelai-test-models"
+rhelai_model_cos_bucket_region: "us-south"
 
 # DB2 on cloud permanent instance for EASe4J test
 geretain-db2fore4j-instance: "crn:v1:bluemix:public:dashdb-for-transactions:us-east:a/abac0df06b644a9cabc6e44f55b3880e:13b09883-7ef8-4c7c-b9c5-05dc92243f66::"
