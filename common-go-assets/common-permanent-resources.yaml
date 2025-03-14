@@ -178,7 +178,7 @@ general_test_storage_cos_instance_resource_group: "geretain-test-permanent"
 # RHEL-AI project test resources
 rhelai_image_cos_bucket_crn: "crn:v1:bluemix:public:cloud-object-storage:global:a/abac0df06b644a9cabc6e44f55b3880e:855ed836-05ce-4f39-98fa-508774f29323:bucket:geretain-rhelai-test-images"
 rhelai_image_cos_bucket_name: "geretain-rhelai-test-images"
-rhelai_image_cos_bucket_url: "cos://us-south/geretain-rhelai-test-images"
+rhelai_image_cos_bucket_url: "cos://us-south/geretain-rhelai-test-images/rhel-ai-nvidia-1.4-1739107849-x86_64-kvm.qcow2"
 rhelai_image_cos_bucket_region: "us-south"
 
 rhelai_model_cos_bucket_crn: "crn:v1:bluemix:public:cloud-object-storage:global:a/abac0df06b644a9cabc6e44f55b3880e:855ed836-05ce-4f39-98fa-508774f29323:bucket:geretain-rhelai-test-models"
