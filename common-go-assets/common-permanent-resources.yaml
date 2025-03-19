@@ -185,6 +185,3 @@ rhelai_model_cos_bucket_crn: "crn:v1:bluemix:public:cloud-object-storage:global:
 rhelai_model_cos_bucket_name: "geretain-rhelai-test-models"
 rhelai_model_cos_bucket_url: "cos://us-south/geretain-rhelai-test-models"
 rhelai_model_cos_bucket_region: "us-south"
-
-# DB2 on cloud permanent instance for EASe4J test
-geretain-db2fore4j-instance: "crn:v1:bluemix:public:dashdb-for-transactions:us-east:a/abac0df06b644a9cabc6e44f55b3880e:9dd45b32-6ae8-4172-8ca6-31d08ef679ad::"
