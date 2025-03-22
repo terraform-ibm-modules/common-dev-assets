@@ -77,7 +77,7 @@ repos:
         - --hook-config=--parallelism-limit=1
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 3.2.386
+  rev: 3.2.390
   hooks:
     - id: checkov
       args:
@@ -184,6 +184,6 @@ repos:
       pass_filenames: false
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
-  rev: v0.1.26
+  rev: v0.1.28
   hooks:
     - id: helmlint
