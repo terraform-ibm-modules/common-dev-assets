@@ -146,10 +146,10 @@ account_level_tenant_id: "35daa2ef-759b-4189-8596-e7a0907e8582"
 account_level_tenant_crn: "crn:v1:bluemix:public:logs-router:us-east:a/abac0df06b644a9cabc6e44f55b3880e:35daa2ef-759b-4189-8596-e7a0907e8582::"
 
 # VSI Snapshot Consistency Group
-snapshot_group_au_syd_group_id: "r026-43d41ad0-88f4-4e99-8adf-0cae4a02710c"
-snapshot_group_au_syd_boot_id: "r026-88f05225-d0aa-4d4e-896f-0135ae569bcc"
-snapshot_group_au_syd_vol1_id: "r026-daf63a97-c445-4f9c-bb54-d6e371e95388"
-snapshot_group_au_syd_vol2_id: "r026-1518ae7d-319c-4164-a781-56067e9be451"
+snapshot_group_au_syd_group_id: "r026-3fa43751-8250-4de0-aac3-b45c7145b178"
+snapshot_group_au_syd_boot_id: "r026-1fc0436f-eb3b-47a5-8ace-79414494d645"
+snapshot_group_au_syd_vol1_id: "r026-94dffa4c-9f78-4710-9364-ba8c7e0f3ff2"
+snapshot_group_au_syd_vol2_id: "r026-81e47123-c33a-4e48-9d3d-0dc05a84046a"
 
 # etcd instance crn for backup-restore test
 etcd_crn: "crn:v1:bluemix:public:databases-for-etcd:us-south:a/abac0df06b644a9cabc6e44f55b3880e:0acee023-4933-4e3b-a7ed-118e2c79fcca::"
