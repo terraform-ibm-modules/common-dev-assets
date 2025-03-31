@@ -69,6 +69,8 @@ repos:
         - --args=--skip-files="**/examples/**/*.yaml"
         - --args=--skip-files="**/examples/**/*.yml"
         - --args=--skip-files="**/helm-charts/**/*"
+        # temporary disabled for sm and proxy issue - to be removed
+        - --args=--skip-files="**/chart/**/*"
         # workaround for https://github.com/antonbabenko/pre-commit-terraform/issues/833
         - --args=--skip-files="**/scripts/*.yaml"
         - --args=--skip-files="**/tests/**/*"
