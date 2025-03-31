@@ -97,7 +97,7 @@ rabbitmqVersion: 3.12
 rabbitmqRegion: "us-south"
 
 # redis instance crn for backup-restore test
-redisCrn: "crn:v1:bluemix:public:databases-for-redis:us-south:a/abac0df06b644a9cabc6e44f55b3880e:6f027028-8808-4a50-b477-8819ec7141b8::"
+redisCrn: "crn:v1:bluemix:public:databases-for-redis:us-south:a/abac0df06b644a9cabc6e44f55b3880e:b0bc0f9e-a688-408a-bf80-a51e6ee306e9::"
 redisVersion: 7.2
 redisRegion: "us-south"
 
