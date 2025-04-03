@@ -37,7 +37,6 @@ cePublicCertCommonName: "geretain-code-engine-public-cert"
 sdnlbServiceIdName: "geretain - sDNLB-ServiceID - DO NOT DELETE"
 sdnlbServiceId: "ServiceId-1ed6ddfa-b4a0-4df7-86e0-461b8bb02d3d"
 
-
 # IAM ServiceID for PAG sDNLB user
 sdnlbPagServiceIdName: "geretain - sDNLB-PAG-service-id - DO NOT DELETE"
 sdnlbPagServiceId: "ServiceId-cf2df49b-fef5-4aeb-87a0-f3b1995d127a"
@@ -47,14 +46,7 @@ sdnlbPagSecretId: "a7ec0241-7ba6-dcd8-c43f-1ca0480e126a" # secret ID in GEdev pe
 # Cloudant Dedicated Host
 dedicatedHostCrn: "crn:v1:bluemix:public:cloudantnosqldb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:7c88e3f2-4412-4f45-b613-bae10b1e103c::"
 
-# HyperProtect Crypto Instances and Root Keys
-# hpcs_east instance id
-hpcs_east: "bc07f975-0b8c-47a3-9c10-fffa60f483f1"
-hpcs_east_crn: "crn:v1:bluemix:public:hs-crypto:us-east:a/abac0df06b644a9cabc6e44f55b3880e:bc07f975-0b8c-47a3-9c10-fffa60f483f1::"
-hpcs_name_east: "geretain-hyper-protect-crypto-us-east"
-hpcs_rg_east: "Default"
-hpcs_east_root_key_crn: "crn:v1:bluemix:public:hs-crypto:us-east:a/abac0df06b644a9cabc6e44f55b3880e:bc07f975-0b8c-47a3-9c10-fffa60f483f1:key:5d1f4bb9-9981-4577-a5a6-a65f7bc28bc9"
-# hpcs_south instance id
+# HyperProtect Crypto Instance and Root Key
 hpcs_south: "e6dce284-e80f-46e1-a3c1-830f7adff7a9"
 hpcs_name_south: "geretain-hyper-protect-crypto-us-south"
 hpcs_rg_south: "Default"
@@ -105,7 +97,7 @@ rabbitmqVersion: 3.12
 rabbitmqRegion: "us-south"
 
 # redis instance crn for backup-restore test
-redisCrn: "crn:v1:bluemix:public:databases-for-redis:us-south:a/abac0df06b644a9cabc6e44f55b3880e:6f027028-8808-4a50-b477-8819ec7141b8::"
+redisCrn: "crn:v1:bluemix:public:databases-for-redis:us-south:a/abac0df06b644a9cabc6e44f55b3880e:b0bc0f9e-a688-408a-bf80-a51e6ee306e9::"
 redisVersion: 7.2
 redisRegion: "us-south"
 
@@ -154,10 +146,10 @@ account_level_tenant_id: "35daa2ef-759b-4189-8596-e7a0907e8582"
 account_level_tenant_crn: "crn:v1:bluemix:public:logs-router:us-east:a/abac0df06b644a9cabc6e44f55b3880e:35daa2ef-759b-4189-8596-e7a0907e8582::"
 
 # VSI Snapshot Consistency Group
-snapshot_group_au_syd_group_id: "r026-43d41ad0-88f4-4e99-8adf-0cae4a02710c"
-snapshot_group_au_syd_boot_id: "r026-88f05225-d0aa-4d4e-896f-0135ae569bcc"
-snapshot_group_au_syd_vol1_id: "r026-daf63a97-c445-4f9c-bb54-d6e371e95388"
-snapshot_group_au_syd_vol2_id: "r026-1518ae7d-319c-4164-a781-56067e9be451"
+snapshot_group_au_syd_group_id: "r026-3fa43751-8250-4de0-aac3-b45c7145b178"
+snapshot_group_au_syd_boot_id: "r026-1fc0436f-eb3b-47a5-8ace-79414494d645"
+snapshot_group_au_syd_vol1_id: "r026-94dffa4c-9f78-4710-9364-ba8c7e0f3ff2"
+snapshot_group_au_syd_vol2_id: "r026-81e47123-c33a-4e48-9d3d-0dc05a84046a"
 
 # etcd instance crn for backup-restore test
 etcd_crn: "crn:v1:bluemix:public:databases-for-etcd:us-south:a/abac0df06b644a9cabc6e44f55b3880e:0acee023-4933-4e3b-a7ed-118e2c79fcca::"
@@ -177,3 +169,19 @@ geretain-appmod-db2-subscription-id: 9133cdfc-f4ba-93b3-7487-d4cce64975a3
 
 # permanent cloud logs instance crn
 cloud_logs_instance_crn: "crn:v1:bluemix:public:logs:us-east:a/abac0df06b644a9cabc6e44f55b3880e:6e931667-0f47-4c59-be2e-fa9b9f13f1a4::"
+
+# General use COS instance
+general_test_storage_cos_instance_crn: "crn:v1:bluemix:public:cloud-object-storage:global:a/abac0df06b644a9cabc6e44f55b3880e:855ed836-05ce-4f39-98fa-508774f29323::"
+general_test_storage_cos_instance_name: "geretain-test-storage"
+general_test_storage_cos_instance_resource_group: "geretain-test-permanent"
+
+# RHEL-AI project test resources
+rhelai_image_cos_bucket_crn: "crn:v1:bluemix:public:cloud-object-storage:global:a/abac0df06b644a9cabc6e44f55b3880e:855ed836-05ce-4f39-98fa-508774f29323:bucket:geretain-rhelai-test-images"
+rhelai_image_cos_bucket_name: "geretain-rhelai-test-images"
+rhelai_image_cos_bucket_url: "cos://us-south/geretain-rhelai-test-images/rhel-ai-nvidia-1.4-1739107849-x86_64-kvm.qcow2"
+rhelai_image_cos_bucket_region: "us-south"
+
+rhelai_model_cos_bucket_crn: "crn:v1:bluemix:public:cloud-object-storage:global:a/abac0df06b644a9cabc6e44f55b3880e:855ed836-05ce-4f39-98fa-508774f29323:bucket:geretain-rhelai-test-models"
+rhelai_model_cos_bucket_name: "geretain-rhelai-test-models"
+rhelai_model_cos_bucket_url: "cos://us-south/geretain-rhelai-test-models"
+rhelai_model_cos_bucket_region: "us-south"
