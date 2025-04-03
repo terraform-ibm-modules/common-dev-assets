@@ -192,4 +192,17 @@ repos:
   rev: v2.4.1
   hooks:
   - id: codespell
-    files: ^.*\.(sh|tf|md|yml)$
+    files: ^.*\.(tf|md|yml)$
+    exclude: |
+      (?x)^(
+        .*\.svg|
+        .*\.sh|
+        .*\.pdf|
+        go\.sum|
+        go\.mod|
+        Makefile|
+        common-dev-assets/.*
+      )$
+    args:
+      - --ignore-words=.codespell-ignores
+      - --skip="*.git/*"

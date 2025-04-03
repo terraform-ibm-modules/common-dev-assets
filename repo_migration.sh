@@ -79,7 +79,7 @@ function add_git_submodule() {
 # Create Symbolic links
 function create_symbolic_links() {
     echo "Creating symbolic links"
-    for file in ".pre-commit-config.yaml" "Makefile" "ci"; do
+    for file in ".pre-commit-config.yaml" "Makefile" "ci" ".codespell-ignores"; do
       if [ -f "${file}" ]
       then
         if [[ "yes" == $(confirm "Replace ${file} [y/N]? (Required for migration)") ]]
