@@ -249,7 +249,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=terraform-docs/terraform-docs
-TERRAFORM_DOCS_VERSION=v0.19.0
+TERRAFORM_DOCS_VERSION=v0.20.0
 BINARY=terraform-docs
 set +e
 INSTALLED_TERRADOCS_VERSION="$(terraform-docs --version | head -1 | cut -d' ' -f3)"
