@@ -218,7 +218,7 @@ fi
 #######################################
 
 # Locking into the latest version that Schematics supports currently
-TERRAFORM_VERSION=v1.9.2
+TERRAFORM_VERSION=v1.10.5
 BINARY=terraform
 
 set +e
