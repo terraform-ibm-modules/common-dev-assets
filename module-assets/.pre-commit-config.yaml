@@ -190,6 +190,6 @@ repos:
 - repo: https://github.com/python-jsonschema/check-jsonschema
   rev: 0.33.0
   hooks:
-    - id: check-jsonschema
+    - id: Validate ibm_catalog.json schema
       files: ibm_catalog.json
       args: ["--schemafile", "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.94/ibm_catalog-schema.json"]
