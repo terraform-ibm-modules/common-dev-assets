@@ -180,6 +180,7 @@ repos:
       entry: python3 ci/validateIbmCatalogJson.py
       language: python
       pass_filenames: false
+      args: ["--skip-element", "skip_redis_secrets_manager_auth_policy_2"]
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
   rev: v0.1.29

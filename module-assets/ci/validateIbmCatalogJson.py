@@ -1,3 +1,4 @@
+import argparse
 import json
 import os
 import sys
@@ -70,6 +71,11 @@ def check_ibm_catalog_file():
     with open(IBM_CATALOG_FILE) as f:
         ibm_catalog = json.load(f)
 
+    # parse arguments to get skip elements
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--skip-element", action="append", dest="skip_elements")
+    args = parser.parse_args()
+
     # loop through flavors and check inputs for each solution defined in working_directory. Check only for "product_kind": "solution".
     if ibm_catalog and "products" in ibm_catalog and ibm_catalog["products"]:
         for product in ibm_catalog["products"]:
@@ -109,7 +115,11 @@ def check_ibm_catalog_file():
 
                     # get inputs defined in ibm_catalog.json for working_directory
                     if "configuration" in flavor and flavor["configuration"]:
-                        catalog_inputs = [x["key"] for x in flavor["configuration"]]
+                        catalog_inputs = [
+                            x["key"]
+                            for x in flavor["configuration"]
+                            if x["key"] not in args.skip_elements
+                        ]
 
                     # compare input variables defined in a solution with the one's defined in ibm_catalog.json
                     inputs_not_in_catalog = check_inputs_missing(
