@@ -115,10 +115,11 @@ def check_ibm_catalog_file():
 
                     # get inputs defined in ibm_catalog.json for working_directory
                     if "configuration" in flavor and flavor["configuration"]:
+                        skip_elements = args.skip_elements or []
                         catalog_inputs = [
                             x["key"]
                             for x in flavor["configuration"]
-                            if x["key"] not in args.skip_elements
+                            if x["key"] not in skip_elements
                         ]
 
                     # compare input variables defined in a solution with the one's defined in ibm_catalog.json
