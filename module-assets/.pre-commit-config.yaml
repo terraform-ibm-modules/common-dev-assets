@@ -64,6 +64,7 @@ repos:
         - --args=--enable-rule=terraform_standard_module_structure
       exclude: dynamic_values/ # Do not run tflint in dynamic_folders directory (temp solution for SLZ modules). Internal issue created to track better solution.
     - id: terraform_trivy
+      files: .*
       args:
         - --args=--skip-files="**/.terraform/**/*"
         - --args=--skip-files="**/examples/**/*.yaml"
