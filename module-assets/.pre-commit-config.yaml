@@ -193,4 +193,4 @@ repos:
     - id: check-jsonschema
       name: Validate ibm_catalog.json schema
       files: ibm_catalog.json
-      args: ["--schemafile", "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.94/ibm_catalog-schema.json"]
+      args: ["--schemafile", "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.95/ibm_catalog-schema.json"]
