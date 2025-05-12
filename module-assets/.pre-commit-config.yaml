@@ -180,7 +180,6 @@ repos:
       entry: python3 ci/validateIbmCatalogJson.py
       language: python
       pass_filenames: false
-      args: ["--skip-element", "single_resource_name"]
 # helm lint
 - repo: https://github.com/gruntwork-io/pre-commit
   rev: v0.1.29
