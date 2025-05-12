@@ -109,7 +109,11 @@ def check_ibm_catalog_file():
 
                     # get inputs defined in ibm_catalog.json for working_directory
                     if "configuration" in flavor and flavor["configuration"]:
-                        catalog_inputs = [x["key"] for x in flavor["configuration"]]
+                        catalog_inputs = [
+                            x["key"]
+                            for x in flavor["configuration"]
+                            if not x.get("virtual", False)
+                        ]
 
                     # compare input variables defined in a solution with the one's defined in ibm_catalog.json
                     inputs_not_in_catalog = check_inputs_missing(
