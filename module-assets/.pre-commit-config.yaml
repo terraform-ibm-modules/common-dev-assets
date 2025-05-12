@@ -77,7 +77,7 @@ repos:
         - --hook-config=--parallelism-limit=1
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 3.2.410
+  rev: 3.2.414
   hooks:
     - id: checkov
       args:
@@ -193,4 +193,4 @@ repos:
     - id: check-jsonschema
       name: Validate ibm_catalog.json schema
       files: ibm_catalog.json
-      args: ["--schemafile", "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.94/ibm_catalog-schema.json"]
+      args: ["--schemafile", "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.96/ibm_catalog-schema.json"]
