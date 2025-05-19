@@ -79,8 +79,7 @@
       "rangeStrategy": "bump",
       "semanticCommitType": "fix",
       "group": true,
-      "groupName": "required_provider",
-      "commitMessageExtra": "to latest for deployable architectures",
+      "groupName": "Terraform dependencies",
       "prPriority": 10
     },
     {
