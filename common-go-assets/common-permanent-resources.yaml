@@ -104,7 +104,7 @@ redisRegion: "us-south"
 # permanent resources for eso module tests
 acme_letsencrypt_private_key_sm_id: "79c6d411-c18f-4670-b009-b0044a238667"
 acme_letsencrypt_private_key_sm_region: "us-south"
-acme_letsencrypt_private_key_secret_crn: "crn:v1:bluemix:public:secrets-manager:us-south:a/abac0df06b644a9cabc6e44f55b3880e:79c6d411-c18f-4670-b009-b0044a238667:secret:80060526-1a80-8b0b-1c6d-b941799e9b08"
+acme_letsencrypt_private_key_secret_crn: "crn:v1:bluemix:public:secrets-manager:us-south:a/abac0df06b644a9cabc6e44f55b3880e:79c6d411-c18f-4670-b009-b0044a238667:secret:80060526-1a80-8b0b-1c6d-b941799e9b08" # pragma: allowlist secret
 acme_letsencrypt_private_key_secret_id: "80060526-1a80-8b0b-1c6d-b941799e9b08"
 imported_certificate_sm_id: "79c6d411-c18f-4670-b009-b0044a238667"
 imported_certificate_sm_region: "us-south"
