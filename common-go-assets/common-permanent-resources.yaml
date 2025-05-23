@@ -30,7 +30,7 @@ dnsDelegatedCloudDomain: "goldeneye.appdomain.cloud" # https://github.ibm.com/Co
 dnsDelegatedIBMDomain: "goldeneye.dev.cloud.ibm.com" # https://github.ibm.com/CoreCloud/cloud.ibm.com/issues/1244
 
 # code engine public cert
-cePublicCertId: "78892bbb-ca34-2a1d-3f97-f3018348581a"
+cePublicCertId: "01262dac-7fcf-c40e-794d-7b8d7b67b772"
 cePublicCertCommonName: "geretain-code-engine-public-cert"
 
 # IAM ServiceID for Service dnlb
@@ -92,8 +92,8 @@ elasticsearchVersion: 8.15
 elasticsearchRegion: "us-south"
 
 # rabbitMQ instance crn for backup-restore test
-rabbitmqCrn: "crn:v1:bluemix:public:messages-for-rabbitmq:us-south:a/abac0df06b644a9cabc6e44f55b3880e:6b86d46e-8f2f-4508-82fb-3f1597f4035b::"
-rabbitmqVersion: 3.12
+rabbitmqCrn: "crn:v1:bluemix:public:messages-for-rabbitmq:us-south:a/abac0df06b644a9cabc6e44f55b3880e:956e6e71-2655-49a1-a367-abf009cf1901::"
+rabbitmqVersion: 3.13
 rabbitmqRegion: "us-south"
 
 # redis instance crn for backup-restore test
