@@ -200,6 +200,7 @@ repos:
   rev: v2.4.1
   hooks:
   - id: codespell
+    entry: ci/codespell-check.sh
     files: ^.*\.(tf|md|json)$
     exclude: |
       (?x)^(
@@ -212,5 +213,3 @@ repos:
         common-dev-assets/.*
         \.git/.*
       )$
-    args:
-      - --ignore-words=.codespell-ignores
