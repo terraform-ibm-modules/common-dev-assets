@@ -21,6 +21,11 @@ variable "vpc_tags" {
   default     = []
 }
 
+variable "rules" {
+  description = "List of rules"
+  type        = list(string)
+}
+
 variable "ibmcloud_api_key" {
   description = "API key that's associated with the account to use, set via environment variable TF_VAR_ibmcloud_api_key"
   type        = string

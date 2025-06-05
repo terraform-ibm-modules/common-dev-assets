@@ -48,6 +48,12 @@
       "groupName": "CI dependencies"
     },
     {
+      "description": "Bundle terraform related updates into the same PR and priortise creation of these PRs.",
+      "matchManagers": ["terraform", "terraform-version"],
+      "groupName": "Terraform dependencies",
+      "prPriority": 10
+    },
+    {
       "description": "Disable terraform required_version updates.",
       "matchManagers": ["terraform"],
       "matchDepTypes": ["required_version"],
@@ -73,15 +79,7 @@
       "rangeStrategy": "bump",
       "semanticCommitType": "fix",
       "group": true,
-      "groupName": "required_provider",
-      "commitMessageExtra": "to latest for deployable architectures",
-      "prPriority": 10
-    },
-    {
-      "description": "Prioritise terraform module updates",
-      "matchManagers": ["terraform"],
-      "matchDepTypes": ["module"],
-      "groupName": "terraform-module",
+      "groupName": "Terraform dependencies",
       "prPriority": 10
     },
     {
