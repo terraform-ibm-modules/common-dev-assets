@@ -48,7 +48,7 @@
       "groupName": "CI dependencies"
     },
     {
-      "description": "Bundle terraform related updates into the same PR and priortise creation of these PRs.",
+      "description": "Bundle terraform related updates into the same PR and prioritise creation of these PRs.",
       "matchManagers": ["terraform", "terraform-version"],
       "groupName": "Terraform dependencies",
       "prPriority": 10
