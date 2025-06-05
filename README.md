@@ -16,3 +16,36 @@ command:
 ```bash
 make
 ```
+
+# Note on codespell pre-commit hook
+
+## Overview
+This repository uses **codespell** to automatically check for common spelling mistakes in code and documentation files.
+
+## What Files Are Checked
+- **Terraform files** (`.tf`)
+- **Markdown files** (`.md`)
+- **JSON files** (`.json`)
+- **Python files** (`.py`)
+
+## What Files Are Ignored
+- Images (`.svg`), scripts (`.sh`), PDFs (`.pdf`)
+- Go module files (`go.sum`, `go.mod`)
+- Makefiles
+- Files in `common-dev-assets/` directory
+- Git metadata files
+
+## Adding Custom Ignore Words
+
+If codespell flags a word that should be ignored (technical terms, DA specific, etc.), add it to file:
+
+```
+ci/.codespell-ignores
+```
+
+**Format:** One word per line
+```
+word
+test
+etc
+```

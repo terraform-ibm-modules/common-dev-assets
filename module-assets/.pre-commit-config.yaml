@@ -201,11 +201,10 @@ repos:
   hooks:
   - id: codespell
     entry: ci/codespell-check.sh
-    files: ^.*\.(tf|md|json)$
+    files: ^.*\.(tf|md|json|py)$
     exclude: |
       (?x)^(
         .*\.svg|
-        .*\.sh|
         .*\.pdf|
         go\.sum|
         go\.mod|
