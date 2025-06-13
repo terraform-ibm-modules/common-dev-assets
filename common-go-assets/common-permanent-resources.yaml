@@ -76,11 +76,6 @@ mysqlPITRCrn: "crn:v1:bluemix:public:databases-for-mysql:us-south:a/abac0df06b64
 mysqlPITRVersion: "8.0"
 mysqlPITRRegion: "us-south"
 
-# Enterprise DB instance crn for PITR test
-enterpriseDbPITRCrn: "crn:v1:bluemix:public:databases-for-enterprisedb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:3d3077b9-fcc0-427f-a877-d7af3830ca5e::"
-enterpriseDbPITRVersion: 12
-enterpriseDbPITRRegion: "us-south"
-
 # mongoDB instance crn for backup-restore test
 mongodbCrn: "crn:v1:bluemix:public:databases-for-mongodb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:10e1efff-d5fa-4d83-adef-f47f81ac5f00::"
 mongodbVersion: 6
