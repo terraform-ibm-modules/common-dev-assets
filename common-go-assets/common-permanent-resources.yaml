@@ -185,3 +185,6 @@ rhelai_model_cos_bucket_region: "us-south"
 
 # App Config
 app_config_crn: "crn:v1:bluemix:public:apprapp:us-south:a/abac0df06b644a9cabc6e44f55b3880e:9fc73a77-f319-4086-a08d-43e00672f981::"
+
+# DAF enterprise
+daf_enterprise_id: "3e4723f82d754ef493651d63bc897ea4"
