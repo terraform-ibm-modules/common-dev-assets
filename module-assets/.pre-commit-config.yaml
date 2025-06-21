@@ -195,3 +195,20 @@ repos:
       name: Validate ibm_catalog.json schema
       files: ibm_catalog.json
       args: ["--schemafile", "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.96/ibm_catalog-schema.json"]
+
+- repo: https://github.com/codespell-project/codespell
+  rev: v2.4.1
+  hooks:
+  - id: codespell
+    entry: ci/codespell-check.sh
+    files: ^.*\.(tf|md|json|py)$
+    exclude: |
+      (?x)^(
+        .*\.svg|
+        .*\.pdf|
+        go\.sum|
+        go\.mod|
+        Makefile|
+        common-dev-assets/.*
+        \.git/.*
+      )$
