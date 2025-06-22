@@ -76,11 +76,6 @@ mysqlPITRCrn: "crn:v1:bluemix:public:databases-for-mysql:us-south:a/abac0df06b64
 mysqlPITRVersion: "8.0"
 mysqlPITRRegion: "us-south"
 
-# Enterprise DB instance crn for PITR test
-enterpriseDbPITRCrn: "crn:v1:bluemix:public:databases-for-enterprisedb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:3d3077b9-fcc0-427f-a877-d7af3830ca5e::"
-enterpriseDbPITRVersion: 12
-enterpriseDbPITRRegion: "us-south"
-
 # mongoDB instance crn for backup-restore test
 mongodbCrn: "crn:v1:bluemix:public:databases-for-mongodb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:10e1efff-d5fa-4d83-adef-f47f81ac5f00::"
 mongodbVersion: 6
@@ -136,6 +131,7 @@ ibm_mq_queue_manager_license_usage: "Development"
 # HPC
 reservation_id_secret_id: "efe3b366-ac99-b959-0d71-6918258e6209"
 hpc_ibm_customer_number_secret_id: "b2f6765b-f974-8e09-8978-da93de20ca55"
+hpc_app_center_gui_password_secret_id: "1e3156f1-67e5-d9f9-a0c6-b5fd2833df32"
 
 # Atracker Trusted Profile
 atracker_trusted_profile: "Profile-ca8f5fa4-d3ba-4973-a5de-660032e9a12b"
@@ -189,3 +185,6 @@ rhelai_model_cos_bucket_region: "us-south"
 
 # App Config
 app_config_crn: "crn:v1:bluemix:public:apprapp:us-south:a/abac0df06b644a9cabc6e44f55b3880e:9fc73a77-f319-4086-a08d-43e00672f981::"
+
+# DAF enterprise
+daf_enterprise_id: "3e4723f82d754ef493651d63bc897ea4"
