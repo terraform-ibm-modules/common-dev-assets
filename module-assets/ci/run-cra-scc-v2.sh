@@ -77,7 +77,7 @@ terraform show -json "$plan_out" | jq '.' > "$plan_json"
 # Login to IBM Cloud using API key and set the target region
 ibmcloud login --apikey "${TF_VAR_ibmcloud_api_key}" -r "$SCC_REGION"
 
-# Run IBM Cloud CRA Terraform validate and continue if it fails, Will fail later if any ot the failures are valid ie not on the ignore list or apply to the created Terraform resources
+# Run IBM Cloud CRA Terraform validate and continue if it fails, Will fail later if any of the failures are valid ie not on the ignore list or apply to the created Terraform resources
 set +e
 ibmcloud cra terraform-validate \
       --tf-plan "$plan_json" \
