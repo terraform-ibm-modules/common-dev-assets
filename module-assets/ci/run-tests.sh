@@ -20,7 +20,6 @@ if [ "${GITHUB_ACTIONS}" == "true" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/${GITHUB_BASE_REF}"
   fi
-  REPO_NAME="$(basename "${GITHUB_REPOSITORY}")"
 
 # Travis (see https://docs.travis-ci.com/user/environment-variables)
 elif [ "${TRAVIS}" == "true" ]; then
@@ -29,7 +28,6 @@ elif [ "${TRAVIS}" == "true" ]; then
     IS_PR=true
     TARGET_BRANCH="${TRAVIS_BRANCH}"
   fi
-  REPO_NAME="$(basename "${TRAVIS_REPO_SLUG}")"
 
 # Tekton Toolchain (see https://cloud.ibm.com/docs/devsecops?topic=devsecops-devsecops-pipelinectl)
 elif [ -n "${PIPELINE_RUN_ID}" ]; then
@@ -37,7 +35,6 @@ elif [ -n "${PIPELINE_RUN_ID}" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/$(get_env base-branch)"
   fi
-  REPO_NAME="$(load_repo app-repo path)"
 
 else
   echo "Could not determine CI runtime environment. Script only support tekton, travis or github actions."
@@ -72,7 +69,6 @@ if [ ${IS_PR} == true ]; then
                          "catalogValidationValues.json.template"
                          ".one-pipeline.yaml"
                          "module-metadata.json"
-                         "ibm_catalog.json"
                          "cra-tf-validate-ignore-goals.json"
                          "cra-tf-validate-ignore-rules.json"
                          "pvs.preset.json"
@@ -81,18 +77,6 @@ if [ ${IS_PR} == true ]; then
                          "LICENSE"
                          ".catalog-onboard-pipeline.yaml"
                          ".trivyignore")
-
-  # Remove `ibm_catalog.json` only if the repo name starts with `stack-`
-  if [[ $REPO_NAME == stack-* ]]; then
-    for index in "${!skip_array[@]}"; do
-      if [[ "${skip_array[$index]}" == "ibm_catalog.json" ]]; then
-        unset "skip_array[$index]"
-        break
-      fi
-    done
-    # reindex the array
-    skip_array=("${skip_array[@]}")
-  fi
 
   # Determine all files being changed in the PR, and add it to array
   changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
