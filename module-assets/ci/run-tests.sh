@@ -72,7 +72,6 @@ if [ ${IS_PR} == true ]; then
                          "catalogValidationValues.json.template"
                          ".one-pipeline.yaml"
                          "module-metadata.json"
-                         "ibm_catalog.json"
                          "cra-tf-validate-ignore-goals.json"
                          "cra-tf-validate-ignore-rules.json"
                          "pvs.preset.json"
@@ -81,18 +80,6 @@ if [ ${IS_PR} == true ]; then
                          "LICENSE"
                          ".catalog-onboard-pipeline.yaml"
                          ".trivyignore")
-
-  # Remove `ibm_catalog.json` only if the repo name starts with `stack-`
-  if [[ $REPO_NAME == stack-* ]]; then
-    for index in "${!skip_array[@]}"; do
-      if [[ "${skip_array[$index]}" == "ibm_catalog.json" ]]; then
-        unset "skip_array[$index]"
-        break
-      fi
-    done
-    # reindex the array
-    skip_array=("${skip_array[@]}")
-  fi
 
   # Determine all files being changed in the PR, and add it to array
   changed_files="$(git diff --name-only "${TARGET_BRANCH}..HEAD" --)"
