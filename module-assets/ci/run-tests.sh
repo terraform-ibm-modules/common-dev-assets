@@ -19,8 +19,7 @@ if [ "${GITHUB_ACTIONS}" == "true" ]; then
   if [ -n "${GITHUB_HEAD_REF}" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/${GITHUB_BASE_REF}"
-  fi
-  REPO_NAME="$(basename "${GITHUB_REPOSITORY}")"
+  fi  
 
 # Travis (see https://docs.travis-ci.com/user/environment-variables)
 elif [ "${TRAVIS}" == "true" ]; then
@@ -29,7 +28,6 @@ elif [ "${TRAVIS}" == "true" ]; then
     IS_PR=true
     TARGET_BRANCH="${TRAVIS_BRANCH}"
   fi
-  REPO_NAME="$(basename "${TRAVIS_REPO_SLUG}")"
 
 # Tekton Toolchain (see https://cloud.ibm.com/docs/devsecops?topic=devsecops-devsecops-pipelinectl)
 elif [ -n "${PIPELINE_RUN_ID}" ]; then
@@ -37,7 +35,6 @@ elif [ -n "${PIPELINE_RUN_ID}" ]; then
     IS_PR=true
     TARGET_BRANCH="origin/$(get_env base-branch)"
   fi
-  REPO_NAME="$(load_repo app-repo path)"
 
 else
   echo "Could not determine CI runtime environment. Script only support tekton, travis or github actions."
