@@ -10,8 +10,8 @@
   "branchConcurrentLimit": 0,
   "automerge": false,
   "force": {
-    "description": "Recreate PRs even if same ones were closed previously",
-    "recreateWhen": "always"
+    "description": "Recreate the PR if something has actually changed, not on every cycle",
+    "recreateWhen": "auto"
   },
   "labels": ["renovate"],
   "rangeStrategy": "pin",
