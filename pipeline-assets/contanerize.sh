@@ -39,11 +39,15 @@ if [[ "${exit_code}" -eq 0 ]]; then
     PR_NUMBER=$(get_env "PR_URL" | grep -o '[^/]*$')
     IMAGE_NAME=$(get_env "IMAGE_NAME")
     IMAGE_TAG="PR-${PR_NUMBER}"
-    make docker-push IMAGE_TAG="${IMAGE_TAG}"
     REGISTRY="$(get_env 'DEV_REPO'  | cut -f1 -d/  )"
     NAMESPACE="$(get_env 'DEV_REPO' | cut -f2 -d/ )"
 
-    ./common-dev-assets/pipeline-assets/image_vuln_scan.sh "${REGISTRY}" "${NAMESPACE}" "${IMAGE_NAME}" "${IMAGE_TAG}" "${IBMCLOUD_APIKEY}" false "${SCAN_ENGINES}"  || exit_code=$?
+    make docker-push IMAGE_TAG="${IMAGE_TAG}" || exit_code=$?
+
+    # Only proceed to scan if docker push successful
+    if [[ "${exit_code}" -eq 0 ]]; then
+      ./common-dev-assets/pipeline-assets/image_vuln_scan.sh "${REGISTRY}" "${NAMESPACE}" "${IMAGE_NAME}" "${IMAGE_TAG}" "${IBMCLOUD_APIKEY}" false "${SCAN_ENGINES}" || exit_code=$?
+    fi
   fi
 else
   echo "Skipping push to ICR and VA scan due to earlier failure"
