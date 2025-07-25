@@ -50,6 +50,7 @@
     {
       "description": "Bundle terraform related updates into the same PR and priortise creation of these PRs.",
       "matchManagers": ["terraform", "terraform-version"],
+      "matchDatasources": ["terraform-module", "terraform-provider"],
       "groupName": "Terraform dependencies",
       "prPriority": 10
     },

@@ -2,7 +2,7 @@
 # For use within Tekton pipeline
 
 USAGE="
-Usage: $0 <registry> <namespace> <image> <version> <apikey> <ignore-config-issues>
+Usage: $0 <registry> <namespace> <image> <version> <apikey> <ignore-config-issues> <scan-engines>
 
 where:
 
@@ -12,6 +12,7 @@ where:
 - <version> is the docker image tag
 - <apikey> is the api key with permissions to push to the container registry
 - <ignore-config-issues> is a boolean (true or false) whether to ignore configuration issues or not
+- <scan-engines> is the list of scan engines to scan with (supports 'ibm_va' or 'ibm_va,prisma_cloud'). You must be allowlisted to use prisma_cloud.
 
 Dependencies:
 - jq
@@ -64,26 +65,36 @@ get_bearer_token() {
 }
 
 check_vulnerability_scan() {
-    if [ "$#" -ne 4 ]; then
-      echo "Usage: $0 <image> <version> <token> <ignore-config>"
+    if [ "$#" -ne 5 ]; then
+      echo "Usage: $0 <image> <version> <token> <ignore-config> <scan-engines>"
       exit 1
     fi
     IMAGE=$1
     VERSION=$2
     TOKEN=$3
     IGNORE_CONFIG=$4
+    SCAN_ENGINES=$5
     CLOUD_VA_REPORT_URL=${CLOUD_VA_REPORT_URL/<image>/$IMAGE}
     CLOUD_VA_REPORT_URL=${CLOUD_VA_REPORT_URL/<version>/$VERSION}
     local response
     local status
-    response=$(curl -Lks -H "Authorization: $TOKEN" "${CONTAINER_REGISTRY_URL}${VA_IMAGE_REPORT_API_ENDPOINT}${CONTAINER_REGISTRY}/${IMAGE}:${VERSION}")
+    response=$(curl -Lks -H "Authorization: $TOKEN" -H "Scan-Engines: ${SCAN_ENGINES}" "${CONTAINER_REGISTRY_URL}${VA_IMAGE_REPORT_API_ENDPOINT}${CONTAINER_REGISTRY}/${IMAGE}:${VERSION}")
     echo "${response}" > "${LOCAL_REPORT}"
     status=$(echo "$response" | jq -r .status)
     message=$(echo "$response" | jq -r .message)
     vulnerabilities_number=$(echo "$response" | jq -r '.vulnerabilities | length' )
     configuration_issues_number=$(echo "$response" | jq -r '.configuration_issues | length' )
     echo "FAIL" > "${RESULT_FILE}"
-    if [ "$status" != 'null' ]; then
+    if [ "$status" = "null" ] || [ "$status" = "PARTIAL" ]; then
+        echo 'Image not scanned yet'
+        if [ "$message" != 'null' ]; then
+            echo "$message"
+            if [[ "$message" == *"does not exist in this namespace"* || "$message" == *"The identity provided is not authorized to perform the requested action"* || "$message" == *"Your account is not authorized to view"* || "$message" == *"invalid image name format"* ]]; then
+                exit 1
+            fi
+        fi
+        return 1
+    else
         echo 'Image processed'
         if [ "$vulnerabilities_number" -lt 1 ]; then
             detected_vul=false
@@ -117,22 +128,21 @@ check_vulnerability_scan() {
 
         echo "IBM CLOUD REPORT: ${CLOUD_VA_REPORT_URL}"
         return 0
-    else
-        echo 'Image not scanned yet'
-        if [ "$message" != 'null' ]; then
-            echo "$message"
-            if [[ "$message" == *"does not exist in this namespace"* || "$message" == *"The identity provided is not authorized to perform the requested action"* || "$message" == *"Your account is not authorized to view"* ]]; then
-                exit 1
-            fi
-        fi
-        return 1
     fi
 }
 
-if [ "$#" -ne 6 ]; then
+if [ "$#" -ne 7 ]; then
   echo "${USAGE}"
   exit 1
 fi
+
+# validate value for <scan-engines>
+if [ "$7" != "ibm_va" ] && [ "$7" != "ibm_va,prisma_cloud" ]; then
+  echo "Invalid value for <scan-engines>"
+  echo "${USAGE}"
+  exit 1
+fi
+
 
 check_for_jq
 
@@ -142,6 +152,7 @@ IMAGE=$3
 VERSION=$4
 APIKEY=$5
 IGNORE_CONFIG_ISSUES=$6
+SCAN_ENGINES=$7
 IAM_API_URL='https://iam.cloud.ibm.com/identity/token'
 CONTAINER_REGISTRY_URL="https://${REGISTRY_DNS_NAME}/"
 VA_IMAGE_REPORT_API_ENDPOINT='va/api/v4/report/image/'
@@ -151,7 +162,7 @@ LOCAL_REPORT="/tmp/${IMAGE}-va-report.json"
 token=$(get_bearer_token "$APIKEY")
 TMP_DIR=$(mktemp -d /tmp/ci-XXXXXXXXXX)
 RESULT_FILE="${TMP_DIR}/result.txt"
-RESULT=$(retry 20 check_vulnerability_scan "$IMAGE" "$VERSION" "$token" "$IGNORE_CONFIG_ISSUES")
+RESULT=$(retry 20 check_vulnerability_scan "$IMAGE" "$VERSION" "$token" "$IGNORE_CONFIG_ISSUES" "$SCAN_ENGINES")
 
 echo "${RESULT}"
 
