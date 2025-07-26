@@ -84,7 +84,7 @@ if [ ${IS_PR} == true ]; then
 
   # If there are no files in the commit, set match=true in order to skip tests.
   # NOTE: We can't use the size of the array in the logic here, as ${#file_array[@]}
-  # will return as 1 even when no files are commited in the PR.
+  # will return as 1 even when no files are committed in the PR.
   if [ "${file_array[*]}" == "" ]; then
     echo "No files found in file array"
     match=true
