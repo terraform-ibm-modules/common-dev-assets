@@ -1,11 +1,21 @@
 import json
 import os
+import re
 import sys
 from subprocess import PIPE, Popen
 
 IBM_CATALOG_FILE = "ibm_catalog.json"
 DA_FOLDER = "solutions"
 ERRORS = []
+
+
+def is_strict_version(version_str):
+    """
+    Returns True if the version string is strictly pinned to a version like '1.14' or '1.14.0'.
+    Rejects anything with comparison operators or ranges.
+    """
+    pattern = r"^\d+\.\d+(\.\d+)?$"
+    return re.match(pattern, version_str.strip()) is not None
 
 
 # Find duplicates in array
@@ -131,6 +141,8 @@ def check_ibm_catalog_file():
                         "terraform_version" in flavor and flavor["terraform_version"]
                     ):
                         terraform_version_error = "- key 'terraform_version' is missing"
+                    elif not is_strict_version(flavor["terraform_version"]):
+                        terraform_version_error = f"- key 'terraform_version': '{flavor["terraform_version"]}' not the right format. Should be locked to a version."
 
                     check_errors(
                         inputs_not_in_catalog,
