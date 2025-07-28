@@ -36,6 +36,7 @@ def check_errors(
     working_directory,
     flavor_label,
     product_label,
+    terraform_version_error,
 ):
     error = False
     errors = []
@@ -52,7 +53,9 @@ def check_errors(
     if len(duplicates) > 0:
         errors.append(f"- ibm_catalog.json has duplicates: {duplicates}")
         error = True
-
+    if terraform_version_error:
+        errors.append(terraform_version_error)
+        error = True
     if error:
         errors.insert(
             0,
@@ -85,6 +88,7 @@ def check_ibm_catalog_file():
                     product_label = product["label"]
 
                 for flavor in product["flavors"]:
+                    terraform_version_error = None
                     flavor_label = ""
                     if "label" in flavor and flavor["label"]:
                         flavor_label = flavor["label"]
@@ -109,11 +113,7 @@ def check_ibm_catalog_file():
 
                     # get inputs defined in ibm_catalog.json for working_directory
                     if "configuration" in flavor and flavor["configuration"]:
-                        catalog_inputs = [
-                            x["key"]
-                            for x in flavor["configuration"]
-                            if not x.get("virtual", False)
-                        ]
+                        catalog_inputs = [x["key"] for x in flavor["configuration"]]
 
                     # compare input variables defined in a solution with the one's defined in ibm_catalog.json
                     inputs_not_in_catalog = check_inputs_missing(
@@ -122,6 +122,12 @@ def check_ibm_catalog_file():
                     inputs_not_in_da = check_inputs_extra(da_inputs, catalog_inputs)
                     duplicates = find_duplicates(catalog_inputs)
 
+                    # if terraform_version is not defined inside flavor then add an error
+                    if not (
+                        "terraform_version" in flavor and flavor["terraform_version"]
+                    ):
+                        terraform_version_error = "- key 'terraform_version' is missing"
+
                     check_errors(
                         inputs_not_in_catalog,
                         inputs_not_in_da,
@@ -129,6 +135,7 @@ def check_ibm_catalog_file():
                         working_directory,
                         flavor_label,
                         product_label,
+                        terraform_version_error,
                     )
 
 
