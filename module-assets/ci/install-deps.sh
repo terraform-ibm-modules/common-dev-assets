@@ -200,7 +200,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=warrensbox/terraform-switcher
-TFSWITCH_VERSION=v1.4.6
+TFSWITCH_VERSION=v1.4.7
 BINARY=tfswitch
 set +e
 INSTALLED_TFSWITCH_VERSION="$(tfswitch --version | grep Version | awk '{ print $2 }')"
@@ -351,7 +351,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v2.2.2
+GOLANGCI_LINT_VERSION=v2.3.0
 BINARY=golangci-lint
 set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"
