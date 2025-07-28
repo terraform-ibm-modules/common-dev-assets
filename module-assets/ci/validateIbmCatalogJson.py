@@ -142,7 +142,8 @@ def check_ibm_catalog_file():
                     ):
                         terraform_version_error = "- key 'terraform_version' is missing"
                     elif not is_strict_version(flavor["terraform_version"]):
-                        terraform_version_error = f"- key 'terraform_version': {flavor["terraform_version"]} not the right format. Should be locked to a version."
+                        version = flavor["terraform_version"]
+                        terraform_version_error = f"- key 'terraform_version': '{version}' not the right format. Should be locked to a version."
 
                     check_errors(
                         inputs_not_in_catalog,
