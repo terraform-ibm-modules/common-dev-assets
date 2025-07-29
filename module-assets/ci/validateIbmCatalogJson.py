@@ -11,10 +11,10 @@ ERRORS = []
 
 def is_strict_version(version_str):
     """
-    Returns True if the version string is strictly pinned to a version like '1.14' or '1.14.0'.
-    Rejects anything with comparison operators or ranges.
+    Returns True if the version string is strictly pinned to a version like '1.10.0'.
+    Rejects anything with comparison operators, ranges, or incomplete versions like '1.10'.
     """
-    pattern = r"^\d+\.\d+(\.\d+)?$"
+    pattern = r"^\d+\.\d+\.\d+$"
     return re.match(pattern, version_str.strip()) is not None
 
 
@@ -143,7 +143,7 @@ def check_ibm_catalog_file():
                         terraform_version_error = "- key 'terraform_version' is missing"
                     elif not is_strict_version(flavor["terraform_version"]):
                         version = flavor["terraform_version"]
-                        terraform_version_error = f"- key 'terraform_version': '{version}' not the right format. Should be locked to a version."
+                        terraform_version_error = f"- key 'terraform_version': '{version}' not the right format. Should be locked to a version and have MAJOR.MINOR.PATCH format."
 
                     check_errors(
                         inputs_not_in_catalog,
