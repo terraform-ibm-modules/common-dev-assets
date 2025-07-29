@@ -74,8 +74,6 @@ check_vulnerability_scan() {
     TOKEN=$3
     IGNORE_CONFIG=$4
     SCAN_ENGINES=$5
-    CLOUD_VA_REPORT_URL=${CLOUD_VA_REPORT_URL/<image>/$IMAGE}
-    CLOUD_VA_REPORT_URL=${CLOUD_VA_REPORT_URL/<version>/$VERSION}
     local response
     local status
     response=$(curl -Lks -H "Authorization: $TOKEN" -H "Scan-Engines: ${SCAN_ENGINES}" "${CONTAINER_REGISTRY_URL}${VA_IMAGE_REPORT_API_ENDPOINT}${CONTAINER_REGISTRY}/${IMAGE}:${VERSION}")
@@ -125,8 +123,6 @@ check_vulnerability_scan() {
               echo "PASS" > "${RESULT_FILE}"
           fi
         fi
-
-        echo "IBM CLOUD REPORT: ${CLOUD_VA_REPORT_URL}"
         return 0
     fi
 }
@@ -157,7 +153,6 @@ IAM_API_URL='https://iam.cloud.ibm.com/identity/token'
 CONTAINER_REGISTRY_URL="https://${REGISTRY_DNS_NAME}/"
 VA_IMAGE_REPORT_API_ENDPOINT='va/api/v4/report/image/'
 CONTAINER_REGISTRY="${REGISTRY_DNS_NAME}/${NAMESPACE}"
-CLOUD_VA_REPORT_URL="https://cloud.ibm.com/containers-kubernetes/registry/images/${NAMESPACE}/<image>/<version>/detail/issues?region=ibm:yp:us-south"
 LOCAL_REPORT="/tmp/${IMAGE}-va-report.json"
 token=$(get_bearer_token "$APIKEY")
 TMP_DIR=$(mktemp -d /tmp/ci-XXXXXXXXXX)
