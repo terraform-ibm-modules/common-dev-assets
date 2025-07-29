@@ -51,17 +51,8 @@ repos:
         - --tf-init-args=-upgrade
     - id: terraform_tflint
       args:
-        - --args=--enable-rule=terraform_unused_declarations
-        - --args=--enable-rule=terraform_deprecated_index
-        - --args=--enable-rule=terraform_comment_syntax
-        - --args=--enable-rule=terraform_documented_outputs
-        - --args=--enable-rule=terraform_documented_variables
-        - --args=--enable-rule=terraform_typed_variables
-        - --args=--enable-rule=terraform_naming_convention
-        - --args=--enable-rule=terraform_required_version
-        - --args=--enable-rule=terraform_required_providers
-        - --args=--enable-rule=terraform_unused_required_providers
-        - --args=--enable-rule=terraform_standard_module_structure
+        - --args=--enable-rule=terraform_*
+        - --args=--disable-rule=terraform_module_shallow_clone
       exclude: dynamic_values/ # Do not run tflint in dynamic_folders directory (temp solution for SLZ modules). Internal issue created to track better solution.
     - id: terraform_trivy
       args:
