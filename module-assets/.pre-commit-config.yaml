@@ -50,7 +50,6 @@ repos:
         - --hook-config=--retry-once-with-cleanup=true
         - --tf-init-args=-upgrade
     - id: terraform_tflint
-      args: []
       exclude: dynamic_values/ # Do not run tflint in dynamic_folders directory (temp solution for SLZ modules). Internal issue created to track better solution.
     - id: terraform_trivy
       args:
