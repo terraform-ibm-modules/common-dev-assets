@@ -135,6 +135,16 @@ else
 fi
 
 #######################################
+# golang
+#######################################
+
+if ! go version &> /dev/null; then
+  echo "golang (go) not detected. Please install golang, ensure it is on your \$PATH, and retry."
+  exit 1
+fi
+
+
+#######################################
 # pip
 #######################################
 
