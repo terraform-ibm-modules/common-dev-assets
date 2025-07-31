@@ -62,6 +62,13 @@ repos:
         - --args=--enable-rule=terraform_required_providers
         - --args=--enable-rule=terraform_unused_required_providers
         - --args=--enable-rule=terraform_standard_module_structure
+        - --args=--enable-rule=terraform_workspace_remote
+        - --args=--enable-rule=terraform_module_version
+        - --args=--enable-rule=terraform_module_pinned_source
+        - --args=--enable-rule=terraform_map_duplicate_keys
+        - --args=--enable-rule=terraform_empty_list_equality
+        - --args=--enable-rule=terraform_deprecated_lookup
+        - --args=--enable-rule=terraform_deprecated_interpolation
       exclude: dynamic_values/ # Do not run tflint in dynamic_folders directory (temp solution for SLZ modules). Internal issue created to track better solution.
     - id: terraform_trivy
       args:
