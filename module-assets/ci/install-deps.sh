@@ -323,7 +323,7 @@ if [[ $OSTYPE == 'darwin'* ]]; then
 fi
 
 # renovate: datasource=github-releases depName=aquasecurity/trivy
-TRIVY_VERSION=v0.64.1
+TRIVY_VERSION=v0.65.0
 BINARY=trivy
 set +e
 INSTALLED_TRIVY_VERSION="$(trivy version | grep "Version:" | cut -d' ' -f2)"
@@ -351,7 +351,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v2.3.0
+GOLANGCI_LINT_VERSION=v2.3.1
 BINARY=golangci-lint
 set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"
