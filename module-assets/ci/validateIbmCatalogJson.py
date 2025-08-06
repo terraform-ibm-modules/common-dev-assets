@@ -1,11 +1,24 @@
 import json
 import os
+import pathlib
+import re
 import sys
 from subprocess import PIPE, Popen
+
+import terraformDocsUtils
 
 IBM_CATALOG_FILE = "ibm_catalog.json"
 DA_FOLDER = "solutions"
 ERRORS = []
+
+
+def is_strict_version(version_str):
+    """
+    Returns True if the version string is strictly pinned to a version like '1.10.0'.
+    Rejects anything with comparison operators, ranges, or incomplete versions like '1.10'.
+    """
+    pattern = r"^\d+\.\d+\.\d+$"
+    return re.match(pattern, version_str.strip()) is not None
 
 
 # Find duplicates in array
@@ -36,6 +49,7 @@ def check_errors(
     working_directory,
     flavor_label,
     product_label,
+    terraform_version_error,
 ):
     error = False
     errors = []
@@ -52,7 +66,9 @@ def check_errors(
     if len(duplicates) > 0:
         errors.append(f"- ibm_catalog.json has duplicates: {duplicates}")
         error = True
-
+    if terraform_version_error:
+        errors.append(terraform_version_error)
+        error = True
     if error:
         errors.insert(
             0,
@@ -70,6 +86,10 @@ def check_ibm_catalog_file():
     with open(IBM_CATALOG_FILE) as f:
         ibm_catalog = json.load(f)
 
+    # get repo name
+    path = pathlib.PurePath(terraformDocsUtils.get_module_url())
+    repo_name = path.name
+
     # loop through flavors and check inputs for each solution defined in working_directory. Check only for "product_kind": "solution".
     if ibm_catalog and "products" in ibm_catalog and ibm_catalog["products"]:
         for product in ibm_catalog["products"]:
@@ -85,6 +105,7 @@ def check_ibm_catalog_file():
                     product_label = product["label"]
 
                 for flavor in product["flavors"]:
+                    terraform_version_error = None
                     flavor_label = ""
                     if "label" in flavor and flavor["label"]:
                         flavor_label = flavor["label"]
@@ -122,6 +143,21 @@ def check_ibm_catalog_file():
                     inputs_not_in_da = check_inputs_extra(da_inputs, catalog_inputs)
                     duplicates = find_duplicates(catalog_inputs)
 
+                    # check terraform_version if:
+                    # - repo does not have 'stack-' in the name
+                    if "stack-" not in repo_name:
+                        # if terraform_version is not defined inside flavor then add an error
+                        if not (
+                            "terraform_version" in flavor
+                            and flavor["terraform_version"]
+                        ):
+                            terraform_version_error = (
+                                "- key 'terraform_version' is missing"
+                            )
+                        elif not is_strict_version(flavor["terraform_version"]):
+                            version = flavor["terraform_version"]
+                            terraform_version_error = f"- key 'terraform_version': '{version}' not the right format. Should be locked to a version and have MAJOR.MINOR.PATCH format."
+
                     check_errors(
                         inputs_not_in_catalog,
                         inputs_not_in_da,
@@ -129,6 +165,7 @@ def check_ibm_catalog_file():
                         working_directory,
                         flavor_label,
                         product_label,
+                        terraform_version_error,
                     )
 
 
