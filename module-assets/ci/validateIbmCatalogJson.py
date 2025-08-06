@@ -1,8 +1,11 @@
 import json
 import os
+import pathlib
 import re
 import sys
 from subprocess import PIPE, Popen
+
+import terraformDocsUtils
 
 IBM_CATALOG_FILE = "ibm_catalog.json"
 DA_FOLDER = "solutions"
@@ -83,6 +86,10 @@ def check_ibm_catalog_file():
     with open(IBM_CATALOG_FILE) as f:
         ibm_catalog = json.load(f)
 
+    # get repo name
+    path = pathlib.PurePath(terraformDocsUtils.get_module_url())
+    repo_name = path.name
+
     # loop through flavors and check inputs for each solution defined in working_directory. Check only for "product_kind": "solution".
     if ibm_catalog and "products" in ibm_catalog and ibm_catalog["products"]:
         for product in ibm_catalog["products"]:
@@ -136,14 +143,20 @@ def check_ibm_catalog_file():
                     inputs_not_in_da = check_inputs_extra(da_inputs, catalog_inputs)
                     duplicates = find_duplicates(catalog_inputs)
 
-                    # if terraform_version is not defined inside flavor then add an error
-                    if not (
-                        "terraform_version" in flavor and flavor["terraform_version"]
-                    ):
-                        terraform_version_error = "- key 'terraform_version' is missing"
-                    elif not is_strict_version(flavor["terraform_version"]):
-                        version = flavor["terraform_version"]
-                        terraform_version_error = f"- key 'terraform_version': '{version}' not the right format. Should be locked to a version and have MAJOR.MINOR.PATCH format."
+                    # check terraform_version if:
+                    # - repo does not have 'stack-' in the name
+                    if "stack-" not in repo_name:
+                        # if terraform_version is not defined inside flavor then add an error
+                        if not (
+                            "terraform_version" in flavor
+                            and flavor["terraform_version"]
+                        ):
+                            terraform_version_error = (
+                                "- key 'terraform_version' is missing"
+                            )
+                        elif not is_strict_version(flavor["terraform_version"]):
+                            version = flavor["terraform_version"]
+                            terraform_version_error = f"- key 'terraform_version': '{version}' not the right format. Should be locked to a version and have MAJOR.MINOR.PATCH format."
 
                     check_errors(
                         inputs_not_in_catalog,
