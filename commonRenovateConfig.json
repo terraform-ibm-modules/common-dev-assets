@@ -32,7 +32,7 @@
     {
       "description": "Group all dependencies into a single PR",
       "matchPackagePatterns": ["*"],
-      "groupName": "dependencies",
+      "groupName": "dependencies"
     },
     {
       "description": "Use fix as Semantic Commit prefix for all dependency updates except ones specified in rules below",
