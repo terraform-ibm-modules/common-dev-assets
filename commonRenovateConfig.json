@@ -24,9 +24,9 @@
   ],
   "postUpdateOptions": ["gomodTidy", "gomodUpdateImportPaths"],
   "postUpgradeTasks": {
-    "commands": ["export CUSTOM_DIRECTORY=/tmp && export PATH=$PATH:/tmp && make dependency-install-darwin-linux", "export PATH=$PATH:/tmp && pre-commit run --all-files || true"],
+    "commands": ["export CUSTOM_DIRECTORY=/tmp && export PATH=$PATH:/tmp && make dependency-install-darwin-linux && cp /opt/containerbase/tools/golang/*/bin/gofmt /tmp", "export PATH=$PATH:/tmp && pre-commit run --all-files || true"],
     "fileFilters": ["**/*.md", "**/*.json", ".secrets.baseline", "**/*.tf", "**/*.go", "go.mod", "go.sum"],
-    "executionMode": "update"
+    "executionMode": "branch"
   },
   "packageRules": [
     {
