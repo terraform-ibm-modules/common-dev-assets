@@ -4,7 +4,6 @@
     ":semanticCommits",
     ":disableDependencyDashboard"
   ],
-  "groupName": "dependencies",
   "recreateWhen": "always",
   "separateMajorMinor": false,
   "cloneSubmodules": true,
@@ -31,6 +30,11 @@
   },
   "packageRules": [
     {
+      "description": "Group all dependencies into a single PR",
+      "matchPackagePatterns": ["*"],
+      "groupName": "dependencies"
+    },
+    {
       "description": "Use fix as Semantic Commit prefix for all dependency updates except ones specified in rules below",
       "matchPackagePatterns": ["*"],
       "semanticCommitType": "fix"
@@ -48,7 +52,7 @@
     {
       "description": "Disable terraform required_version and required_provider updates.",
       "matchManagers": ["terraform"],
-      "matchDepTypes": ["required_version"],
+      "matchDepTypes": ["required_version", "required_provider"],
       "enabled": false
     },
     {
