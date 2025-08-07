@@ -14,7 +14,7 @@
   "rangeStrategy": "pin",
   "forkProcessing": "enabled",
   "git-submodules": {
-    "enabled": false
+    "enabled": false,
     "description": "workaround for https://github.com/renovatebot/renovate/issues/30279"
   },
   "pre-commit": {
