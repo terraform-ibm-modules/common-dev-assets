@@ -9,7 +9,7 @@
   "cloneSubmodules": true,
   "prConcurrentLimit": 0,
   "prHourlyLimit": 0,
-  "automerge": true,
+  "automerge": false,
   "labels": ["renovate"],
   "rangeStrategy": "pin",
   "forkProcessing": "enabled",
