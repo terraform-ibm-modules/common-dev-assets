@@ -27,9 +27,10 @@ This repository uses **codespell** to automatically check for common spelling mi
 - **Markdown files** (`.md`)
 - **JSON files** (`.json`)
 - **Python files** (`.py`)
+- **Shell files** (`.sh`)
 
 ## What Files Are Ignored
-- Images (`.svg`), scripts (`.sh`), PDFs (`.pdf`)
+- Images (`.svg`), PDFs (`.pdf`)
 - Go module files (`go.sum`, `go.mod`)
 - Makefiles
 - Files in `common-dev-assets/` directory
@@ -40,7 +41,7 @@ This repository uses **codespell** to automatically check for common spelling mi
 If codespell flags a word that should be ignored (technical terms, DA specific, etc.), add it to file:
 
 ```
-ci/.codespell-ignores
+.codespell-ignores
 ```
 
 **Format:** One word per line

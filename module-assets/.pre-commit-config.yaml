@@ -207,8 +207,7 @@ repos:
   rev: v2.4.1
   hooks:
   - id: codespell
-    entry: ci/codespell-check.sh
-    files: ^.*\.(tf|md|json|py)$
+    files: ^.*\.(tf|md|json|py|sh)$
     exclude: |
       (?x)^(
         .*\.svg|
@@ -219,3 +218,5 @@ repos:
         common-dev-assets/.*
         \.git/.*
       )$
+    args:
+     - --ignore-words=.codespell-ignores

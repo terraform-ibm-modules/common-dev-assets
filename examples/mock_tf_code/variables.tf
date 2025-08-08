@@ -6,7 +6,7 @@ variable "unique_name" {
 }
 
 variable "ibm_region" {
-  description = "IBM Cloud region where all resources will be deployed"
+  description = "IBM Cloud region wheree all resources will be deployed"
   type        = string
 }
 
