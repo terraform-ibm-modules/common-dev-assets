@@ -4,17 +4,15 @@
     ":semanticCommits",
     ":disableDependencyDashboard"
   ],
+  "recreateWhen": "always",
+  "separateMajorMinor": false,
   "cloneSubmodules": true,
-  "prConcurrentLimit": 5,
-  "prHourlyLimit": 10,
-  "branchConcurrentLimit": 0,
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
   "automerge": false,
-  "force": {
-    "description": "Recreate the PR if something has actually changed, not on every cycle",
-    "recreateWhen": "auto"
-  },
   "labels": ["renovate"],
   "rangeStrategy": "pin",
+  "forkProcessing": "enabled",
   "git-submodules": {
     "enabled": true
   },
@@ -26,11 +24,16 @@
   ],
   "postUpdateOptions": ["gomodTidy", "gomodUpdateImportPaths"],
   "postUpgradeTasks": {
-    "commands": ["export CUSTOM_DIRECTORY=/tmp && export PATH=$PATH:/tmp && make dependency-install-darwin-linux", "export PATH=$PATH:/tmp && pre-commit run --all-files || true"],
+    "commands": ["export CUSTOM_DIRECTORY=/tmp && export PATH=$PATH:/tmp && make dependency-install-darwin-linux && cp /opt/containerbase/tools/golang/*/bin/gofmt /tmp", "export PATH=$PATH:/tmp && pre-commit run --all-files || true"],
     "fileFilters": ["**/*.md", "**/*.json", ".secrets.baseline", "**/*.tf", "**/*.go", "go.mod", "go.sum"],
-    "executionMode": "update"
+    "executionMode": "branch"
   },
   "packageRules": [
+    {
+      "description": "Group all dependencies into a single PR",
+      "matchPackagePatterns": ["*"],
+      "groupName": "dependencies"
+    },
     {
       "description": "Use fix as Semantic Commit prefix for all dependency updates except ones specified in rules below",
       "matchPackagePatterns": ["*"],
@@ -44,31 +47,13 @@
     {
       "description": "Use chore as Semantic Commit prefix for git submodule, go.mod, github actions, and pre-commit updates, and bundle into the same PR to reduce number of PRs created by renovate.",
       "matchManagers": ["git-submodules", "gomod", "pre-commit", "github-actions"],
-      "semanticCommitType": "chore",
-      "groupName": "CI dependencies"
+      "semanticCommitType": "chore"
     },
     {
-      "description": "Bundle terraform related updates into the same PR and prioritise creation of these PRs.",
-      "matchManagers": ["terraform", "terraform-version"],
-      "groupName": "Terraform dependencies",
-      "prPriority": 10
-    },
-    {
-      "description": "Disable terraform required_version updates.",
+      "description": "Disable terraform required_version and required_provider updates.",
       "matchManagers": ["terraform"],
-      "matchDepTypes": ["required_version"],
+      "matchDepTypes": ["required_version", "required_provider"],
       "enabled": false
-    },
-    {
-      "description": "Disable terraform provider updates by default. To enable, set enable to true below and renovate will prioritise bumping this. We only need to bump this version to consume required bug fixes and/or new provider features.",
-      "enabled": false,
-      "matchManagers": ["terraform"],
-      "matchDepTypes": ["required_provider"],
-      "rangeStrategy": "bump",
-      "semanticCommitType": "feat",
-      "group": true,
-      "groupName": "required_provider",
-      "prPriority": 100
     },
     {
       "description": "Allow the locked in provider version to be updated to the latest for deployable architectures",
@@ -77,10 +62,7 @@
       "matchManagers": ["terraform"],
       "matchDepTypes": ["required_provider"],
       "rangeStrategy": "bump",
-      "semanticCommitType": "fix",
-      "group": true,
-      "groupName": "Terraform dependencies",
-      "prPriority": 10
+      "semanticCommitType": "fix"
     },
     {
       "description": "Custom regex required to bump IBM detect secrets",
