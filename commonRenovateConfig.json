@@ -14,7 +14,8 @@
   "rangeStrategy": "pin",
   "forkProcessing": "enabled",
   "git-submodules": {
-    "enabled": true
+    "enabled": false,
+    "description": "workaround for https://github.com/renovatebot/renovate/issues/30279"
   },
   "pre-commit": {
     "enabled": true
@@ -24,8 +25,8 @@
   ],
   "postUpdateOptions": ["gomodTidy", "gomodUpdateImportPaths"],
   "postUpgradeTasks": {
-    "commands": ["export CUSTOM_DIRECTORY=/tmp && export PATH=$PATH:/tmp && make dependency-install-darwin-linux && cp /opt/containerbase/tools/golang/*/bin/gofmt /tmp", "export PATH=$PATH:/tmp && pre-commit run --all-files || true"],
-    "fileFilters": ["**/*.md", "**/*.json", ".secrets.baseline", "**/*.tf", "**/*.go", "go.mod", "go.sum"],
+    "commands": ["git submodule update --remote --merge && export CUSTOM_DIRECTORY=/tmp && export PATH=$PATH:/tmp && make dependency-install-darwin-linux && cp /opt/containerbase/tools/golang/*/bin/gofmt /tmp", "export PATH=$PATH:/tmp && pre-commit run --all-files || true"],
+    "fileFilters": ["**/*.md", "**/*.json", ".secrets.baseline", "**/*.tf", "**/*.go", "go.mod", "go.sum", "common-dev-assets", "armada-csutil", "modules/logs-routing-module/helm-charts", "modules/prometheus-module/helm-charts"],
     "executionMode": "branch"
   },
   "packageRules": [
