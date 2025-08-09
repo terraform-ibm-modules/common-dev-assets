@@ -158,7 +158,7 @@ fi
 #######################################
 
  # renovate: datasource=github-tags depName=pre-commit/pre-commit
-PRE_COMMIT_VERSION=v4.2.0
+PRE_COMMIT_VERSION=v4.3.0
 PACKAGE=pre-commit
 set +e
 INSTALLED_PRE_COMMIT_VERSION="$(${PYTHON} -m pip show pre-commit | grep Version: | cut -d' ' -f2)"
