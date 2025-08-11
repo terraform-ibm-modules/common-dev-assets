@@ -24,12 +24,6 @@ if [[ -z "$COMMIT_SHA" ]]; then
   echo "Using PR #$PR_NUMBER commit SHA: $COMMIT_SHA"
 fi
 
-# Export Artifactory credentials if present
-ARTIFACTORY_USERNAME="$(get_env ARTIFACTORY_USERNAME "")"
-export ARTIFACTORY_USERNAME
-ARTIFACTORY_PASSWORD="$(get_env ARTIFACTORY_PASSWORD "")"  # pragma: allowlist secret
-export ARTIFACTORY_PASSWORD
-
 # Source report.sh and post pending status
 source "$(dirname "${BASH_SOURCE[0]}")/report.sh"
 report_status pending "Build started"
