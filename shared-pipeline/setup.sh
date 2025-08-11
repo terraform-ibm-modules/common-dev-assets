@@ -25,10 +25,11 @@ if [[ -z "$COMMIT_SHA" ]]; then
 fi
 
 # Export Artifactory credentials if present
-export ARTIFACTORY_USERNAME="$(get_env ARTIFACTORY_USERNAME "")"
-export ARTIFACTORY_PASSWORD="$(get_env ARTIFACTORY_PASSWORD "")"  # pragma: allowlist secret
+ARTIFACTORY_USERNAME="$(get_env ARTIFACTORY_USERNAME "")"
+export ARTIFACTORY_USERNAME
+ARTIFACTORY_PASSWORD="$(get_env ARTIFACTORY_PASSWORD "")"  # pragma: allowlist secret
+export ARTIFACTORY_PASSWORD
 
 # Source report.sh and post pending status
-source "$(dirname "$BASH_SOURCE")/report.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/report.sh"
 report_status pending "Build started"
-
