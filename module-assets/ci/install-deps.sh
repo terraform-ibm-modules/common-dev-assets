@@ -154,21 +154,43 @@ if ! ${PYTHON} -m pip &> /dev/null; then
 fi
 
 #######################################
+# pipx
+#######################################
+
+PIPX_VERSION=1.7.1
+PACKAGE=pipx
+set +e
+INSTALLED_PIPX_VERSION="$(${PYTHON} -m pipx --version)"
+set -e
+echo
+if [[ "$INSTALLED_PIPX_VERSION" != "$PIPX_VERSION" ]]; then
+  echo "-- Installing ${PACKAGE}..."
+  ${PYTHON} -m pip install -q --upgrade ${PACKAGE}
+  echo "COMPLETE"
+else
+ echo "${PACKAGE} ${PIPX_VERSION} already installed - skipping install"
+fi
+
+#######################################
 # pre-commit
 #######################################
 
  # renovate: datasource=github-tags depName=pre-commit/pre-commit
-PRE_COMMIT_VERSION=v4.3.0
+PRE_COMMIT_VERSION=v4.2.0
 PACKAGE=pre-commit
 set +e
-INSTALLED_PRE_COMMIT_VERSION="$(${PYTHON} -m pip show pre-commit | grep Version: | cut -d' ' -f2)"
+INSTALLED_PRE_COMMIT_VERSION="$(${PYTHON} -m pipx list | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
 set -e
-if [[ "$PRE_COMMIT_VERSION" != "v$INSTALLED_PRE_COMMIT_VERSION" ]]; then
-
+if [[ "$INSTALLED_PRE_COMMIT_VERSION" == "" ]]; then
   echo
   echo "-- Installing ${PACKAGE} ${PRE_COMMIT_VERSION}..."
-
-  ${PYTHON} -m pip install -q --upgrade ${PACKAGE}==${PRE_COMMIT_VERSION}
+  ${PYTHON} -m pipx install -q ${PACKAGE}==${PRE_COMMIT_VERSION}
+  echo "COMPLETE"
+elif [[ "$PRE_COMMIT_VERSION" != "v$INSTALLED_PRE_COMMIT_VERSION" ]]; then
+  echo
+  echo "-- Upgrading ${PACKAGE} ${PRE_COMMIT_VERSION}..."
+  ${PYTHON} -m pipx uninstall -q $PACKAGE
+  ${PYTHON} -m pipx install -q "${PACKAGE}==${PRE_COMMIT_VERSION}"
   echo "COMPLETE"
 else
  echo "${PACKAGE} ${PRE_COMMIT_VERSION} already installed - skipping install"
