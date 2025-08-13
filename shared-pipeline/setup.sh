@@ -5,12 +5,6 @@ set -eu pipefail
 
 REPO_OWNER="${TRIGGERED_BY:-}"
 REPO_NAME="${TRIGGER_NAME:-}"
-GIT_TOKEN="$(get_env git-token "")"
-
-# Configure Git authentication
-if [[ -n "$GIT_TOKEN" ]]; then
-  git config --global url."https://$GIT_TOKEN@github.ibm.com/".insteadOf "https://github.ibm.com/"
-fi
 
 # Get PR commit SHA
 COMMIT_SHA="$(get_env COMMIT_SHA "")"
