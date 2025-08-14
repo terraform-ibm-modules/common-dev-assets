@@ -1,5 +1,6 @@
 # Python
 **/__pycache__/
+venv/
 
 # Ignore Mac files
 .DS_Store
