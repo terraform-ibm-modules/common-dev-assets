@@ -27,7 +27,7 @@ def has_tf_files(path):
         return False
 
 
-# check if pre-commmit hook tag exists on main README.md
+# check if pre-commit hook tag exists on main README.md
 def is_hook_exists(hook_tag, md_file="README.md"):
     exists = False
     with open(md_file, "r") as reader:

@@ -203,20 +203,22 @@ repos:
       files: ibm_catalog.json
       args: ["--schemafile", "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.96/ibm_catalog-schema.json"]
 
-- repo: https://github.com/codespell-project/codespell
-  rev: v2.4.1
+- repo: https://github.com/crate-ci/typos
+  rev: v1.35.4
   hooks:
-  - id: codespell
-    files: ^.*\.(tf|md|json|py|sh)$
-    exclude: |
-      (?x)^(
+    - id: typos
+      files: ^.*\.(tf|md|json|py|go|yaml|yml)$
+      exclude: |
+        (?x)^(
         .*\.svg|
         .*\.pdf|
         go\.sum|
         go\.mod|
         Makefile|
-        common-dev-assets/.*
+        common-dev-assets/.*|
         \.git/.*
-      )$
-    args:
-     - --ignore-words=.codespell-ignores
+        )$
+      args:
+        - --format=brief
+        - --color=always
+        - --config=.typos.toml
