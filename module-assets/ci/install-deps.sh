@@ -351,7 +351,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v2.3.1
+GOLANGCI_LINT_VERSION=v2.4.0
 BINARY=golangci-lint
 set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"
@@ -434,7 +434,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v3.18.4
+HELM_VERSION=v3.18.5
 BINARY=helm
 set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"
@@ -461,7 +461,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.33.3
+KUBECTL_VERSION=v1.33.4
 BINARY=kubectl
 set +e
 INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml --client | grep "gitVersion" | cut -d' ' -f4)"
