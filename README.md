@@ -17,10 +17,10 @@ command:
 make
 ```
 
-# Note on codespell pre-commit hook
+# Note on typos pre-commit hook
 
 ## Overview
-This repository uses **codespell** to automatically check for common spelling mistakes in code and documentation files.
+This repository uses **typos** to automatically check for common spelling mistakes in code and documentation files.
 
 ## What Files Are Checked
 - **Terraform files** (`.tf`)
@@ -28,6 +28,9 @@ This repository uses **codespell** to automatically check for common spelling mi
 - **JSON files** (`.json`)
 - **Python files** (`.py`)
 - **Shell files** (`.sh`)
+- **Go files** (`.go`)
+- **YAML/YML files** (`.yaml/.yml`)
+
 
 ## What Files Are Ignored
 - Images (`.svg`), PDFs (`.pdf`)
@@ -36,17 +39,17 @@ This repository uses **codespell** to automatically check for common spelling mi
 - Files in `common-dev-assets/` directory
 - Git metadata files
 
-## Adding Custom Ignore Words
+## Handling False Positives
 
-If codespell flags a word that should be ignored (technical terms, DA specific, etc.), add it to file:
+If typos flags a word that should be ignored (technical terms, DA specific, etc.), add it to file:
 
 ```
-.codespell-ignores
+.typos.toml
 ```
 
-**Format:** One word per line
+**Format:** "word" = "word"
 ```
-word
-test
-etc
+[default.extend-words]
+# Words to ignore
+# Format: "word" = "word" (keep as-is)
 ```
