@@ -158,7 +158,7 @@ fi
 #######################################
 
  # renovate: datasource=github-tags depName=pre-commit/pre-commit
-PRE_COMMIT_VERSION=v4.2.0
+PRE_COMMIT_VERSION=v4.3.0
 PACKAGE=pre-commit
 set +e
 INSTALLED_PRE_COMMIT_VERSION="$(${PYTHON} -m pip show pre-commit | grep Version: | cut -d' ' -f2)"
@@ -200,7 +200,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=warrensbox/terraform-switcher
-TFSWITCH_VERSION=v1.4.7
+TFSWITCH_VERSION=v1.5.0
 BINARY=tfswitch
 set +e
 INSTALLED_TFSWITCH_VERSION="$(tfswitch --version | grep Version | awk '{ print $2 }')"
@@ -379,7 +379,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=koalaman/shellcheck
-SHELLCHECK_VERSION=v0.10.0
+SHELLCHECK_VERSION=v0.11.0
 BINARY=shellcheck
 set +e
 INSTALLED_SHELLCHECK_VERSION="$(shellcheck --version | grep "version:" | cut -d' ' -f2)"

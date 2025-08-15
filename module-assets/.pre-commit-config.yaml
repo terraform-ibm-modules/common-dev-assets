@@ -17,7 +17,7 @@ repos:
       pass_filenames: false
       description: This hook ensures that a file named LICENSE exists for any repo (on github.com) which contains .tf files in the root directory of the repo
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v5.0.0
+  rev: v6.0.0
   hooks:
     - id: check-yaml
       exclude: chart/|metadata.yaml|tests/|examples/charts/
@@ -40,7 +40,7 @@ repos:
   hooks:
     - id: hadolint
 - repo: https://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.99.5
+  rev: v1.100.0
   hooks:
     - id: terraform_fmt
     - id: terraform_validate
@@ -85,7 +85,7 @@ repos:
         - --hook-config=--parallelism-limit=1
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 3.2.457
+  rev: 3.2.460
   hooks:
     - id: checkov
       args:
@@ -201,7 +201,7 @@ repos:
     - id: check-jsonschema
       name: Validate ibm_catalog.json schema
       files: ibm_catalog.json
-      args: ["--schemafile", "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.96/ibm_catalog-schema.json"]
+      args: ["--schemafile", "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.97/ibm_catalog-schema.json"]
 
 - repo: https://github.com/crate-ci/typos
   rev: v1.35.4
