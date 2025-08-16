@@ -40,8 +40,8 @@ sdnlbServiceId: "ServiceId-1ed6ddfa-b4a0-4df7-86e0-461b8bb02d3d"
 # IAM ServiceID for PAG sDNLB user
 sdnlbPagServiceIdName: "geretain - sDNLB-PAG-service-id - DO NOT DELETE"
 sdnlbPagServiceId: "ServiceId-cf2df49b-fef5-4aeb-87a0-f3b1995d127a"
-sdnlbPagSecretGroupId: "f428b278-d638-8e84-a32d-eaa325b1106c" # secret group in GEdev permenent SM instance
-sdnlbPagSecretId: "a7ec0241-7ba6-dcd8-c43f-1ca0480e126a" # secret ID in GEdev permenent SM instance
+sdnlbPagSecretGroupId: "f428b278-d638-8e84-a32d-eaa325b1106c" # secret group in GEdev permanent SM instance
+sdnlbPagSecretId: "a7ec0241-7ba6-dcd8-c43f-1ca0480e126a" # secret ID in GEdev permanent SM instance
 
 # Cloudant Dedicated Host
 dedicatedHostCrn: "crn:v1:bluemix:public:cloudantnosqldb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:7c88e3f2-4412-4f45-b613-bae10b1e103c::"

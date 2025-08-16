@@ -126,7 +126,7 @@ def add_to_overview(overview, folder_name):
 def main():
     if terraformDocsUtils.is_hook_exists("<!-- BEGIN OVERVIEW HOOK -->"):
         overview: List[str] = []
-        overivew_markdown = "overview.md"
+        overview_markdown = "overview.md"
 
         # add module name to an overview as a first element
         path = pathlib.PurePath(terraformDocsUtils.get_module_url())
@@ -143,14 +143,14 @@ def main():
         overview.append(get_main_readme_headings())
 
         # create markdown
-        terraformDocsUtils.create_markdown(overview, overivew_markdown)
+        terraformDocsUtils.create_markdown(overview, overview_markdown)
 
         # run terraform docs
         os.system(
             "terraform-docs -c common-dev-assets/module-assets/.terraform-docs-config-overview.yaml ."
         )
 
-        terraformDocsUtils.remove_markdown(overivew_markdown)
+        terraformDocsUtils.remove_markdown(overview_markdown)
 
 
 main()
