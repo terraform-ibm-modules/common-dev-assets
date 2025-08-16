@@ -24,13 +24,12 @@ This repository uses **typos** to automatically check for common spelling mistak
 
 ## What Files Are Checked
 - **Terraform files** (`.tf`)
-- **Markdown files** (`.md`)
-- **JSON files** (`.json`)
 - **Python files** (`.py`)
 - **Shell files** (`.sh`)
 - **Go files** (`.go`)
+- **Markdown files** (`.md`)
+- **JSON files** (`.json`)
 - **YAML/YML files** (`.yaml/.yml`)
-
 
 ## What Files Are Ignored
 - Images (`.svg`), PDFs (`.pdf`)
@@ -47,7 +46,7 @@ If typos flags a word that should be ignored (technical terms, DA specific, etc.
 .typos.toml
 ```
 
-**Format:** "word" = "word"
+**.typos.toml:**  file should contain belowpr
 ```
 [default.extend-words]
 # Words to ignore

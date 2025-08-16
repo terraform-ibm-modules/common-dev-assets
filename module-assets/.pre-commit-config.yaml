@@ -207,7 +207,7 @@ repos:
   rev: v1.35.4
   hooks:
     - id: typos
-      files: ^.*\.(tf|md|json|py|go|yaml|yml)$
+      files: ^.*\.(tf|py|sh|go|md|json|yaml|yml)$
       exclude: |
         (?x)^(
         .*\.svg|
