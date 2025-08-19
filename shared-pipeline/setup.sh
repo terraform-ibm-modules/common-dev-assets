@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Setup environment variables and git authentication for CI pipelines
 
-REPO_OWNER="Goldeneye"
+REPO_OWNER="GoldenEye"
 REPO_NAME="${TRIGGER_NAME:-}"
 
 # Get PR commit SHA from GIT_COMMIT environment variable
