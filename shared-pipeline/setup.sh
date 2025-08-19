@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -eu pipefail
 
-# Setup environment variables and git authentication for CI pipelines
-
 echo "commit - $COMMIT_SHA"
 
 if [[ -z "$COMMIT_SHA" ]]; then
