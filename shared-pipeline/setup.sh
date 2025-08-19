@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eu pipefail
+set -euo pipefail
 
 echo "commit - $COMMIT_SHA"
 
