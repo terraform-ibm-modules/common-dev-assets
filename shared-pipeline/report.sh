@@ -7,7 +7,7 @@
 function report_status {
   local status=$1
   local description=$2
-  
+
   # Check if required variables are set (without failing due to set -u)
   if [[ -n "${GIT_TOKEN:-}" && -n "${COMMIT_SHA:-}" && -n "${REPO_OWNER:-}" && -n "${REPO_NAME:-}" ]]; then
     echo "Reporting status: $status - $description"
