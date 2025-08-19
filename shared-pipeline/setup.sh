@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Setup environment variables and git authentication for CI pipelines
+
+REPO_OWNER="${TRIGGERED_BY:-}"
+REPO_NAME="${TRIGGER_NAME:-}"
+
+# Get PR commit SHA from GIT_COMMIT environment variable
+COMMIT_SHA="$(get_env GIT_COMMIT "")"
 echo "commit - $COMMIT_SHA"
 
 if [[ -z "$COMMIT_SHA" ]]; then
@@ -10,6 +17,10 @@ if [[ -z "$COMMIT_SHA" ]]; then
   PR_NUMBER=$(echo "$PRS_JSON" | jq -r '.[0].number')
   echo "Using PR #$PR_NUMBER commit SHA: $COMMIT_SHA"
 fi
+
+export COMMIT_SHA
+export REPO_OWNER
+export REPO_NAME
 
 # Source report.sh and post pending status
 source "$(dirname "${BASH_SOURCE[0]}")/report.sh"
