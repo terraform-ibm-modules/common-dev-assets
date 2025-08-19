@@ -221,4 +221,4 @@ repos:
       args:
         - --format=brief
         - --color=always
-        - --config=.typos.toml
+        - --config=ci/.typos.toml
