@@ -4,53 +4,29 @@ set -euo pipefail
 # Setup environment variables and git authentication for CI pipelines
 
 REPO_OWNER="GoldenEye"
-REPO_NAME="release-notes"
+# Use custom repo-name environment variable (no default - must be set)
+REPO_NAME="$(get_env repo-name "")"
+echo "Using REPO_NAME: $REPO_NAME"
 
-# Log potential environment variables for debugging
-echo "=== ENVIRONMENT VARIABLE DEBUGGING ==="
-echo "TRIGGER_NAME: ${TRIGGER_NAME:-NOT_SET}"
-echo "TRIGGERED_BY: ${TRIGGERED_BY:-NOT_SET}"
-echo "PIPELINE_RUN_NAME: ${PIPELINE_RUN_NAME:-NOT_SET}"
-echo "PIPELINE_RUN_ID: ${PIPELINE_RUN_ID:-NOT_SET}"
-echo "PIPELINE_RUN_URL: ${PIPELINE_RUN_URL:-NOT_SET}"
-echo "GIT_URL: ${GIT_URL:-NOT_SET}"
-echo "GIT_BRANCH: ${GIT_BRANCH:-NOT_SET}"
-echo "GIT_COMMIT: ${GIT_COMMIT:-NOT_SET}"
-echo "GIT_TOKEN: ${GIT_TOKEN:+SET}"
-echo "REPO_URL: ${REPO_URL:-NOT_SET}"
-echo "REPOSITORY_URL: ${REPOSITORY_URL:-NOT_SET}"
-echo "SOURCE_REPOSITORY_URL: ${SOURCE_REPOSITORY_URL:-NOT_SET}"
-echo "CI_REPOSITORY_URL: ${CI_REPOSITORY_URL:-NOT_SET}"
-echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY:-NOT_SET}"
-echo "GITHUB_REF: ${GITHUB_REF:-NOT_SET}"
-echo "GITHUB_SHA: ${GITHUB_SHA:-NOT_SET}"
-echo "PR_NUMBER: ${PR_NUMBER:-NOT_SET}"
-echo "PULL_REQUEST_NUMBER: ${PULL_REQUEST_NUMBER:-NOT_SET}"
-echo "BUILD_NUMBER: ${BUILD_NUMBER:-NOT_SET}"
-echo "BUILD_ID: ${BUILD_ID:-NOT_SET}"
+# Get the actual PR commit SHA (not master head)
+# GIT_COMMIT points to master head, so we need to get the PR head SHA instead
+GIT_COMMIT_MASTER="$(get_env GIT_COMMIT "")"
+echo "GIT_COMMIT (from env): $GIT_COMMIT_MASTER"
 
-# Check get_env function for various potential variables
-echo "=== GET_ENV FUNCTION CHECKS ==="
-echo "get_env TRIGGER_NAME: $(get_env TRIGGER_NAME "")"
-echo "get_env TRIGGERED_BY: $(get_env TRIGGERED_BY "")"
-echo "get_env REPO_NAME: $(get_env REPO_NAME "")"
-echo "get_env REPOSITORY_NAME: $(get_env REPOSITORY_NAME "")"
-echo "get_env GIT_REPO: $(get_env GIT_REPO "")"
-echo "get_env SOURCE_REPO: $(get_env SOURCE_REPO "")"
-echo "get_env PIPELINE_SOURCE_REPO: $(get_env PIPELINE_SOURCE_REPO "")"
-echo "get_env TEKTON_REPO: $(get_env TEKTON_REPO "")"
-echo "get_env WORKSPACE_NAME: $(get_env WORKSPACE_NAME "")"
+# Get PR commit SHA from GitHub API (this is the actual commit we want to report status on)
+PRS_JSON=$(curl -s -H "Authorization: token $GIT_TOKEN" -H "Accept: application/vnd.github+json" \
+  "https://github.ibm.com/api/v3/repos/$REPO_OWNER/$REPO_NAME/pulls?state=open")
+COMMIT_SHA=$(echo "$PRS_JSON" | jq -r '.[0].head.sha')
+PR_NUMBER=$(echo "$PRS_JSON" | jq -r '.[0].number')
+echo "PR #$PR_NUMBER head commit: $COMMIT_SHA"
 
-# Get PR commit SHA from GIT_COMMIT environment variable
-COMMIT_SHA="$(get_env GIT_COMMIT "")"
-echo "commit - $COMMIT_SHA"
-
-if [[ -z "$COMMIT_SHA" ]]; then
-  PRS_JSON=$(curl -s -H "Authorization: token $GIT_TOKEN" -H "Accept: application/vnd.github+json" \
-    "https://github.ibm.com/api/v3/repos/$REPO_OWNER/$REPO_NAME/pulls?state=open")
-  COMMIT_SHA=$(echo "$PRS_JSON" | jq -r '.[0].head.sha')
-  PR_NUMBER=$(echo "$PRS_JSON" | jq -r '.[0].number')
-  echo "Using PR #$PR_NUMBER commit SHA: $COMMIT_SHA"
+# Compare the two
+if [[ "$GIT_COMMIT_MASTER" == "$COMMIT_SHA" ]]; then
+  echo "✅ GIT_COMMIT and PR head match - using GIT_COMMIT"
+  COMMIT_SHA="$GIT_COMMIT_MASTER"
+else
+  echo "⚠️  GIT_COMMIT ($GIT_COMMIT_MASTER) != PR head ($COMMIT_SHA)"
+  echo "Using PR head commit for status reporting"
 fi
 
 export COMMIT_SHA
