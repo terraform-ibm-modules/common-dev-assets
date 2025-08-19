@@ -43,12 +43,5 @@ This repository uses **typos** to automatically check for common spelling mistak
 If typos flags a word that should be ignored (technical terms, DA specific, etc.), add it to file:
 
 ```
-.typos.toml
-```
-
-**.typos.toml:**  file should contain belowpr
-```
-[default.extend-words]
-# Words to ignore
-# Format: "word" = "word" (keep as-is)
+ci/.typos.toml
 ```
