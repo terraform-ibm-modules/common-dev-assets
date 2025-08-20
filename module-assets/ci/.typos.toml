@@ -1,3 +1,12 @@
+[default]
+# Will ignore words like-
+# test-02-sme
+# api-v1
+# my-service-123
+# app-dev-east
+# database-cluster-01
+extend-ignore-re = ["[a-z]+(?:-[a-z0-9]+)+"]
+
 [default.extend-words]
 # Words to ignore
 # Format: "word" = "word" (keep as-is)
