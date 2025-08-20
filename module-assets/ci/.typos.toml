@@ -1,0 +1,3 @@
+[default.extend-words]
+# Words to ignore
+# Format: "word" = "word" (keep as-is)
