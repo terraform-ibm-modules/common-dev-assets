@@ -548,18 +548,3 @@ if [[ "$JQ_VERSION" != "$INSTALLED_JQ_VERSION" ]]; then
 else
   echo "${BINARY} ${JQ_VERSION} already installed - skipping install"
 fi
-
-
-#######################################
-# typos
-#######################################
-if ! typos --version &> /dev/null; then
- if [ "$OS" == "darwin" ]; then
-   echo
-   echo "-- Installing typos-cli..."
-   brew install typos-cli
- else
-   echo "typos must be installed to check spelling. Please install and retry."
-   exit 1
- fi
-fi
