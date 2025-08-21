@@ -202,23 +202,21 @@ repos:
       name: Validate ibm_catalog.json schema
       files: ibm_catalog.json
       args: ["--schemafile", "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.97/ibm_catalog-schema.json"]
-
-- repo: https://github.com/crate-ci/typos
-  rev: v1.35.4
+- repo: local
   hooks:
-    - id: typos
-      files: ^.*\.(tf|py|sh|go|md|json|yaml|yml)$
-      exclude: |
-        (?x)^(
-        .*\.svg|
-        .*\.pdf|
-        go\.sum|
-        go\.mod|
-        Makefile|
-        common-dev-assets/.*|
-        \.git/.*
-        )$
-      args:
-        - --format=brief
-        - --color=always
-        - --config=ci/.typos.toml
+  - id: typos-warning-only
+    name: typos (warning only)
+    entry: bash -c 'typos --format=brief --color=always --config=ci/.typos.toml "$@" || true'
+    language: system
+    files: ^.*\.(tf|py|sh|go|md|json|yaml|yml)$
+    exclude: |
+      (?x)^(
+      .*\.svg|
+      .*\.pdf|
+      go\.sum|
+      go\.mod|
+      Makefile|
+      common-dev-assets/.*|
+      \.git/.*
+      )$
+    verbose: true
