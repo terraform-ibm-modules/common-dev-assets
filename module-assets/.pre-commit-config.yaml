@@ -219,5 +219,5 @@ repos:
         common-dev-assets/.*|
         \.git/.*
         )$
-      entry: bash -c 'typos --format=brief --color=always "$@" || true'
+      entry: bash -c 'typos --format=brief --color=always --config=ci/.typos.toml "$@" | sed "s/\`//g" || true'
       verbose: true
