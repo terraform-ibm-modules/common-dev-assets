@@ -85,7 +85,7 @@ repos:
         - --hook-config=--parallelism-limit=1
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 3.2.461
+  rev: 3.2.464
   hooks:
     - id: checkov
       args:
@@ -196,14 +196,14 @@ repos:
 # ibm_catalog.json lint
 # TODO https://github.ibm.com/GoldenEye/issues/issues/11524
 - repo: https://github.com/python-jsonschema/check-jsonschema
-  rev: 0.33.2
+  rev: 0.33.3
   hooks:
     - id: check-jsonschema
       name: Validate ibm_catalog.json schema
       files: ibm_catalog.json
       args: ["--schemafile", "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.97/ibm_catalog-schema.json"]
 - repo: https://github.com/crate-ci/typos
-  rev: v1.35.4
+  rev: v1.35.5
   hooks:
     - id: typos
       name: typos (warning only)
