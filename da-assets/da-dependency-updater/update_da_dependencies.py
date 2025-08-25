@@ -4,28 +4,14 @@ import json
 import logging
 import os
 import sys
+import requests
+import semver
 
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_platform_services.catalog_management_v1 import CatalogManagementV1
 
 # Get the root logger
 logger = logging.getLogger()
-
-
-def newest_version(versions):
-    # Parse and pad version numbers
-    if not versions:
-        raise ValueError("Failed to find newest version. The versions list is empty.")
-
-    parsed = []
-    max_parts = max(v.count(".") + 1 for v in versions)  # Find max parts in any version
-
-    for v in versions:
-        numbers = list(map(int, v[1:].split(".")))
-        numbers += [0] * (max_parts - len(numbers))  # Pad with zeros
-        parsed.append((tuple(numbers), v))
-
-    return max(parsed)[1]
 
 
 def intialize_parser():
@@ -111,7 +97,84 @@ def get_apikey(apikey_arg):
     return apikey
 
 
-def update_da_dependency_versions(service, original_ibm_catalog_json):
+def get_tokens(api_key: str):
+    try:
+        iam_url = "https://iam.cloud.ibm.com/identity/token"
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+        data = {
+            "grant_type": "urn:ibm:params:oauth:grant-type:apikey",
+            "apikey": api_key,
+        }
+
+        response = requests.post(iam_url, headers=headers, data=data)
+        logger.debug(response)
+        response_json = response.json()
+
+        return response_json.get("access_token"), response_json.get("refresh_token")
+    except Exception as e:
+        logger.error(f"Error getting tokens: {str(e)}")
+        return None, None
+
+def get_version_updates(offeringId, catalogId, kind, flavor, api_key):
+    authenticator = IAMAuthenticator(api_key)
+    service = CatalogManagementV1(authenticator=authenticator)
+    _, refresh_token = get_tokens(api_key)
+    try:
+        response = service.get_offering_updates(
+            catalog_identifier=catalogId,
+            offering_id=offeringId,
+            kind=kind,
+            x_auth_refresh_token=refresh_token,
+        ).get_result()
+        logger.debug(f"Got updates for {offeringId}")
+        # filter updates by flavor name
+        response = [
+            update
+            for update in response
+            if "flavor" in update.keys() and update["flavor"]["name"] == flavor
+        ]
+        logger.debug(f"Number of filtered updates: {len(response)}")
+        return response
+    except KeyError as e:
+        logger.error(
+            f"KeyError: {str(e)} in update dictionary. Please ensure the update dictionary has the correct "
+            f"structure."
+        )
+        return None
+    except Exception as e:
+        logger.error(f"Error getting version updates for {offeringId}: {str(e)}")
+        return None
+
+def get_latest_valid_version(updates):
+    try:
+        # sort updates by version
+        updates = sorted(
+            updates,
+            key=lambda x: semver.VersionInfo.parse(x["version"].lstrip("v")),
+            reverse=True,
+        )
+        logger.debug(f"Number of sorted updates: {len(updates)}")
+        # get the latest version that is not deprecated, consumable and not a pre-release version
+        for update in updates:
+            try:
+                version_info = semver.VersionInfo.parse(update["version"].lstrip("v"))
+                logger.debug(f"Checking update: {update}")
+                if (
+                    update["can_update"]
+                    and update["state"]["current"] == "consumable"
+                    and version_info.prerelease is None
+                ):
+                    logger.debug(f"Selected latest valid version: {update['version']}")
+                    return update
+            except ValueError:
+                logger.debug(f"Skipping invalid version format: {update['version']}")
+                continue
+        return None
+    except Exception as e:
+        logger.error(f"Error getting latest valid version: {str(e)}")
+        return None
+
+def update_da_dependency_versions(apikey, original_ibm_catalog_json):
     ibm_catalog_json = copy.deepcopy(original_ibm_catalog_json)
     for flavor in ibm_catalog_json["products"][0]["flavors"]:
         if "dependencies" not in flavor:
@@ -126,17 +189,16 @@ def update_da_dependency_versions(service, original_ibm_catalog_json):
             logger.info(
                 f"{offering_name} {offering_flavor} current version: {current_version}"
             )
-            response = service.get_offering(
-                catalog_identifier=catalog_id, offering_id=offering_id, digest=True
-            ).get_result()
-            versions = []
-            for version in response["kinds"][0]["versions"]:
-                if (
-                    version["flavor"]["name"] == offering_flavor
-                    and version["is_consumable"]
-                ):
-                    versions.append(version["version"])
-            latest_version = newest_version(versions)
+            updates = get_version_updates(
+                offering_id, catalog_id, "terraform", offering_flavor, apikey
+            )
+            if updates is None:
+                logger.error(f"Failed to get versions for {offering_id}\n")
+                continue
+            latest_version = get_latest_valid_version(updates)["version"]
+            if latest_version is None:
+                logger.error(f"Failed to get latest valid version for {updates}\n")
+                continue
             if dependency["version"] != latest_version:
                 logger.info(
                     f"Updating {offering_name} {offering_flavor} to latest version: {latest_version}\n"
@@ -150,15 +212,13 @@ def update_da_dependency_versions(service, original_ibm_catalog_json):
 
 
 def update_ibmcatalog_json_file(apikey, catalog_json_file):
-    authenticator = IAMAuthenticator(apikey)
-    service = CatalogManagementV1(authenticator=authenticator)
     with open(catalog_json_file, "r") as f:
         ibm_catalog_json = json.loads(f.read())
         logger.info(
             f"Updating dependencies for product {ibm_catalog_json['products'][0]['name']}"
         )
         logger.info("=================================================================")
-        updated_json = update_da_dependency_versions(service, ibm_catalog_json)
+        updated_json = update_da_dependency_versions(apikey, ibm_catalog_json)
     if args.dry_run:
         logger.info(f"Run in DRY_RUN mode, No update made to {catalog_json_file}")
     else:
