@@ -4,9 +4,9 @@ import json
 import logging
 import os
 import sys
+
 import requests
 import semver
-
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_platform_services.catalog_management_v1 import CatalogManagementV1
 
@@ -115,6 +115,7 @@ def get_tokens(api_key: str):
         logger.error(f"Error getting tokens: {str(e)}")
         return None, None
 
+
 def get_version_updates(offeringId, catalogId, kind, flavor, api_key):
     authenticator = IAMAuthenticator(api_key)
     service = CatalogManagementV1(authenticator=authenticator)
@@ -145,6 +146,7 @@ def get_version_updates(offeringId, catalogId, kind, flavor, api_key):
         logger.error(f"Error getting version updates for {offeringId}: {str(e)}")
         return None
 
+
 def get_latest_valid_version(updates):
     try:
         # sort updates by version
@@ -173,6 +175,7 @@ def get_latest_valid_version(updates):
     except Exception as e:
         logger.error(f"Error getting latest valid version: {str(e)}")
         return None
+
 
 def update_da_dependency_versions(apikey, original_ibm_catalog_json):
     ibm_catalog_json = copy.deepcopy(original_ibm_catalog_json)
