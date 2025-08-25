@@ -179,38 +179,39 @@ def get_latest_valid_version(updates):
 
 def update_da_dependency_versions(apikey, original_ibm_catalog_json):
     ibm_catalog_json = copy.deepcopy(original_ibm_catalog_json)
-    for flavor in ibm_catalog_json["products"][0]["flavors"]:
-        if "dependencies" not in flavor:
-            logger.info(f"Flavor {flavor['name']} does not have any dependencies")
-            continue
-        for dependency in flavor["dependencies"]:
-            catalog_id = dependency["catalog_id"]
-            offering_id = dependency["id"]
-            offering_name = dependency["name"]
-            current_version = dependency["version"]
-            offering_flavor = dependency["flavors"][0]
-            logger.info(
-                f"{offering_name} {offering_flavor} current version: {current_version}"
-            )
-            updates = get_version_updates(
-                offering_id, catalog_id, "terraform", offering_flavor, apikey
-            )
-            if updates is None:
-                logger.error(f"Failed to get versions for {offering_id}\n")
+    for product in ibm_catalog_json["products"]:
+        for flavor in product["flavors"]:
+            if "dependencies" not in flavor:
+                logger.info(f"Flavor {flavor['name']} does not have any dependencies")
                 continue
-            latest_version = get_latest_valid_version(updates)["version"]
-            if latest_version is None:
-                logger.error(f"Failed to get latest valid version for {updates}\n")
-                continue
-            if dependency["version"] != latest_version:
+            for dependency in flavor["dependencies"]:
+                catalog_id = dependency["catalog_id"]
+                offering_id = dependency["id"]
+                offering_name = dependency["name"]
+                current_version = dependency["version"]
+                offering_flavor = dependency["flavors"][0]
                 logger.info(
-                    f"Updating {offering_name} {offering_flavor} to latest version: {latest_version}\n"
+                    f"{offering_name} {offering_flavor} current version: {current_version}"
                 )
-                dependency["version"] = latest_version
-            else:
-                logger.info(
-                    f"No change required for {offering_name} {offering_flavor} on version: {current_version}\n"
+                updates = get_version_updates(
+                    offering_id, catalog_id, "terraform", offering_flavor, apikey
                 )
+                if updates is None:
+                    logger.error(f"Failed to get versions for {offering_id}\n")
+                    continue
+                latest_version = get_latest_valid_version(updates)["version"]
+                if latest_version is None:
+                    logger.error(f"Failed to get latest valid version for {updates}\n")
+                    continue
+                if dependency["version"] != latest_version:
+                    logger.info(
+                        f"Updating {offering_name} {offering_flavor} to latest version: {latest_version}\n"
+                    )
+                    dependency["version"] = latest_version
+                else:
+                    logger.info(
+                        f"No change required for {offering_name} {offering_flavor} on version: {current_version}\n"
+                    )
     return ibm_catalog_json
 
 
