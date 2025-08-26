@@ -76,6 +76,16 @@ def check_errors(
         )
         for val in errors:
             ERRORS.append(val)
+    # if error is not thrown then check the JSON formatting
+    else:
+        # Read the JSON data
+        with open(IBM_CATALOG_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        # Write JSON with pretty formatting (indentation)
+        with open(IBM_CATALOG_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+            f.write("\n")  # Adds a single empty line at the end
 
 
 # get inputs for solution defined in ibm_catalog.json file
