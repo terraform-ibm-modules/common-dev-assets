@@ -286,7 +286,7 @@ fi
 # tflint
 #######################################
  # renovate: datasource=github-releases depName=terraform-linters/tflint
-TFLINT_VERSION=v0.58.1
+TFLINT_VERSION=v0.59.1
 BINARY=tflint
 set +e
 INSTALLED_TFLINT_VERSION="$(tflint --version | grep "TFLint version " |cut -d' ' -f3)"
@@ -323,7 +323,7 @@ if [[ $OSTYPE == 'darwin'* ]]; then
 fi
 
 # renovate: datasource=github-releases depName=aquasecurity/trivy
-TRIVY_VERSION=v0.65.0
+TRIVY_VERSION=v0.66.0
 BINARY=trivy
 set +e
 INSTALLED_TRIVY_VERSION="$(trivy version | grep "Version:" | cut -d' ' -f2)"
@@ -406,7 +406,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=hadolint/hadolint
-HADOLINT_VERSION=v2.12.0
+HADOLINT_VERSION=v2.13.1
 BINARY=hadolint
 set +e
 INSTALLED_HADOLINT_VERSION="$(hadolint --version | head -1 | cut -d' ' -f4)"
@@ -461,7 +461,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.33.4
+KUBECTL_VERSION=v1.34.0
 BINARY=kubectl
 set +e
 INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml --client | grep "gitVersion" | cut -d' ' -f4)"
