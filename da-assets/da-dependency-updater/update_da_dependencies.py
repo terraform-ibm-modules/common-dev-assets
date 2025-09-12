@@ -14,7 +14,7 @@ from ibm_platform_services.catalog_management_v1 import CatalogManagementV1
 logger = logging.getLogger()
 
 
-def intialize_parser():
+def initialize_parser():
     parser = argparse.ArgumentParser(description="Update DA Dependency Versions")
     parser.add_argument(
         "--catalog_json",
@@ -181,6 +181,11 @@ def update_da_dependency_versions(apikey, original_ibm_catalog_json):
     ibm_catalog_json = copy.deepcopy(original_ibm_catalog_json)
     for product in ibm_catalog_json["products"]:
         for flavor in product["flavors"]:
+            if flavor.get("install_type") == "extension":
+                logger.info(
+                    f"Flavor {flavor['name']} has install type `extension`, skipping."
+                )
+                continue
             if "dependencies" not in flavor:
                 logger.info(f"Flavor {flavor['name']} does not have any dependencies")
                 continue
@@ -236,7 +241,7 @@ def update_ibmcatalog_json_file(apikey, catalog_json_file):
 
 
 if __name__ == "__main__":
-    args = intialize_parser().parse_args()
+    args = initialize_parser().parse_args()
     setup_logger(args.debug)
 
     validate_catalog_json_input(args.catalog_json)
