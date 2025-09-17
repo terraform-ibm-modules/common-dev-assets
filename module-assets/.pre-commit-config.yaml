@@ -113,6 +113,8 @@ repos:
   - id: detect-secrets
     args: ['--baseline', '.secrets.baseline', '--fail-on-unaudited', '--use-all-plugins']
     exclude: go.sum
+    # workaround for https://github.com/IBM/detect-secrets/issues/173
+    additional_dependencies: [boxsdk<4]
 # flake8
 - repo: https://github.com/pycqa/flake8
   rev: 7.3.0
