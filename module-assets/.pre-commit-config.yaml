@@ -135,7 +135,7 @@ repos:
     args: ["--profile", "black", "--filter-files"]
 # black
 - repo: https://github.com/ambv/black
-  rev: 25.1.0
+  rev: 25.9.0
   hooks:
   - id: black
     args: # arguments to configure black
@@ -198,7 +198,7 @@ repos:
 # ibm_catalog.json lint
 # TODO https://github.ibm.com/GoldenEye/issues/issues/11524
 - repo: https://github.com/python-jsonschema/check-jsonschema
-  rev: 0.33.3
+  rev: 0.34.0
   hooks:
     - id: check-jsonschema
       name: Validate ibm_catalog.json schema
