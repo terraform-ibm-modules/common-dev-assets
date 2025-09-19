@@ -41,7 +41,7 @@ python3 update_da_dependencies.py --catalog_json  path/to/ibm_catalog.json} --ap
 ```
 
 
-- `--catalog_json` or `-s`: Path to the stack definition JSON file (required).
+- `--catalog_json` or `-s`: Path to the IBM catalog definition JSON file (required).
 - `--apikey` or `-k`: IBM Cloud API Key. If not provided, the script will use the `IBM_CLOUD_API_KEY` environment variable (optional).
 - `--debug`: Set the log level to DEBUG for more detailed output (optional).
 - `--dry-run` or `-d`: Perform a dry run without updating the ibm_catalog.json file (optional).
@@ -50,17 +50,17 @@ python3 update_da_dependencies.py --catalog_json  path/to/ibm_catalog.json} --ap
 Example:
 
 ```bash
-python3 update_stack_definition.py --stack path/to/ibm_catalog.json --api-key your_api_key --dry-run --debug
+python3 update_da_dependencies.py --catalog_json path/to/ibm_catalog.json --apikey your_api_key --dry-run --debug
 ```
 
 
 ## How It Works
 
-1. The script reads the `ibm_catalog` JSON file and iterates through each stack member.
+1. The script reads the `ibm_catalog` JSON file and iterates through each dependent DA.
 3. It retrieves the versions of the dependency filtering by flavor.
 4. The script selects the latest version retrieved from catalog using the `newest_version` function.
-5. If the latest version differs from the current version, the script updates the DAs dependency's version in the stack definition.
-6. Finally, if any updates were made, the script writes the updated stack definition back to the JSON file.
+5. If the latest version differs from the current version, the script updates the DAs dependency's version in the IBM catalog definition.
+6. Finally, if any updates were made, the script writes the updated DA definition back to the JSON file.
 
 ## Logging
 
