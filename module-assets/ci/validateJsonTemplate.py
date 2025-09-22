@@ -11,8 +11,8 @@ validation_errors = []
 def create_temp_json(root, file):
     temp_file = os.path.join(root, "temp_" + file.replace(".template", ""))
     file_path = os.path.join(root, file)
-    with open(file_path, "rt") as fin:
-        with open(temp_file, "wt") as fout:
+    with open(file_path) as fin:
+        with open(temp_file, "w") as fout:
             for line in fin:
                 # it can happens that the content of catalogValidationValues.json.template is in one row only (not pretty print format), in that case we must split the line according the delimiter
                 multiple_lines = re.split("(,|{|})", line)

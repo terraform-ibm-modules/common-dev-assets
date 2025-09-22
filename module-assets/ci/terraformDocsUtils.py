@@ -30,7 +30,7 @@ def has_tf_files(path):
 # check if pre-commit hook tag exists on main README.md
 def is_hook_exists(hook_tag, md_file="README.md"):
     exists = False
-    with open(md_file, "r") as reader:
+    with open(md_file) as reader:
         lines = reader.readlines()
         for line in lines:
             if hook_tag in line:
@@ -40,7 +40,7 @@ def is_hook_exists(hook_tag, md_file="README.md"):
 
 # Return title (first line) of README file
 def get_readme_title(readme_file):
-    with open(readme_file, "r") as reader:
+    with open(readme_file) as reader:
         line = reader.readline()
         return line
 

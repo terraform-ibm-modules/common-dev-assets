@@ -4,7 +4,6 @@ import os
 import pathlib
 import re
 from pathlib import Path
-from typing import List, Tuple
 
 import terraformDocsUtils
 
@@ -12,7 +11,7 @@ import terraformDocsUtils
 # Check if a line is a heading
 def get_title(
     line: str, code_block: bool, comment_block: bool
-) -> Tuple[int, str, bool, bool]:
+) -> tuple[int, str, bool, bool]:
     level = 0
     for c in line:
         # set a flag to know if the lines are inside code block
@@ -44,7 +43,7 @@ def get_title(
 # get main readme headings
 def get_main_readme_headings():
     data = ""
-    with open("./README.md", "r") as f:
+    with open("./README.md") as f:
         code_block = False
         comment_block = False
         for line in f.readlines():
@@ -64,7 +63,7 @@ def get_main_readme_headings():
 
 
 def get_headings(folder_name):
-    readme_headings: List[str] = []
+    readme_headings: list[str] = []
     if os.path.isdir(folder_name.lower()):
         for readme_file_path in Path(folder_name.lower()).rglob("*"):
             path = str(readme_file_path)
@@ -124,13 +123,13 @@ def add_to_overview(overview, folder_name):
 
 def main():
     if terraformDocsUtils.is_hook_exists("<!-- BEGIN OVERVIEW HOOK -->"):
-        overview: List[str] = []
+        overview: list[str] = []
         overview_markdown = "overview.md"
 
         # add module name to an overview as a first element
         path = pathlib.PurePath(terraformDocsUtils.get_module_url())
         repo_name = path.name
-        overview.append("* [{}](#{})".format(repo_name, repo_name))
+        overview.append(f"* [{repo_name}](#{repo_name})")
 
         # add modules to "overview"
         add_to_overview(overview, "Modules")

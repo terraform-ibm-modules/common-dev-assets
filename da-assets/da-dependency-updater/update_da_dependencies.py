@@ -216,7 +216,7 @@ def update_da_dependency_versions(apikey, original_ibm_catalog_json):
 
 
 def update_ibmcatalog_json_file(apikey, catalog_json_file):
-    with open(catalog_json_file, "r") as f:
+    with open(catalog_json_file) as f:
         ibm_catalog_json = json.loads(f.read())
         logger.info(
             f"Updating dependencies for product {ibm_catalog_json['products'][0]['name']}"

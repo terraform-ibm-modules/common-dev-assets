@@ -26,8 +26,8 @@ def modify_temp_markdown_file(temp_markdown: str) -> list[str]:
                 temp_markdowns.append(new_markdown_path)
 
                 # change headings from lvl 2 to lvl 3 and save tf docs content into new temp file
-                with open(markdown_path, "rt") as reader:
-                    with open(new_markdown_path, "wt") as writer:
+                with open(markdown_path) as reader:
+                    with open(new_markdown_path, "w") as writer:
                         for line in reader:
                             # tf_docs adds BEGIN_TF_DOCS and END_TF_DOCS metatags to a markdown content by default. We do not need this, since we have own metatag
                             if not ("BEGIN_TF_DOCS" in line or "END_TF_DOCS" in line):

@@ -128,9 +128,10 @@ repos:
       - id: ruff
         args:
           - --fix
+          - --unsafe-fixes
           - --line-length=88
-          - --select=E,F
-          - --ignore=E203,E501
+          - --select=E,F,I,W,UP,B,C4
+          - --ignore=E203,E501,B007
       - id: ruff-format
         args:
           - --line-length=88
