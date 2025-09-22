@@ -26,8 +26,8 @@ def modify_temp_markdown_file(temp_markdown: str) -> list[str]:
                 temp_markdowns.append(new_markdown_path)
 
                 # change headings from lvl 2 to lvl 3 and save tf docs content into new temp file
-                with open(markdown_path, "rt") as reader:
-                    with open(new_markdown_path, "wt") as writer:
+                with open(markdown_path) as reader:
+                    with open(new_markdown_path, "w") as writer:
                         for line in reader:
                             # tf_docs adds BEGIN_TF_DOCS and END_TF_DOCS metatags to a markdown content by default. We do not need this, since we have own metatag
                             if not ("BEGIN_TF_DOCS" in line or "END_TF_DOCS" in line):
@@ -42,7 +42,7 @@ def get_valid_readme_paths() -> list[str]:
     hook_tag = "<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->"
     for readme_file in Path(dir).rglob("README.md"):
         path = str(readme_file)
-        if not ("/.") in path and terraformDocsUtils.is_hook_exists(hook_tag, path):
+        if ("/.") not in path and terraformDocsUtils.is_hook_exists(hook_tag, path):
             paths.append(str(readme_file.parent))
     return paths
 

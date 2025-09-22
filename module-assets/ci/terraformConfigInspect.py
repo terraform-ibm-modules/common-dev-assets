@@ -24,8 +24,8 @@ def get_terraform_provider():
 def run_metadata_generator(file_path, terraform_provider):
     tf_config_inspect_command = ""
     if terraform_provider:
-        tf_config_inspect_command = "terraform-config-inspect --json --metadata %s" % (
-            terraform_provider
+        tf_config_inspect_command = (
+            f"terraform-config-inspect --json --metadata {terraform_provider}"
         )
     else:
         tf_config_inspect_command = "terraform-config-inspect --json"

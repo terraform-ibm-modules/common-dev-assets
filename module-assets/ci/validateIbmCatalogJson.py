@@ -79,7 +79,7 @@ def check_errors(
     # if error is not thrown then check the JSON formatting
     else:
         # Read the JSON data
-        with open(IBM_CATALOG_FILE, "r", encoding="utf-8") as f:
+        with open(IBM_CATALOG_FILE, encoding="utf-8") as f:
             data = json.load(f)
 
         # Write JSON with pretty formatting (indentation)

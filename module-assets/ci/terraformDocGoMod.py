@@ -8,7 +8,7 @@ import terraformDocsUtils
 
 # Set go.mod file with the correct module repo
 def set_go_mod(path, module_url):
-    with open(path, "r") as file:
+    with open(path) as file:
         lines = file.readlines()
     if len(lines) > 0:
         expected_line = "module " + module_url
@@ -19,9 +19,7 @@ def set_go_mod(path, module_url):
                 regex_result = regex.string.strip()
                 if regex_result.lower() != expected_line.lower():
                     print(
-                        "current value: {}\nnew value    : {}".format(
-                            regex_result.lower(), expected_line.lower()
-                        )
+                        f"current value: {regex_result.lower()}\nnew value    : {expected_line.lower()}"
                     )
                     replace_module = True
                     break
@@ -41,7 +39,7 @@ def change_module_url(module_url):
         git_owner = "GoldenEye"
     return re.sub(
         "/.*/",
-        lambda x: x.group(0).replace(x.group(0), "/%s/" % (git_owner)),
+        lambda x: x.group(0).replace(x.group(0), f"/{git_owner}/"),
         module_url,
     )
 
