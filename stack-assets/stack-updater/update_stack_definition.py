@@ -108,7 +108,6 @@ def get_latest_valid_version(updates: List[Dict[str, Any]]):
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description="Update Stack Member Versions")
     parser.add_argument(
         "--stack",

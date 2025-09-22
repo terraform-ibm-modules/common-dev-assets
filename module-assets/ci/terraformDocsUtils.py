@@ -51,7 +51,7 @@ def get_readme_titles(path):
     for readme_file in Path(path).rglob("README.md"):
         path = str(readme_file)
         # ignore README file if it has dot(.) in a path or the parent path does not contain any tf file
-        if not ("/.") in path and has_tf_files(readme_file.parent):
+        if ("/.") not in path and has_tf_files(readme_file.parent):
             readme_title = get_readme_title(path)
             if readme_title:
                 data = {"path": path, "title": readme_title}

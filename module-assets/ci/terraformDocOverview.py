@@ -66,7 +66,6 @@ def get_main_readme_headings():
 def get_headings(folder_name):
     readme_headings: List[str] = []
     if os.path.isdir(folder_name.lower()):
-
         for readme_file_path in Path(folder_name.lower()).rglob("*"):
             path = str(readme_file_path)
             regex_pattern = r"README.md"
@@ -78,7 +77,7 @@ def get_headings(folder_name):
                 continue
 
             # ignore README file if it has dot(.) in a path or the parent path does not contain any tf file
-            if not ("/.") in path and terraformDocsUtils.has_tf_files(
+            if ("/.") not in path and terraformDocsUtils.has_tf_files(
                 readme_file_path.parent
             ):
                 regex_pattern = r"/README.md"

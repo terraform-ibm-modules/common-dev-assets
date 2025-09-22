@@ -119,7 +119,6 @@ def validate_inputs(root, temp_catalog_template_file, original_catalog_template_
 
         # check if catalog_template key is part of terraform input variables of the same directory
         for catalog_template_key in catalog_template_keys:
-
             # if 'ibmcloud_api_key' is defined in stack's json template then do not validate it
             if is_stack is True and catalog_template_key == "ibmcloud_api_key":
                 continue
@@ -136,7 +135,6 @@ def main():
         for file in files:
             if file.endswith("catalogValidationValues.json.template"):
                 if ".terraform" not in os.path.join(root, file):
-
                     # create a new temp catalogValidationValues.json.template file
                     original_catalog_file = os.path.join(root, file)
                     temp_catalog_file = create_temp_json(root, file)

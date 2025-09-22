@@ -42,7 +42,7 @@ def get_valid_readme_paths() -> list[str]:
     hook_tag = "<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->"
     for readme_file in Path(dir).rglob("README.md"):
         path = str(readme_file)
-        if not ("/.") in path and terraformDocsUtils.is_hook_exists(hook_tag, path):
+        if ("/.") not in path and terraformDocsUtils.is_hook_exists(hook_tag, path):
             paths.append(str(readme_file.parent))
     return paths
 
