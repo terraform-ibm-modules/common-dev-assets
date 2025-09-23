@@ -399,6 +399,75 @@ else
   echo "${BINARY} ${GOLANGCI_LINT_VERSION} already installed - skipping install"
 fi
 
+#######################################
+# Rust
+#######################################
+
+# renovate: datasource=github-releases depName=rust-lang/rust
+RUST_VERSION=1.83.0
+BINARY=rustc
+set +e
+INSTALLED_RUST_VERSION="$(rustc --version 2>/dev/null | cut -d' ' -f2)"
+set -e
+if [[ "$RUST_VERSION" != "$INSTALLED_RUST_VERSION" ]]; then
+  echo
+  echo "-- Installing Rust ${RUST_VERSION}..."
+
+  # Download rustup installer
+  TMP_DIR=$(mktemp -d /tmp/rust-XXXXX)
+  RUSTUP_INIT="rustup-init.sh"
+
+  if [[ $OSTYPE == 'darwin'* ]]; then
+    if [[ "${ARCH}" == "arm64" ]]; then
+      RUSTUP_TARGET="aarch64-apple-darwin"
+    else
+      RUSTUP_TARGET="x86_64-apple-darwin"
+    fi
+  else
+    RUSTUP_TARGET="x86_64-unknown-linux-gnu"
+  fi
+
+  # Use the standard rustup installer
+  curl --retry 3 -fLsS "https://sh.rustup.rs" --output "${TMP_DIR}/${RUSTUP_INIT}"
+
+  # Install rust with specific version
+  chmod +x "${TMP_DIR}/${RUSTUP_INIT}"
+
+  # Install rustup and rust toolchain
+  echo "Installing Rust toolchain ${RUST_VERSION}..."
+
+  # Set RUSTUP_HOME and CARGO_HOME if not set
+  export RUSTUP_HOME="${RUSTUP_HOME:-$HOME/.rustup}"
+  export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
+
+  # Install rustup non-interactively
+  "${TMP_DIR}/${RUSTUP_INIT}" -y --default-toolchain "${RUST_VERSION}" --target "${RUSTUP_TARGET}"
+
+  # Add cargo bin to PATH for this session
+  export PATH="${CARGO_HOME}/bin:$PATH"
+
+  # Create symlinks in DIRECTORY if different from default cargo location
+  if [[ "${DIRECTORY}" != "${CARGO_HOME}/bin" ]]; then
+    echo "Creating symlinks in ${DIRECTORY}..."
+    arg=""
+    if ! [ -w "${DIRECTORY}" ]; then
+      echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
+      arg=sudo
+    fi
+
+    # Create symlinks for main rust tools
+    for rust_binary in rustc cargo rustup; do
+      ${arg} rm -f "${DIRECTORY}/${rust_binary}"
+      ${arg} ln -sf "${CARGO_HOME}/bin/${rust_binary}" "${DIRECTORY}/${rust_binary}"
+    done
+  fi
+
+  echo "Deleting tmp dir: ${TMP_DIR}"
+  rm -rf "${TMP_DIR}"
+  echo "COMPLETE"
+else
+  echo "Rust ${RUST_VERSION} already installed - skipping install"
+fi
 
 #######################################
 # Shellcheck
