@@ -17,10 +17,10 @@ if [[ $OSTYPE == 'darwin'* ]]; then
   # Determine OS arch
   mac_arch="$(sysctl -a | grep machdep.cpu.brand_string)"
   if [[ "${mac_arch}" == 'machdep.cpu.brand_string: Intel'* ]]; then
-    # macOS on Intel architecture
+    # macOS on Intel architecture
     ARCH="amd64"
   else
-    # macOS on M1 architecture
+    # macOS on M1 architecture
     ARCH="arm64"
   fi
 else
@@ -58,7 +58,7 @@ function verify {
 
   echo "Verifying.."
   checksum=$(< "${tmp_dir}/${sumfile}" grep "${file}" | awk '{ print $1 }')
-  echo "${checksum} ${tmp_dir}/${file}" | sha256sum -c
+  echo "${checksum}  ${tmp_dir}/${file}" | ${SHA256_CMD} -c
 
 }
 
@@ -71,7 +71,7 @@ function verify_alternative {
 
   echo "Verifying.."
   checksum=$(cat "${tmp_dir}/${sumfile}")
-  echo "${checksum} ${tmp_dir}/${file}" | sha256sum -c
+  echo "${checksum}  ${tmp_dir}/${file}" | ${SHA256_CMD} -c
 
 }
 
@@ -109,17 +109,42 @@ function clean {
 # sha256sum
 #######################################
 
-if ! sha256sum --version &> /dev/null; then
-  # If sha256sum not detected on mac, install coreutils
+# Determine which sha256 command to use
+SHA256_CMD=""
+if command -v sha256sum &> /dev/null; then
+  # Check if it's the GNU version by looking for "GNU coreutils" in version output
+  if sha256sum --version 2>&1 | grep -q "GNU coreutils"; then
+    SHA256_CMD="sha256sum"
+  elif command -v gsha256sum &> /dev/null; then
+    # GNU version available via coreutils
+    SHA256_CMD="gsha256sum"
+  elif command -v shasum &> /dev/null; then
+    # Fall back to BSD shasum
+    SHA256_CMD="shasum -a 256"
+  else
+    echo "No suitable SHA256 command found"
+    exit 1
+  fi
+elif command -v gsha256sum &> /dev/null; then
+  # GNU version installed via coreutils on macOS
+  SHA256_CMD="gsha256sum"
+elif command -v shasum &> /dev/null; then
+  # BSD version (macOS default)
+  SHA256_CMD="shasum -a 256"
+else
+  # Need to install appropriate tool
   if [ "$OS" == "darwin" ]; then
     echo
     echo "-- Installing coreutils..."
     brew install coreutils
+    SHA256_CMD="gsha256sum"
   else
     echo "sha256sum must be installed to verify downloads. Please install and retry."
     exit 1
   fi
 fi
+
+echo "Using SHA256 command: ${SHA256_CMD}"
 
 #######################################
 # python
@@ -375,6 +400,76 @@ else
 fi
 
 #######################################
+# Rust
+#######################################
+
+# renovate: datasource=github-releases depName=rust-lang/rust
+RUST_VERSION=1.83.0
+BINARY=rustc
+set +e
+INSTALLED_RUST_VERSION="$(rustc --version 2>/dev/null | cut -d' ' -f2)"
+set -e
+if [[ "$RUST_VERSION" != "$INSTALLED_RUST_VERSION" ]]; then
+  echo
+  echo "-- Installing Rust ${RUST_VERSION}..."
+
+  # Download rustup installer
+  TMP_DIR=$(mktemp -d /tmp/rust-XXXXX)
+  RUSTUP_INIT="rustup-init.sh"
+
+  if [[ $OSTYPE == 'darwin'* ]]; then
+    if [[ "${ARCH}" == "arm64" ]]; then
+      RUSTUP_TARGET="aarch64-apple-darwin"
+    else
+      RUSTUP_TARGET="x86_64-apple-darwin"
+    fi
+  else
+    RUSTUP_TARGET="x86_64-unknown-linux-gnu"
+  fi
+
+  # Use the standard rustup installer
+  curl --retry 3 -fLsS "https://sh.rustup.rs" --output "${TMP_DIR}/${RUSTUP_INIT}"
+
+  # Install rust with specific version
+  chmod +x "${TMP_DIR}/${RUSTUP_INIT}"
+
+  # Install rustup and rust toolchain
+  echo "Installing Rust toolchain ${RUST_VERSION}..."
+
+  # Set RUSTUP_HOME and CARGO_HOME if not set
+  export RUSTUP_HOME="${RUSTUP_HOME:-$HOME/.rustup}"
+  export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
+
+  # Install rustup non-interactively
+  "${TMP_DIR}/${RUSTUP_INIT}" -y --default-toolchain "${RUST_VERSION}" --target "${RUSTUP_TARGET}"
+
+  # Add cargo bin to PATH for this session
+  export PATH="${CARGO_HOME}/bin:$PATH"
+
+  # Create symlinks in DIRECTORY if different from default cargo location
+  if [[ "${DIRECTORY}" != "${CARGO_HOME}/bin" ]]; then
+    echo "Creating symlinks in ${DIRECTORY}..."
+    arg=""
+    if ! [ -w "${DIRECTORY}" ]; then
+      echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
+      arg=sudo
+    fi
+
+    # Create symlinks for main rust tools
+    for rust_binary in rustc cargo rustup; do
+      ${arg} rm -f "${DIRECTORY}/${rust_binary}"
+      ${arg} ln -sf "${CARGO_HOME}/bin/${rust_binary}" "${DIRECTORY}/${rust_binary}"
+    done
+  fi
+
+  echo "Deleting tmp dir: ${TMP_DIR}"
+  rm -rf "${TMP_DIR}"
+  echo "COMPLETE"
+else
+  echo "Rust ${RUST_VERSION} already installed - skipping install"
+fi
+
+#######################################
 # Shellcheck
 #######################################
 
@@ -412,7 +507,12 @@ set +e
 INSTALLED_HADOLINT_VERSION="$(hadolint --version | head -1 | cut -d' ' -f4)"
 set -e
 if [[ "$HADOLINT_VERSION" != "v$INSTALLED_HADOLINT_VERSION" ]]; then
-  FILE_NAME="hadolint-${OS}-x86_64"
+  # Handle architecture properly
+  HADOLINT_ARCH="x86_64"
+  if [[ "$ARCH" == "arm64" ]]; then
+    HADOLINT_ARCH="arm64"
+  fi
+
   URL="https://github.com/hadolint/hadolint/releases/download/${HADOLINT_VERSION}"
   SUMFILE=""
   TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
@@ -420,11 +520,43 @@ if [[ "$HADOLINT_VERSION" != "v$INSTALLED_HADOLINT_VERSION" ]]; then
   echo
   echo "-- Installing ${BINARY} ${HADOLINT_VERSION}..."
 
-  download ${BINARY} ${HADOLINT_VERSION} ${URL} ${FILE_NAME} "${SUMFILE}" "${TMP_DIR}"
-  ## rename binary to hadolint
-  mv "${TMP_DIR}/${FILE_NAME}" "${TMP_DIR}/${BINARY}"
-  copy_replace_binary ${BINARY} "${TMP_DIR}"
-  clean "${TMP_DIR}"
+  # Try hadolint's current naming convention first (macos), then fall back to darwin
+  DOWNLOAD_SUCCESS=false
+
+  if [[ "$OS" == "darwin" ]]; then
+    # Try macos naming first
+    FILE_NAME="hadolint-macos-${HADOLINT_ARCH}"
+    echo "Attempting download with macos naming: ${FILE_NAME}"
+    if curl --retry 3 -fLsS "${URL}/${FILE_NAME}" --output "${TMP_DIR}/${FILE_NAME}" 2>/dev/null; then
+      DOWNLOAD_SUCCESS=true
+      echo "Downloaded successfully"
+    else
+      echo "macos naming failed, trying darwin naming..."
+      # Fall back to darwin naming
+      FILE_NAME="hadolint-darwin-${HADOLINT_ARCH}"
+      echo "Attempting download with darwin naming: ${FILE_NAME}"
+      if curl --retry 3 -fLsS "${URL}/${FILE_NAME}" --output "${TMP_DIR}/${FILE_NAME}" 2>/dev/null; then
+        DOWNLOAD_SUCCESS=true
+        echo "Downloaded successfully"
+      fi
+    fi
+  else
+    # For Linux, use standard naming
+    FILE_NAME="hadolint-${OS}-${HADOLINT_ARCH}"
+    download ${BINARY} ${HADOLINT_VERSION} ${URL} ${FILE_NAME} "${SUMFILE}" "${TMP_DIR}"
+    DOWNLOAD_SUCCESS=true
+  fi
+
+  if [[ "$DOWNLOAD_SUCCESS" == "true" ]]; then
+    ## rename binary to hadolint
+    mv "${TMP_DIR}/${FILE_NAME}" "${TMP_DIR}/${BINARY}"
+    copy_replace_binary ${BINARY} "${TMP_DIR}"
+    clean "${TMP_DIR}"
+  else
+    echo "Failed to download ${BINARY} ${HADOLINT_VERSION} with both naming conventions"
+    clean "${TMP_DIR}"
+    exit 1
+  fi
 else
   echo "${BINARY} ${HADOLINT_VERSION} already installed - skipping install"
 fi
