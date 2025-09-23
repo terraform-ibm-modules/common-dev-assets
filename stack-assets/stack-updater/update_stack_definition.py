@@ -4,7 +4,7 @@ import json
 import logging
 import os
 import sys
-from typing import Any, Dict, List
+from typing import Any
 
 import requests
 import semver
@@ -77,7 +77,7 @@ def get_version_updates(offeringId, catalogId, kind, flavor, api_key):
         return None
 
 
-def get_latest_valid_version(updates: List[Dict[str, Any]]):
+def get_latest_valid_version(updates: list[dict[str, Any]]):
     try:
         # sort updates by version
         updates = sorted(
@@ -108,7 +108,6 @@ def get_latest_valid_version(updates: List[Dict[str, Any]]):
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description="Update Stack Member Versions")
     parser.add_argument(
         "--stack",
@@ -201,7 +200,7 @@ if __name__ == "__main__":
     changelog = []  # list to track all updates
 
     # read stack definition json
-    with open(args.stack, "r") as f:
+    with open(args.stack) as f:
         stack_json = f.read()
         stack = json.loads(stack_json)
         logger.debug(f"Stack definition: {stack}")

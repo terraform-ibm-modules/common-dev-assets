@@ -97,7 +97,7 @@ def get_files(
     for file in glob.glob(extension, recursive=True):
         directory_name = os.path.dirname(file)
         if not any(directory_name.startswith(prefix) for prefix in EXCLUDE_DIRECTORIES):
-            with open(file, "r") as reader:
+            with open(file) as reader:
                 for line in reader:
                     if re.search(search_pattern, line):
                         matched_lines.append(line)
@@ -134,7 +134,7 @@ def replace_source(
     id, version = extract_repo_details(store, repo_name)
     if id is not None and version is not None:
         repo_id = id.rsplit("/", 1)[0] + '/ibm"'
-        with open(file, "r") as reader:
+        with open(file) as reader:
             file_data = reader.read()
             if current_file_pattern == "**/*.tf":
                 version_replace_text = '\n  version = "' + version + '"'
