@@ -2,3 +2,4 @@
 # Words to ignore
 # Format: "word" = "word" (keep as-is)
 "ODF" = "ODF" # The Red Hat OpenShift Data Foundation (ODF)
+"Hashi" = "Hashi"
