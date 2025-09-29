@@ -181,7 +181,7 @@ fi
 #######################################
 # pipx
 #######################################
-
+ # renovate: datasource=github-tags depName=pypa/pipx
 PIPX_VERSION=1.7.1
 PACKAGE=pipx
 set +e
