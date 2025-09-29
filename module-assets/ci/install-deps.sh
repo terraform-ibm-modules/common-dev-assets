@@ -231,14 +231,14 @@ fi
 DETECT_SECRETS_VERSION=0.13.1+ibm.62.dss
 PACKAGE=detect-secrets
 set +e
-INSTALLED_DETECT_SECRETS="$(${PYTHON} -m pip show detect-secrets | grep Version: | cut -d' ' -f2)"
+INSTALLED_DETECT_SECRETS="$(${PYTHON} -m pipx show detect-secrets | grep Version: | cut -d' ' -f2)"
 set -e
 if [[ "$DETECT_SECRETS_VERSION" != "$INSTALLED_DETECT_SECRETS" ]]; then
 
   echo
   echo "-- Installing ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
 
-  ${PYTHON} -m pip install -q --upgrade "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets"
+  ${PYTHON} -m pipx install -q --upgrade "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets"
   echo "COMPLETE"
 else
  echo "${PACKAGE} ${DETECT_SECRETS_VERSION} already installed - skipping install"
