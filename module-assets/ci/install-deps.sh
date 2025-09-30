@@ -238,7 +238,7 @@ if [[ "$DETECT_SECRETS_VERSION" != "$INSTALLED_DETECT_SECRETS" ]]; then
   echo
   echo "-- Installing ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
 
-  ${PYTHON} -m pipx install -q --upgrade "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets"
+  ${PYTHON} -m pipx upgrade -q --install "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets"
   echo "COMPLETE"
 else
  echo "${PACKAGE} ${DETECT_SECRETS_VERSION} already installed - skipping install"
