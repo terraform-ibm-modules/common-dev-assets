@@ -231,14 +231,20 @@ fi
 DETECT_SECRETS_VERSION=0.13.1+ibm.62.dss
 PACKAGE=detect-secrets
 set +e
-INSTALLED_DETECT_SECRETS="$(${PYTHON} -m pipx show detect-secrets | grep Version: | cut -d' ' -f2)"
+INSTALLED_DETECT_SECRETS="$(${PYTHON} -m pipx list | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
 set -e
-if [[ "$DETECT_SECRETS_VERSION" != "$INSTALLED_DETECT_SECRETS" ]]; then
+if [[ "$INSTALLED_DETECT_SECRETS" == "" ]]; then
 
   echo
   echo "-- Installing ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
 
-  ${PYTHON} -m pipx inject ${PACKAGE} ${PACKAGE}==${DETECT_SECRETS_VERSION}
+    ${PYTHON} -m pipx install -q ${PACKAGE}==${DETECT_SECRETS_VERSION}
+  echo "COMPLETE"
+elif [[ "$DETECT_SECRETS_VERSION" != "$INSTALLED_DETECT_SECRETS" ]]; then
+  echo
+  echo "-- Upgrading ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
+  ${PYTHON} -m pipx uninstall -q $PACKAGE
+  ${PYTHON} -m pipx install -q "${PACKAGE}==${DETECT_SECRETS_VERSION}"
   echo "COMPLETE"
 else
  echo "${PACKAGE} ${DETECT_SECRETS_VERSION} already installed - skipping install"
