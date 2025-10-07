@@ -119,8 +119,6 @@ repos:
             "--use-all-plugins",
           ]
         exclude: go.sum
-        # workaround for https://github.com/IBM/detect-secrets/issues/173
-        additional_dependencies: [boxsdk<4]
   # ruff - replaces flake8, isort, and black
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.13.3
