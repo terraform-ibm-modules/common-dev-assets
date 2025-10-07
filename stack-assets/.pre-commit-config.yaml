@@ -66,8 +66,6 @@ repos:
   - id: detect-secrets
     args: ['--baseline', '.secrets.baseline', '--fail-on-unaudited', '--use-all-plugins']
     exclude: go.sum
-    # workaround for https://github.com/IBM/detect-secrets/issues/173
-    additional_dependencies: [boxsdk<4]
 - repo: local
   hooks:
     - id: golangci-lint
