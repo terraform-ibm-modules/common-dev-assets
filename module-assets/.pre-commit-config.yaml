@@ -40,7 +40,7 @@ repos:
     hooks:
       - id: hadolint
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.101.0
+    rev: v1.101.1
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
@@ -85,7 +85,7 @@ repos:
           - --hook-config=--parallelism-limit=1
   # checkov (does not require checkov to be installed locally to run)
   - repo: https://github.com/bridgecrewio/checkov.git
-    rev: 3.2.474
+    rev: 3.2.479
     hooks:
       - id: checkov
         args:
@@ -121,7 +121,7 @@ repos:
         exclude: go.sum
   # ruff - replaces flake8, isort, and black
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.13.3
+    rev: v0.14.0
     hooks:
       - id: ruff
         args:
@@ -202,7 +202,7 @@ repos:
             "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.97/ibm_catalog-schema.json",
           ]
   - repo: https://github.com/crate-ci/typos
-    rev: v1.37.2
+    rev: v1.38.1
     hooks:
       - id: typos
         name: typos (warning only)
