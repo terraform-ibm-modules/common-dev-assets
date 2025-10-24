@@ -85,7 +85,7 @@ repos:
           - --hook-config=--parallelism-limit=1
   # checkov (does not require checkov to be installed locally to run)
   - repo: https://github.com/bridgecrewio/checkov.git
-    rev: 3.2.484
+    rev: 3.2.487
     hooks:
       - id: checkov
         args:
@@ -121,7 +121,7 @@ repos:
         exclude: go.sum
   # ruff - replaces flake8, isort, and black
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.1
+    rev: v0.14.2
     hooks:
       - id: ruff
         args:
