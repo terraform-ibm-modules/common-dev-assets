@@ -179,6 +179,24 @@ if ! ${PYTHON} -m pip &> /dev/null; then
 fi
 
 #######################################
+# pipx
+#######################################
+ # renovate: datasource=github-tags depName=pypa/pipx
+PIPX_VERSION=1.7.1
+PACKAGE=pipx
+set +e
+INSTALLED_PIPX_VERSION="$(${PYTHON} -m pipx --version)"
+set -e
+echo
+if [[ "$INSTALLED_PIPX_VERSION" != "$PIPX_VERSION" ]]; then
+  echo "-- Installing ${PACKAGE}..."
+  ${PYTHON} -m pip install -q --upgrade ${PACKAGE}
+  echo "COMPLETE"
+else
+ echo "${PACKAGE} ${PIPX_VERSION} already installed - skipping install"
+fi
+
+#######################################
 # pre-commit
 #######################################
 
@@ -186,14 +204,20 @@ fi
 PRE_COMMIT_VERSION=v4.3.0
 PACKAGE=pre-commit
 set +e
-INSTALLED_PRE_COMMIT_VERSION="$(${PYTHON} -m pip show pre-commit | grep Version: | cut -d' ' -f2)"
+INSTALLED_PRE_COMMIT_VERSION="$(${PYTHON} -m pipx list | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
 set -e
-if [[ "$PRE_COMMIT_VERSION" != "v$INSTALLED_PRE_COMMIT_VERSION" ]]; then
+if [[ "$INSTALLED_PRE_COMMIT_VERSION" == "" ]]; then
 
   echo
   echo "-- Installing ${PACKAGE} ${PRE_COMMIT_VERSION}..."
 
-  ${PYTHON} -m pip install -q --upgrade ${PACKAGE}==${PRE_COMMIT_VERSION}
+    ${PYTHON} -m pipx install -q ${PACKAGE}==${PRE_COMMIT_VERSION}
+  echo "COMPLETE"
+elif [[ "$PRE_COMMIT_VERSION" != "v$INSTALLED_PRE_COMMIT_VERSION" ]]; then
+  echo
+  echo "-- Upgrading ${PACKAGE} ${PRE_COMMIT_VERSION}..."
+  ${PYTHON} -m pipx uninstall -q $PACKAGE
+  ${PYTHON} -m pipx install -q "${PACKAGE}==${PRE_COMMIT_VERSION}"
   echo "COMPLETE"
 else
  echo "${PACKAGE} ${PRE_COMMIT_VERSION} already installed - skipping install"
@@ -207,14 +231,20 @@ fi
 DETECT_SECRETS_VERSION=0.13.1+ibm.64.dss
 PACKAGE=detect-secrets
 set +e
-INSTALLED_DETECT_SECRETS="$(${PYTHON} -m pip show detect-secrets | grep Version: | cut -d' ' -f2)"
+INSTALLED_DETECT_SECRETS="$(${PYTHON} -m pipx list | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
 set -e
-if [[ "$DETECT_SECRETS_VERSION" != "$INSTALLED_DETECT_SECRETS" ]]; then
+if [[ "$INSTALLED_DETECT_SECRETS" == "" ]]; then
 
   echo
   echo "-- Installing ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
 
-  ${PYTHON} -m pip install -q --upgrade "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets"
+    ${PYTHON} -m pipx install -q "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets"
+  echo "COMPLETE"
+elif [[ "$DETECT_SECRETS_VERSION" != "$INSTALLED_DETECT_SECRETS" ]]; then
+  echo
+  echo "-- Upgrading ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
+  ${PYTHON} -m pipx uninstall -q $PACKAGE
+  ${PYTHON} -m pipx install -q "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets"
   echo "COMPLETE"
 else
  echo "${PACKAGE} ${DETECT_SECRETS_VERSION} already installed - skipping install"
