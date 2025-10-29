@@ -199,7 +199,7 @@ repos:
         args:
           [
             "--schemafile",
-            "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.97/ibm_catalog-schema.json",
+            "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.99/ibm_catalog-schema.json",
           ]
   - repo: https://github.com/crate-ci/typos
     rev: v1.38.1
