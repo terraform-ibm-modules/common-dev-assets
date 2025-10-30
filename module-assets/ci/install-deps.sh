@@ -196,6 +196,13 @@ else
  echo "${PACKAGE} ${PIPX_VERSION} already installed - skipping install"
 fi
 
+# Ensure pipx bin directory is in PATH
+export PATH="${HOME}/.local/bin:${PATH}"
+# Add to GITHUB_PATH if running in GitHub Actions
+if [ -n "${GITHUB_PATH}" ]; then
+  echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
+fi
+
 #######################################
 # pre-commit
 #######################################
