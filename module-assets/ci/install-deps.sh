@@ -197,7 +197,6 @@ if [[ "$INSTALLED_PIPX_VERSION" != "$PIPX_VERSION" ]]; then
 else
  echo "${PACKAGE} ${PIPX_VERSION} already installed - skipping install"
 fi
-pre-commit --version
 
 #######################################
 # pre-commit
@@ -225,6 +224,8 @@ elif [[ "$PRE_COMMIT_VERSION" != "v$INSTALLED_PRE_COMMIT_VERSION" ]]; then
 else
  echo "${PACKAGE} ${PRE_COMMIT_VERSION} already installed - skipping install"
 fi
+ls -la /usr/local/bin
+pre-commit --version
 
 #######################################
 # detect-secrets
