@@ -216,7 +216,7 @@ set +e
 INSTALLED_PRE_COMMIT_VERSION="$(pipx list | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
 set -e
 
-if [[ "$INSTALLED_PRE_COMMIT_VERSION" == "" ]] || [[ "$INSTALLED_PRE_COMMIT_VERSION" ~= "nothing has been installed with pipx" ]]; then
+if [[ "$INSTALLED_PRE_COMMIT_VERSION" == "" ]] || [[ "$INSTALLED_PRE_COMMIT_VERSION" =~ "nothing has been installed with pipx" ]]; then
   echo
   echo "-- Installing ${PACKAGE} ${PRE_COMMIT_VERSION}..."
   arg=""
@@ -252,7 +252,7 @@ PACKAGE=detect-secrets
 set +e
 INSTALLED_DETECT_SECRETS="$(pipx list | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
 set -e
-if [[ "$INSTALLED_DETECT_SECRETS" == "" ]] || [[ "$INSTALLED_PRE_COMMIT_VERSION" ~= "nothing has been installed with pipx" ]]; then
+if [[ "$INSTALLED_DETECT_SECRETS" == "" ]] || [[ "$INSTALLED_PRE_COMMIT_VERSION" =~ "nothing has been installed with pipx" ]]; then
   echo
   echo "-- Installing ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
   arg=""
