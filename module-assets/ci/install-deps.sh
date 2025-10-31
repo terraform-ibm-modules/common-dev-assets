@@ -214,20 +214,20 @@ fi
 PRE_COMMIT_VERSION=v4.3.0
 PACKAGE=pre-commit
 set +e
-INSTALLED_PRE_COMMIT_VERSION="$(${PYTHON} -m pipx list | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
+INSTALLED_PRE_COMMIT_VERSION="$(pipx list | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
 set -e
 if [[ "$INSTALLED_PRE_COMMIT_VERSION" == "" ]]; then
 
   echo
   echo "-- Installing ${PACKAGE} ${PRE_COMMIT_VERSION}..."
+  pipx install -q ${PACKAGE}==${PRE_COMMIT_VERSION}
 
-    ${PYTHON} -m pipx install -q ${PACKAGE}==${PRE_COMMIT_VERSION}
   echo "COMPLETE"
 elif [[ "$PRE_COMMIT_VERSION" != "v$INSTALLED_PRE_COMMIT_VERSION" ]]; then
   echo
   echo "-- Upgrading ${PACKAGE} ${PRE_COMMIT_VERSION}..."
-  ${PYTHON} -m pipx uninstall -q $PACKAGE
-  ${PYTHON} -m pipx install -q "${PACKAGE}==${PRE_COMMIT_VERSION}"
+  pipx uninstall -q $PACKAGE
+  pipx install -q "${PACKAGE}==${PRE_COMMIT_VERSION}"
   echo "COMPLETE"
 else
  echo "${PACKAGE} ${PRE_COMMIT_VERSION} already installed - skipping install"
@@ -243,20 +243,20 @@ pre-commit --version
 DETECT_SECRETS_VERSION=0.13.1+ibm.64.dss
 PACKAGE=detect-secrets
 set +e
-INSTALLED_DETECT_SECRETS="$(${PYTHON} -m pipx list | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
+INSTALLED_DETECT_SECRETS="$(pipx list | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
 set -e
 if [[ "$INSTALLED_DETECT_SECRETS" == "" ]]; then
 
   echo
   echo "-- Installing ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
 
-    ${PYTHON} -m pipx install -q "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets"
+    pipx install -q "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets"
   echo "COMPLETE"
 elif [[ "$DETECT_SECRETS_VERSION" != "$INSTALLED_DETECT_SECRETS" ]]; then
   echo
   echo "-- Upgrading ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
-  ${PYTHON} -m pipx uninstall -q $PACKAGE
-  ${PYTHON} -m pipx install -q "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets"
+  pipx uninstall -q $PACKAGE
+  pipx install -q "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets"
   echo "COMPLETE"
 else
  echo "${PACKAGE} ${DETECT_SECRETS_VERSION} already installed - skipping install"
