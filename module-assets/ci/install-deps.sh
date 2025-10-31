@@ -191,13 +191,20 @@ echo
 if [[ "$INSTALLED_PIPX_VERSION" != "$PIPX_VERSION" ]]; then
   echo "-- Installing ${PACKAGE}..."
   ${PYTHON} -m pip install -q --upgrade ${PACKAGE}
+  # prepend the pipx bin directory to $PATH
+  ${PYTHON} -m pipx ensurepath --prepend
+  # source the shell's config file to export new $PATH
+  if [ -f ~/.bashrc ]; then
+    source ~/.bashrc
+  fi
+  if [ -f ~/.zshrc ]; then
+    source ~/.zshrc
+  fi
   echo "COMPLETE"
 else
  echo "${PACKAGE} ${PIPX_VERSION} already installed - skipping install"
 fi
 
-# Ensure pipx bin directory is in PATH
-export PATH="${HOME}/.local/bin:${PATH}"
 # Add to GITHUB_PATH if running in GitHub Actions
 if [ -n "${GITHUB_PATH}" ]; then
   echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
