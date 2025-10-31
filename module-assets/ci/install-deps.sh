@@ -169,7 +169,6 @@ if ! go version &> /dev/null; then
   exit 1
 fi
 
-
 #######################################
 # pip
 #######################################
@@ -220,18 +219,27 @@ set -e
 if [[ "$INSTALLED_PRE_COMMIT_VERSION" == "" ]] || [[ "$INSTALLED_PRE_COMMIT_VERSION" ~= "nothing has been installed with pipx" ]]; then
   echo
   echo "-- Installing ${PACKAGE} ${PRE_COMMIT_VERSION}..."
+  arg=""
+  if ! [ -w "${DIRECTORY}" ]; then
+    echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
+    arg=sudo
+  fi
   ${arg} pipx install -q ${PACKAGE}==${PRE_COMMIT_VERSION} --global
   echo "COMPLETE"
 elif [[ "$PRE_COMMIT_VERSION" != "v$INSTALLED_PRE_COMMIT_VERSION" ]]; then
   echo
   echo "-- Upgrading ${PACKAGE} ${PRE_COMMIT_VERSION}..."
+  arg=""
+  if ! [ -w "${DIRECTORY}" ]; then
+    echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
+    arg=sudo
+  fi
   ${arg} pipx uninstall -q $PACKAGE
   ${arg} pipx install -q "${PACKAGE}==${PRE_COMMIT_VERSION}" --global
   echo "COMPLETE"
 else
  echo "${PACKAGE} ${PRE_COMMIT_VERSION} already installed - skipping install"
 fi
-ls -la /usr/local/bin
 pre-commit --version
 
 #######################################
@@ -247,11 +255,21 @@ set -e
 if [[ "$INSTALLED_DETECT_SECRETS" == "" ]] || [[ "$INSTALLED_PRE_COMMIT_VERSION" ~= "nothing has been installed with pipx" ]]; then
   echo
   echo "-- Installing ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
+  arg=""
+  if ! [ -w "${DIRECTORY}" ]; then
+    echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
+    arg=sudo
+  fi
   ${arg} pipx install -q "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets" --global
   echo "COMPLETE"
 elif [[ "$DETECT_SECRETS_VERSION" != "$INSTALLED_DETECT_SECRETS" ]]; then
   echo
   echo "-- Upgrading ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
+  arg=""
+  if ! [ -w "${DIRECTORY}" ]; then
+    echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
+    arg=sudo
+  fi
   ${arg} pipx uninstall -q $PACKAGE
   ${arg} pipx install -q "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets" --global
   echo "COMPLETE"
