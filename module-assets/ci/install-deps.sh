@@ -9,6 +9,7 @@ if [[ -z "${CUSTOM_DIRECTORY}" ]]; then
 else
   DIRECTORY="${CUSTOM_DIRECTORY}"
   mkdir -p "${DIRECTORY}"
+  export PIPX_GLOBAL_BIN_DIR="${DIRECTORY}"
 fi
 
 # Determine OS type and arch
@@ -191,8 +192,15 @@ echo
 if [[ "$INSTALLED_PIPX_VERSION" != "$PIPX_VERSION" ]]; then
   echo "-- Installing ${PACKAGE}..."
   ${PYTHON} -m pip install -q --upgrade ${PACKAGE}
+  
+  arg=""
+  if ! [ -w "${DIRECTORY}" ]; then
+    echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
+    arg=sudo
+  fi
   # use --global option to place binaries in /usr/local/bin
-  ${PYTHON} -m pipx ensurepath --global
+  # NB: This will be override by the value of $CUSTOM_DIRECTORY if passed when running this script
+  ${arg} ${PYTHON} -m pipx ensurepath --global
   echo "COMPLETE"
 else
  echo "${PACKAGE} ${PIPX_VERSION} already installed - skipping install"
