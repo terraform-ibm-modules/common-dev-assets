@@ -197,6 +197,7 @@ if [[ "$INSTALLED_PIPX_VERSION" != "$PIPX_VERSION" ]]; then
 else
  echo "${PACKAGE} ${PIPX_VERSION} already installed - skipping install"
 fi
+pre-commit --version
 
 #######################################
 # pre-commit
