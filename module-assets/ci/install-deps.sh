@@ -191,7 +191,7 @@ echo
 if [[ "$INSTALLED_PIPX_VERSION" != "$PIPX_VERSION" ]]; then
   echo "-- Installing ${PACKAGE}..."
   ${PYTHON} -m pip install -q --upgrade ${PACKAGE}==${PIPX_VERSION}
-  
+
   arg=""
   if ! [ -w "${DIRECTORY}" ]; then
     echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
@@ -240,7 +240,6 @@ elif [[ "$PRE_COMMIT_VERSION" != "v$INSTALLED_PRE_COMMIT_VERSION" ]]; then
 else
  echo "${PACKAGE} ${PRE_COMMIT_VERSION} already installed - skipping install"
 fi
-pre-commit --version
 
 #######################################
 # detect-secrets
