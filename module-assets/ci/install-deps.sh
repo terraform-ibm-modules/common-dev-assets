@@ -83,7 +83,7 @@ function permission_check {
   if ! [ -w "${DIRECTORY}" ]; then
     echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
     # override global env var
-    ARG="sudo"
+    ARG=sudo
   fi
 }
 
@@ -94,7 +94,7 @@ function copy_replace_binary {
   tmp_dir=$2
 
   echo "Placing ${binary} binary in ${DIRECTORY} and making executable.."
-  permission_check()
+  permission_check
   # Need to delete if exists already in case it is a symlink which cannot be overwritten using cp -r
   ${ARG} rm -f "${DIRECTORY}/${binary}"
   ${ARG} cp -r "${tmp_dir}/${binary}" "${DIRECTORY}"
@@ -201,7 +201,7 @@ if [[ "$INSTALLED_PIPX_VERSION" != "$PIPX_VERSION" ]]; then
 
   # use --global option to place binaries in /usr/local/bin
   # NB: This will be override by the value of $CUSTOM_DIRECTORY if passed when running this script
-  permission_check()
+  permission_check
   ${ARG} ${PYTHON} -m pipx ensurepath --global
   echo "COMPLETE"
 else
@@ -222,13 +222,13 @@ set -e
 if [[ "$INSTALLED_PRE_COMMIT_VERSION" == "" ]] || [[ "$INSTALLED_PRE_COMMIT_VERSION" =~ "nothing has been installed with pipx" ]]; then
   echo
   echo "-- Installing ${PACKAGE} ${PRE_COMMIT_VERSION}..."
-  permission_check()
+  permission_check
   ${ARG} pipx install -q ${PACKAGE}==${PRE_COMMIT_VERSION} --global
   echo "COMPLETE"
 elif [[ "$PRE_COMMIT_VERSION" != "v$INSTALLED_PRE_COMMIT_VERSION" ]]; then
   echo
   echo "-- Upgrading ${PACKAGE} ${PRE_COMMIT_VERSION}..."
-  permission_check()
+  permission_check
   ${ARG} pipx uninstall -q $PACKAGE
   ${ARG} pipx install -q "${PACKAGE}==${PRE_COMMIT_VERSION}" --global
   echo "COMPLETE"
@@ -249,13 +249,13 @@ set -e
 if [[ "$INSTALLED_DETECT_SECRETS" == "" ]] || [[ "$INSTALLED_PRE_COMMIT_VERSION" =~ "nothing has been installed with pipx" ]]; then
   echo
   echo "-- Installing ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
-  permission_check()
+  permission_check
   ${ARG} pipx install -q "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets" --global
   echo "COMPLETE"
 elif [[ "$DETECT_SECRETS_VERSION" != "$INSTALLED_DETECT_SECRETS" ]]; then
   echo
   echo "-- Upgrading ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
-  permission_check()
+  permission_check
   ${ARG} pipx uninstall -q $PACKAGE
   ${ARG} pipx install -q "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets" --global
   echo "COMPLETE"
