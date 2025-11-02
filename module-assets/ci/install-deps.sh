@@ -83,7 +83,7 @@ function permission_check {
   if ! [ -w "${DIRECTORY}" ]; then
     echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
     # override global env var
-    ARG=sudo
+    ARG="sudo"
   fi
 }
 
