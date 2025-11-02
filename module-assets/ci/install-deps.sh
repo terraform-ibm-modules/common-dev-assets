@@ -3,6 +3,8 @@
 set -o errexit
 set -o pipefail
 
+ARG=""
+
 # Place binaries in /usr/local/bin unless $CUSTOM_DIRECTORY defined
 if [[ -z "${CUSTOM_DIRECTORY}" ]]; then
   DIRECTORY="/usr/local/bin"
@@ -76,6 +78,15 @@ function verify_alternative {
 
 }
 
+# Check if sudo needed
+function permission_check {
+  if ! [ -w "${DIRECTORY}" ]; then
+    echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
+    # override global env var
+    ARG=sudo
+  fi
+}
+
 # Function to copy and replace binary in $DIRECTORY
 function copy_replace_binary {
 
@@ -83,15 +94,11 @@ function copy_replace_binary {
   tmp_dir=$2
 
   echo "Placing ${binary} binary in ${DIRECTORY} and making executable.."
-  arg=""
-  if ! [ -w "${DIRECTORY}" ]; then
-    echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
-    arg=sudo
-  fi
+  permission_check
   # Need to delete if exists already in case it is a symlink which cannot be overwritten using cp -r
-  ${arg} rm -f "${DIRECTORY}/${binary}"
-  ${arg} cp -r "${tmp_dir}/${binary}" "${DIRECTORY}"
-  ${arg} chmod +x "${DIRECTORY}/${binary}"
+  ${ARG} rm -f "${DIRECTORY}/${binary}"
+  ${ARG} cp -r "${tmp_dir}/${binary}" "${DIRECTORY}"
+  ${ARG} chmod +x "${DIRECTORY}/${binary}"
 
 }
 
@@ -181,6 +188,7 @@ fi
 #######################################
 # pipx
 #######################################
+
  # renovate: datasource=github-tags depName=pypa/pipx
 PIPX_VERSION=1.7.1
 PACKAGE=pipx
@@ -192,17 +200,13 @@ if [[ "$INSTALLED_PIPX_VERSION" != "$PIPX_VERSION" ]]; then
   echo "-- Installing ${PACKAGE}..."
   ${PYTHON} -m pip install -q --upgrade ${PACKAGE}==${PIPX_VERSION}
 
-  arg=""
-  if ! [ -w "${DIRECTORY}" ]; then
-    echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
-    arg=sudo
-  fi
   # use --global option to place binaries in /usr/local/bin
   # NB: This will be override by the value of $CUSTOM_DIRECTORY if passed when running this script
-  ${arg} ${PYTHON} -m pipx ensurepath --global
+  permission_check
+  ${ARG} ${PYTHON} -m pipx ensurepath --global
   echo "COMPLETE"
 else
- echo "${PACKAGE} ${PIPX_VERSION} already installed - skipping install"
+  echo "${PACKAGE} ${PIPX_VERSION} already installed - skipping install"
 fi
 
 #######################################
@@ -213,29 +217,21 @@ fi
 PRE_COMMIT_VERSION=v4.3.0
 PACKAGE=pre-commit
 set +e
-INSTALLED_PRE_COMMIT_VERSION="$(pipx list | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
+INSTALLED_PRE_COMMIT_VERSION="$(pipx list --global | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
 set -e
 
 if [[ "$INSTALLED_PRE_COMMIT_VERSION" == "" ]] || [[ "$INSTALLED_PRE_COMMIT_VERSION" =~ "nothing has been installed with pipx" ]]; then
   echo
   echo "-- Installing ${PACKAGE} ${PRE_COMMIT_VERSION}..."
-  arg=""
-  if ! [ -w "${DIRECTORY}" ]; then
-    echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
-    arg=sudo
-  fi
-  ${arg} pipx install -q ${PACKAGE}==${PRE_COMMIT_VERSION} --global
+  permission_check
+  ${ARG} pipx install -q ${PACKAGE}==${PRE_COMMIT_VERSION} --global
   echo "COMPLETE"
 elif [[ "$PRE_COMMIT_VERSION" != "v$INSTALLED_PRE_COMMIT_VERSION" ]]; then
   echo
   echo "-- Upgrading ${PACKAGE} ${PRE_COMMIT_VERSION}..."
-  arg=""
-  if ! [ -w "${DIRECTORY}" ]; then
-    echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
-    arg=sudo
-  fi
-  ${arg} pipx uninstall -q $PACKAGE
-  ${arg} pipx install -q "${PACKAGE}==${PRE_COMMIT_VERSION}" --global
+  permission_check
+  ${ARG} pipx uninstall -q $PACKAGE --global
+  ${ARG} pipx install -q "${PACKAGE}==${PRE_COMMIT_VERSION}" --global
   echo "COMPLETE"
 else
  echo "${PACKAGE} ${PRE_COMMIT_VERSION} already installed - skipping install"
@@ -248,29 +244,22 @@ fi
  # renovate: datasource=github-tags depName=ibm/detect-secrets versioning="regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$"
 DETECT_SECRETS_VERSION=0.13.1+ibm.64.dss
 PACKAGE=detect-secrets
+PIPX_PACKAGE_NAME=detect_secrets
 set +e
-INSTALLED_DETECT_SECRETS="$(pipx list | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
+INSTALLED_DETECT_SECRETS="$(pipx list --global | grep "package $PIPX_PACKAGE_NAME " | sed -E "s/^.*package $PIPX_PACKAGE_NAME ([^,]+),.*/\1/")"
 set -e
 if [[ "$INSTALLED_DETECT_SECRETS" == "" ]] || [[ "$INSTALLED_PRE_COMMIT_VERSION" =~ "nothing has been installed with pipx" ]]; then
   echo
   echo "-- Installing ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
-  arg=""
-  if ! [ -w "${DIRECTORY}" ]; then
-    echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
-    arg=sudo
-  fi
-  ${arg} pipx install -q "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets" --global
+  permission_check
+  ${ARG} pipx install -q "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets" --global
   echo "COMPLETE"
 elif [[ "$DETECT_SECRETS_VERSION" != "$INSTALLED_DETECT_SECRETS" ]]; then
   echo
   echo "-- Upgrading ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
-  arg=""
-  if ! [ -w "${DIRECTORY}" ]; then
-    echo "No write permission to ${DIRECTORY}. Attempting to run with sudo..."
-    arg=sudo
-  fi
-  ${arg} pipx uninstall -q $PACKAGE
-  ${arg} pipx install -q "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets" --global
+  permission_check
+  ${ARG} pipx uninstall -q $PACKAGE --global
+  ${ARG} pipx install -q "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets" --global
   echo "COMPLETE"
 else
  echo "${PACKAGE} ${DETECT_SECRETS_VERSION} already installed - skipping install"
