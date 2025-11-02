@@ -188,11 +188,12 @@ fi
 #######################################
 # pipx
 #######################################
+
  # renovate: datasource=github-tags depName=pypa/pipx
 PIPX_VERSION=1.7.1
 PACKAGE=pipx
 set +e
-INSTALLED_PIPX_VERSION="$(pipx --version)"
+INSTALLED_PIPX_VERSION="$(${PYTHON} -m pipx --version)"
 set -e
 echo
 if [[ "$INSTALLED_PIPX_VERSION" != "$PIPX_VERSION" ]]; then
@@ -216,7 +217,7 @@ fi
 PRE_COMMIT_VERSION=v4.3.0
 PACKAGE=pre-commit
 set +e
-INSTALLED_PRE_COMMIT_VERSION="$(pipx list | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
+INSTALLED_PRE_COMMIT_VERSION="$(pipx list --global | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
 set -e
 
 if [[ "$INSTALLED_PRE_COMMIT_VERSION" == "" ]] || [[ "$INSTALLED_PRE_COMMIT_VERSION" =~ "nothing has been installed with pipx" ]]; then
@@ -229,7 +230,7 @@ elif [[ "$PRE_COMMIT_VERSION" != "v$INSTALLED_PRE_COMMIT_VERSION" ]]; then
   echo
   echo "-- Upgrading ${PACKAGE} ${PRE_COMMIT_VERSION}..."
   permission_check
-  ${ARG} pipx uninstall -q $PACKAGE
+  ${ARG} pipx uninstall -q $PACKAGE --global
   ${ARG} pipx install -q "${PACKAGE}==${PRE_COMMIT_VERSION}" --global
   echo "COMPLETE"
 else
@@ -243,8 +244,9 @@ fi
  # renovate: datasource=github-tags depName=ibm/detect-secrets versioning="regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$"
 DETECT_SECRETS_VERSION=0.13.1+ibm.64.dss
 PACKAGE=detect-secrets
+PIPX_PACKAGE_NAME=detect_secrets
 set +e
-INSTALLED_DETECT_SECRETS="$(pipx list | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
+INSTALLED_DETECT_SECRETS="$(pipx list --global | grep "package $PIPX_PACKAGE_NAME " | sed -E "s/^.*package $PIPX_PACKAGE_NAME ([^,]+),.*/\1/")"
 set -e
 if [[ "$INSTALLED_DETECT_SECRETS" == "" ]] || [[ "$INSTALLED_PRE_COMMIT_VERSION" =~ "nothing has been installed with pipx" ]]; then
   echo
@@ -256,7 +258,7 @@ elif [[ "$DETECT_SECRETS_VERSION" != "$INSTALLED_DETECT_SECRETS" ]]; then
   echo
   echo "-- Upgrading ${PACKAGE} ${DETECT_SECRETS_VERSION}..."
   permission_check
-  ${ARG} pipx uninstall -q $PACKAGE
+  ${ARG} pipx uninstall -q $PACKAGE --global
   ${ARG} pipx install -q "git+https://github.com/ibm/detect-secrets.git@${DETECT_SECRETS_VERSION}#egg=detect-secrets" --global
   echo "COMPLETE"
 else
