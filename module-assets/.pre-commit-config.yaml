@@ -16,6 +16,12 @@ repos:
         require_serial: true
         pass_filenames: false
         description: This hook ensures that a file named LICENSE exists for any repo (on github.com) which contains .tf files in the root directory of the repo
+      - id: check-go-code-cve
+        name: Check Vulnerabilities in tests code
+        entry: ci/check-go-code-cve.sh
+        language: script
+        pass_filenames: false
+        description: This hook ensures that there are no vulnerabilities in the golang test cases
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
