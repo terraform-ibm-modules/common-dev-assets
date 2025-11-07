@@ -190,7 +190,7 @@ fi
 #######################################
 
  # renovate: datasource=github-tags depName=pypa/pipx
-PIPX_VERSION=1.7.1
+PIPX_VERSION=1.8.0
 PACKAGE=pipx
 set +e
 INSTALLED_PIPX_VERSION="$(${PYTHON} -m pipx --version)"
@@ -270,7 +270,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=warrensbox/terraform-switcher
-TFSWITCH_VERSION=v1.8.0
+TFSWITCH_VERSION=v1.9.0
 BINARY=tfswitch
 set +e
 INSTALLED_TFSWITCH_VERSION="$(tfswitch --version | grep Version | awk '{ print $2 }')"
@@ -421,7 +421,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v2.5.0
+GOLANGCI_LINT_VERSION=v2.6.1
 BINARY=golangci-lint
 set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"
@@ -449,7 +449,7 @@ fi
 #######################################
 
 # renovate: datasource=github-releases depName=rust-lang/rust
-RUST_VERSION=1.90.0
+RUST_VERSION=1.91.0
 BINARY=rustc
 set +e
 INSTALLED_RUST_VERSION="$(rustc --version 2>/dev/null | cut -d' ' -f2)"
