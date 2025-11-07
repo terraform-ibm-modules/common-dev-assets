@@ -82,7 +82,7 @@ if [[ -z "${RESOURCE_GROUP_ID}" ]]; then
 fi
 echo "Successfully retrieved resource group ID: ${RESOURCE_GROUP_ID}"
 
-# check if containers aoikey already exists for the given region and resource group
+# check if containers api key already exists for the given region and resource group
 reset=true
 key_descriptions=()
 while IFS='' read -r line; do key_descriptions+=("$line"); done < <(ibmcloud iam api-keys --all --output json | jq -r --arg name "${APIKEY_KEY_NAME}" '.[] | select(.name == $name) | .description')
