@@ -13,5 +13,5 @@ while IFS= read -r -d '' modfile; do
 
   dir=$(dirname "$modfile")
   echo "Scanning: $dir"
-  trivy fs "$dir" --severity HIGH,CRITICAL --exit-code 1
+  trivy fs "$dir" --exit-code 1
 done
