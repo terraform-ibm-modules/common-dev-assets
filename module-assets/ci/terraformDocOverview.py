@@ -62,8 +62,18 @@ def get_main_readme_headings():
     return data
 
 
+def get_repo_info():
+    module_url = terraformDocsUtils.get_module_url()
+    repo_name = pathlib.PurePath(module_url).name
+    module_name = repo_name.replace("terraform-ibm-", "")
+    short_name = "".join([word[0] for word in module_name.split("-")])
+    return module_url, short_name
+
+
 def get_headings(folder_name):
     readme_headings: list[str] = []
+    repo_url, module_short_name = get_repo_info()
+
     if os.path.isdir(folder_name.lower()):
         for readme_file_path in Path(folder_name.lower()).rglob("*"):
             path = str(readme_file_path)
@@ -95,9 +105,25 @@ def get_headings(folder_name):
                     # for examples bullet point name is title in example's README
                     readme_title = terraformDocsUtils.get_readme_title(path)
                     if readme_title:
-                        data = "    * [{}](./{})".format(
-                            readme_title.strip().replace("\n", "").replace("# ", ""),
-                            re.sub(regex_pattern, "", path, flags=re.IGNORECASE),
+                        title = readme_title.strip().replace("\n", "").replace("# ", "")
+                        example_path = re.sub(
+                            regex_pattern, "", path, flags=re.IGNORECASE
+                        )
+                        example_name = os.path.basename(example_path)
+
+                        deploy_url = (
+                            f"https://cloud.ibm.com/schematics/workspaces/create?"
+                            f"workspace_name={module_short_name}-{example_name}-example&"
+                            f"repository={repo_url}/tree/main/{example_path}"
+                        )
+
+                        data = (
+                            f'    * <div style="display: inline-block;"><a href="./{example_path}">'
+                            f"{title}</a></div> "
+                            f'<div style="display: inline-block; vertical-align: middle;">'
+                            f'<a href="{deploy_url}" target="_blank">'
+                            f'<img src="https://cloud.ibm.com/media/docs/images/icons/Deploy_to_cloud.svg" '
+                            f'alt="Deploy to IBM Cloud button"></a></div>'
                         )
                 readme_headings.append(data)
     return sorted(readme_headings)
