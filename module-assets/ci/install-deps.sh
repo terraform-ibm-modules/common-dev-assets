@@ -174,8 +174,6 @@ fi
 if ! go version &> /dev/null; then
   echo "golang (go) not detected. Please install golang, ensure it is on your \$PATH, and retry."
   exit 1
-else
-  go install github.com/securego/gosec/v2/cmd/gosec@latest
 fi
 
 #######################################
@@ -416,6 +414,35 @@ if [[ "$TRIVY_VERSION" != "v${INSTALLED_TRIVY_VERSION}" ]]; then
   clean "${TMP_DIR}"
 else
   echo "${BINARY} ${TRIVY_VERSION} already installed - skipping install"
+fi
+
+
+#######################################
+# gosec
+#######################################
+
+ # renovate: datasource=github-releases depName=securego/gosec
+GOSEC_VERSION=v2.22.10
+BINARY=gosec
+set +e
+INSTALLED_GOSEC_VERSION="$(gosec --version | head -1 | cut -d' ' -f2)"
+set -e
+if [[ "$GOSEC_VERSION" != "v$INSTALLED_GOSEC_VERSION" ]]; then
+  FILE_NAME="gosec_${GOSEC_VERSION//v/}_${OS}_${ARCH}.tar.gz"
+  URL="https://github.com/securego/gosec/releases/download/${GOSEC_VERSION}"
+  SUMFILE="${BINARY}_${GOSEC_VERSION//v/}_checksums.txt"
+  TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
+
+  echo
+  echo "-- Installing ${BINARY} ${GOSEC_VERSION}..."
+
+  download ${BINARY} ${GOSEC_VERSION} ${URL} "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+  verify "${FILE_NAME}" "${SUMFILE}" "${TMP_DIR}"
+  tar -xzf "${TMP_DIR}/${FILE_NAME}" -C "${TMP_DIR}"
+  copy_replace_binary ${BINARY} "${TMP_DIR}"
+  clean "${TMP_DIR}"
+else
+  echo "${BINARY} ${GOSEC_VERSION} already installed - skipping install"
 fi
 
 #######################################

@@ -40,7 +40,7 @@ repos:
     hooks:
       - id: hadolint
   - repo: https://github.com/TekWizely/pre-commit-golang
-    rev: v1.0.0-rc.2
+    rev: v1.0.0-rc.4
     hooks:
       - id: go-sec-repo-mod
         name: Go static code scan
@@ -56,7 +56,7 @@ repos:
     hooks:
       - id: deps-sca
         name: Dependencies Scan
-        entry: trivy fs . --severity CRITICAL,HIGH --exit-code 1 --skip-dirs common-dev-assets
+        entry: trivy fs . --severity CRITICAL,HIGH --exit-code 1 --skip-files="**/.terraform/**/*" --skip-files="common-dev-assets/**/*"
         language: system
         pass_filenames: false
   - repo: https://github.com/antonbabenko/pre-commit-terraform
