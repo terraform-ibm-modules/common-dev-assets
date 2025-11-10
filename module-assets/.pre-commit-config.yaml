@@ -16,12 +16,6 @@ repos:
         require_serial: true
         pass_filenames: false
         description: This hook ensures that a file named LICENSE exists for any repo (on github.com) which contains .tf files in the root directory of the repo
-      - id: check-go-code-cve
-        name: Check Vulnerabilities in tests code
-        entry: ci/check-go-code-cve.sh
-        language: script
-        pass_filenames: false
-        description: This hook ensures that there are no vulnerabilities in the golang test cases
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -45,6 +39,26 @@ repos:
     rev: v2.14.0
     hooks:
       - id: hadolint
+  - repo: https://github.com/TekWizely/pre-commit-golang
+    rev: v1.0.0-rc.2
+    hooks:
+      - id: go-sec-repo-mod
+        name: Go static code scan
+        args:
+          - -severity
+          - high
+          - -confidence
+          - medium
+          - -fmt
+          - text
+          - -tests
+  - repo: local
+    hooks:
+      - id: go-deps-sca
+        name: Go dependencies Scan
+        entry: trivy fs . --scanners vuln --severity CRITICAL,HIGH --exit-code 1 --file-patterns "go:.*"
+        language: system
+        pass_filenames: false
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.103.0
     hooks:
