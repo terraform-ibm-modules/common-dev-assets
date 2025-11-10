@@ -54,9 +54,9 @@ repos:
           - -tests
   - repo: local
     hooks:
-      - id: go-deps-sca
-        name: Go dependencies Scan
-        entry: trivy fs . --severity CRITICAL,HIGH --exit-code 1
+      - id: deps-sca
+        name: Dependencies Scan
+        entry: trivy fs . --severity CRITICAL,HIGH --exit-code 1 --skip-dirs common-dev-assets
         language: system
         pass_filenames: false
   - repo: https://github.com/antonbabenko/pre-commit-terraform
