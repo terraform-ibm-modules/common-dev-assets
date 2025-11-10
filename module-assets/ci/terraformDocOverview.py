@@ -64,10 +64,15 @@ def get_main_readme_headings():
 
 def get_repo_info():
     module_url = terraformDocsUtils.get_module_url()
+    full_module_url = f"https://{module_url}"
     repo_name = pathlib.PurePath(module_url).name
     module_name = repo_name.replace("terraform-ibm-", "")
-    short_name = "".join([word[0] for word in module_name.split("-")])
-    return module_url, short_name
+    words = module_name.split("-")
+    if len(words) == 1:
+        short_name = module_name
+    else:
+        short_name = "".join([word[0] for word in words])
+    return full_module_url, short_name
 
 
 def get_headings(folder_name):
