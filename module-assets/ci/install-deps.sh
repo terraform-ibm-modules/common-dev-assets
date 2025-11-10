@@ -174,7 +174,7 @@ fi
 if ! go version &> /dev/null; then
   echo "golang (go) not detected. Please install golang, ensure it is on your \$PATH, and retry."
   exit 1
-else 
+else
   go install github.com/securego/gosec/v2/cmd/gosec@latest
 fi
 
