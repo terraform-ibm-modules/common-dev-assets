@@ -43,7 +43,7 @@ repos:
     rev: v1.0.0-rc.4
     hooks:
       - id: go-sec-repo-mod
-        name: Go static code scan
+        name: Go Security Checker
         args:
           - --hook:ignore-dir=.terraform
           - --hook:ignore-dir=common-dev-assets
@@ -56,8 +56,8 @@ repos:
           - -tests
   - repo: local
     hooks:
-      - id: deps-sca
-        name: Dependencies Scan
+      - id: trivy
+        name: Trivy scan
         entry: trivy fs . --severity CRITICAL,HIGH --exit-code 1 --skip-files="**/.terraform/**/*" --skip-files="common-dev-assets/**/*"
         language: system
         pass_filenames: false
