@@ -7,4 +7,3 @@
 common-go-assets/ @whoffler @daniel-butler-irl
 pipeline-assets/ @daniel-butler-irl @ocofaigh
 scripts/update-multiple-repos/ @akocbek
-scripts/update-source/ @mounika-nalla
