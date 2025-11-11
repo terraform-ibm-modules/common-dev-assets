@@ -45,6 +45,8 @@ repos:
       - id: go-sec-repo-mod
         name: Go static code scan
         args:
+          - --hook:ignore-dir=.terraform
+          - --hook:ignore-dir=common-dev-assets
           - -severity
           - high
           - -confidence
