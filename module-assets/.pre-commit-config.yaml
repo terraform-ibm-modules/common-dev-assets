@@ -39,6 +39,28 @@ repos:
     rev: v2.14.0
     hooks:
       - id: hadolint
+  - repo: https://github.com/TekWizely/pre-commit-golang
+    rev: v1.0.0-rc.4
+    hooks:
+      - id: go-sec-repo-mod
+        name: Go Security Checker
+        args:
+          - --hook:ignore-dir=.terraform
+          - --hook:ignore-dir=common-dev-assets
+          - -severity
+          - high
+          - -confidence
+          - medium
+          - -fmt
+          - text
+          - -tests
+  - repo: local
+    hooks:
+      - id: trivy
+        name: Trivy scan
+        entry: trivy fs . --severity CRITICAL,HIGH --exit-code 1 --skip-files="**/.terraform/**/*" --skip-files="common-dev-assets/**/*"
+        language: system
+        pass_filenames: false
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.103.0
     hooks:
