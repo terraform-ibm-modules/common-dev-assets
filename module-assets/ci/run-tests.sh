@@ -71,7 +71,7 @@ if [ ${IS_PR} == true ]; then
                          "module-metadata.json"
                          "pvs.preset.json"
                          ".fileignore"
-                        
+
                          "LICENSE"
                          ".catalog-onboard-pipeline.yaml"
                          ".trivyignore")
