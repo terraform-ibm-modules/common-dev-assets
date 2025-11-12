@@ -69,11 +69,9 @@ if [ ${IS_PR} == true ]; then
                          "catalogValidationValues.json.template"
                          ".one-pipeline.yaml"
                          "module-metadata.json"
-                         "cra-tf-validate-ignore-goals.json"
-                         "cra-tf-validate-ignore-rules.json"
                          "pvs.preset.json"
                          ".fileignore"
-                         "cra-config.yaml"
+                        
                          "LICENSE"
                          ".catalog-onboard-pipeline.yaml"
                          ".trivyignore")
