@@ -63,7 +63,7 @@ def get_main_readme_headings():
 
 
 def get_repo_info():
-    module_url = terraformDocsUtils.get_module_url() 
+    module_url = terraformDocsUtils.get_module_url()
     if "terraform-ibm-" in module_url and "github.com" in module_url:
         repo_name = module_url.split("/")[-1]
         module_url = f"github.com/terraform-ibm-modules/{repo_name}"
