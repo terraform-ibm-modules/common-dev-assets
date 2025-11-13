@@ -64,15 +64,11 @@ def get_main_readme_headings():
 
 def get_repo_info():
     module_url = terraformDocsUtils.get_module_url() 
-    
-    # Force terraform-ibm-modules organization for all terraform-ibm-* repos
     if "terraform-ibm-" in module_url and "github.com" in module_url:
         repo_name = module_url.split("/")[-1]
         module_url = f"github.com/terraform-ibm-modules/{repo_name}"
     
-    # Add https:// protocol
     full_module_url = f"https://{module_url}"
-    
     repo_name = pathlib.PurePath(module_url).name
     module_name = repo_name.replace("terraform-ibm-", "")
     words = module_name.split("-")
