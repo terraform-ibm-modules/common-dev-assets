@@ -5,6 +5,7 @@ import pathlib
 import re
 from pathlib import Path
 
+import terraformDocGoMod
 import terraformDocsUtils
 
 
@@ -64,17 +65,20 @@ def get_main_readme_headings():
 
 def get_repo_info():
     module_url = terraformDocsUtils.get_module_url()
-    if "terraform-ibm-" in module_url and "github.com" in module_url:
-        repo_name = module_url.split("/")[-1]
-        module_url = f"github.com/terraform-ibm-modules/{repo_name}"
+
+    module_url = terraformDocGoMod.change_module_url(module_url)
+
     full_module_url = f"https://{module_url}"
+
     repo_name = pathlib.PurePath(module_url).name
     module_name = repo_name.replace("terraform-ibm-", "")
     words = module_name.split("-")
+
     if len(words) == 1:
         short_name = module_name
     else:
         short_name = "".join([word[0] for word in words])
+
     return full_module_url, short_name
 
 
