@@ -1,6 +1,6 @@
 ## Description
 
-This script is to update module source references according to hashicorp syntax
+This script is to update module source references according to HashiCorp syntax
 
 ## Usage
 
