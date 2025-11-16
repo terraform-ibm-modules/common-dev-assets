@@ -2,7 +2,7 @@
 # To avoid correction for website URLs, for example hashicorp.com or https://hashicorp.com
 extend-ignore-re = [
     "https?://[^\\s]+",
-    "\\b[a-z0-9][-a-z0-9]*\\.(com)\\b", # If required we can add top level domains like (com|org|dev)
+    "\\b[a-z0-9][-a-z0-9]*\\.(com)\\b", # If required we can add more top level domains like (com|org|dev)
 ]
 
 [default.extend-words]
