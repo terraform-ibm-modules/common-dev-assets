@@ -1,5 +1,23 @@
+[default]
+# To avoid correction for website URLs, for example hashicorp.com or https://hashicorp.com
+extend-ignore-re = [
+    "https?://[^\\s]+",
+    "\\b[a-z0-9][-a-z0-9]*\\.(com)\\b", # If required we can add more top level domains like (com|org|dev)
+]
+
 [default.extend-words]
 # Words to ignore
 # Format: "word" = "word" (keep as-is)
-"ODF" = "ODF" # The Red Hat OpenShift Data Foundation (ODF)
-"Hashi" = "HashiCorp" # IBM HashiCorp
+
+"ODF" = "ODF"             # The Red Hat OpenShift Data Foundation (ODF)
+
+[default.extend-identifiers]
+# Define valid identifiers or specify corrections for misspelled identifiers
+# Format: "incorrect_identifier" = "correct_identifier" OR "valid_identifier" = "valid_identifier"
+
+"HashiCorp" = "HashiCorp" # IBM HashiCorp
+"hashi"     = "HashiCorp"
+"Hashi"     = "HashiCorp"
+"hashicorp" = "HashiCorp"
+"Hashicorp" = "HashiCorp"
+"hashiCorp" = "HashiCorp"
