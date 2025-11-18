@@ -58,7 +58,7 @@ repos:
     hooks:
       - id: trivy
         name: Trivy scan
-        entry: trivy fs . --severity CRITICAL,HIGH --exit-code 1 --skip-files="**/.terraform/**/*" --skip-files="common-dev-assets/**/*"
+        entry: trivy fs . --severity CRITICAL,HIGH --exit-code 1 --skip-files="**/.terraform/**/*" --skip-files="common-dev-assets/**/*" --skip-files "**/terraform.tfstate*"
         language: system
         pass_filenames: false
   - repo: https://github.com/antonbabenko/pre-commit-terraform
@@ -107,7 +107,7 @@ repos:
           - --hook-config=--parallelism-limit=1
   # checkov (does not require checkov to be installed locally to run)
   - repo: https://github.com/bridgecrewio/checkov.git
-    rev: 3.2.491
+    rev: 3.2.493
     hooks:
       - id: checkov
         args:
@@ -143,7 +143,7 @@ repos:
         exclude: go.sum
   # ruff - replaces flake8, isort, and black
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.4
+    rev: v0.14.5
     hooks:
       - id: ruff
         args:
@@ -213,7 +213,7 @@ repos:
   # ibm_catalog.json lint
   # TODO https://github.ibm.com/GoldenEye/issues/issues/11524
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.34.1
+    rev: 0.35.0
     hooks:
       - id: check-jsonschema
         name: Validate ibm_catalog.json schema
@@ -221,10 +221,10 @@ repos:
         args:
           [
             "--schemafile",
-            "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.99/ibm_catalog-schema.json",
+            "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.100/ibm_catalog-schema.json",
           ]
   - repo: https://github.com/crate-ci/typos
-    rev: v1.39.0
+    rev: v1.39.2
     hooks:
       - id: typos
         name: typos (warning only)
