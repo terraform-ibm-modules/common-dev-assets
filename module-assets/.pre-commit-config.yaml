@@ -58,7 +58,7 @@ repos:
     hooks:
       - id: trivy
         name: Trivy scan
-        entry: trivy fs . --severity CRITICAL,HIGH --exit-code 1 --skip-files="**/.terraform/**/*" --skip-files="common-dev-assets/**/*" --skip-files "**/terraform.tfstate" --skip-files "**/terraform.tfstate.backup"
+        entry: trivy fs . --severity CRITICAL,HIGH --exit-code 1 --skip-files="**/.terraform/**/*" --skip-files="common-dev-assets/**/*" --skip-files "**/terraform.tfstate" --skip-files "**/terraform.tfstate.backup" --skip-files="**/terraform.tfstate.d/**/*"
         language: system
         pass_filenames: false
   - repo: https://github.com/antonbabenko/pre-commit-terraform
