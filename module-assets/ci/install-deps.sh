@@ -144,7 +144,11 @@ else
   if [ "$OS" == "darwin" ]; then
     echo
     echo "-- Installing coreutils..."
-    brew install coreutils
+    if [[ "${ARCH}" == "arm64" ]]; then
+      arch -arm64 brew install coreutils
+    else
+      brew install coreutils
+    fi
     SHA256_CMD="gsha256sum"
   else
     echo "sha256sum must be installed to verify downloads. Please install and retry."
@@ -158,13 +162,11 @@ echo "Using SHA256 command: ${SHA256_CMD}"
 # python
 #######################################
 
-if python3 --version &> /dev/null; then
-  PYTHON=python3
-elif python --version &> /dev/null; then
-  PYTHON=python
-else
-  echo "python or python3 not detected. Please install python, ensure it is on your \$PATH, and retry."
-  exit 1
+if ! python3 --version &> /dev/null; then
+  if ! python --version &> /dev/null; then
+    echo "python or python3 not detected. Please install python, ensure it is on your \$PATH, and retry."
+    exit 1
+  fi
 fi
 
 #######################################
@@ -177,37 +179,38 @@ if ! go version &> /dev/null; then
 fi
 
 #######################################
-# pip
-#######################################
-
-if ! ${PYTHON} -m pip &> /dev/null; then
-  echo "Unable to detect pip after running: ${PYTHON} -m pip. Please ensure pip is installed and try again."
-  exit 1
-fi
-
-#######################################
 # pipx
 #######################################
 
- # renovate: datasource=github-tags depName=pypa/pipx
-PIPX_VERSION=1.8.0
 PACKAGE=pipx
-set +e
-INSTALLED_PIPX_VERSION="$(${PYTHON} -m pipx --version)"
-set -e
-echo
-if [[ "$INSTALLED_PIPX_VERSION" != "$PIPX_VERSION" ]]; then
-  echo "-- Installing ${PACKAGE}..."
-  ${PYTHON} -m pip install -q --upgrade ${PACKAGE}==${PIPX_VERSION}
-
-  # use --global option to place binaries in /usr/local/bin
-  # NB: This will be override by the value of $CUSTOM_DIRECTORY if passed when running this script
-  permission_check
-  ${ARG} ${PYTHON} -m pipx ensurepath --global
-  echo "COMPLETE"
+echo "-- Installing ${PACKAGE}..."
+# always attempt to install / upgrade pipx on mac
+if [[ $OSTYPE == 'darwin'* ]]; then
+  if [[ "${ARCH}" == "arm64" ]]; then
+    arch -arm64 brew install "${PACKAGE}"
+  else
+    brew install "${PACKAGE}"
+  fi
 else
-  echo "${PACKAGE} ${PIPX_VERSION} already installed - skipping install"
+  # if pipx is not found but apt is, attempt to install using apt
+  if ! pipx --version &> /dev/null; then
+    if apt --version &> /dev/null; then
+      permission_check
+      ${ARG} apt install ${PACKAGE} -y
+    else
+      echo "${PACKAGE} install is only supported for operating systems which support the apt or brew package installer. Please install ${PACKAGE} outside of this script and try again."
+      exit 1
+    fi
+  else
+    echo "${PACKAGE} already installed"
+  fi
 fi
+
+# use --global option to place binaries in /usr/local/bin
+# NB: This will be override by the value of $CUSTOM_DIRECTORY if passed when running this script
+permission_check
+pipx ensurepath --global
+echo "COMPLETE"
 
 #######################################
 # pre-commit
