@@ -92,13 +92,17 @@ def check_errors(
 def check_ibm_catalog_file():
     catalog_inputs = []
 
-    # read ibm_catalog.json content
-    with open(IBM_CATALOG_FILE) as f:
-        ibm_catalog = json.load(f)
-
     # get repo name
     path = pathlib.PurePath(terraformDocsUtils.get_module_url())
     repo_name = path.name
+
+    # Do not check if repo has 'stack-' in the name (do not run against stack repos)
+    if repo_name.startswith("stack-"):
+        return
+
+    # read ibm_catalog.json content
+    with open(IBM_CATALOG_FILE) as f:
+        ibm_catalog = json.load(f)
 
     # loop through flavors and check inputs for each solution defined in working_directory. Check only for "product_kind": "solution".
     if ibm_catalog and "products" in ibm_catalog and ibm_catalog["products"]:
