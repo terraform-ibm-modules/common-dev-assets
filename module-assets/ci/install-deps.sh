@@ -735,7 +735,7 @@ if [[ $OSTYPE == 'darwin'* ]]; then
 fi
 
  # renovate: datasource=github-releases depName=jqlang/jq
-JQ_VERSION=1.7.1
+JQ_VERSION=1.8.1
 BINARY=jq
 set +e
 INSTALLED_JQ_VERSION="$(jq --version | cut -c4-)"
