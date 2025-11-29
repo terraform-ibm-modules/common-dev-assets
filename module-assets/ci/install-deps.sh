@@ -217,7 +217,7 @@ echo "COMPLETE"
 #######################################
 
  # renovate: datasource=github-tags depName=pre-commit/pre-commit
-PRE_COMMIT_VERSION=v4.4.0
+PRE_COMMIT_VERSION=v4.5.0
 PACKAGE=pre-commit
 set +e
 INSTALLED_PRE_COMMIT_VERSION="$(pipx list --global | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
@@ -273,7 +273,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=warrensbox/terraform-switcher
-TFSWITCH_VERSION=v1.9.0
+TFSWITCH_VERSION=v1.10.0
 BINARY=tfswitch
 set +e
 INSTALLED_TFSWITCH_VERSION="$(tfswitch --version | grep Version | awk '{ print $2 }')"
@@ -643,7 +643,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v4.0.0
+HELM_VERSION=v4.0.1
 BINARY=helm
 set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"

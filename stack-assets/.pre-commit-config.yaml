@@ -41,7 +41,7 @@ repos:
       description: Forces to replace line ending by the UNIX 'lf' character.
 # checkov (does not require checkov to be installed locally to run)
 - repo: https://github.com/bridgecrewio/checkov.git
-  rev: 3.2.493
+  rev: 3.2.495
   hooks:
     - id: checkov
       args:
