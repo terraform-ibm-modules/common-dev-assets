@@ -50,6 +50,7 @@ def check_errors(
     flavor_label,
     product_label,
     terraform_version_error,
+    inputs_not_have_hcl_editor,
 ):
     error = False
     errors = []
@@ -68,6 +69,11 @@ def check_errors(
         error = True
     if terraform_version_error:
         errors.append(terraform_version_error)
+        error = True
+    if len(inputs_not_have_hcl_editor) > 0:
+        errors.append(
+            f"- the following inputs should have HCL editor in ibm_catalog.json: {inputs_not_have_hcl_editor}"
+        )
         error = True
     if error:
         errors.insert(
@@ -91,6 +97,7 @@ def check_errors(
 # get inputs for solution defined in ibm_catalog.json file
 def check_ibm_catalog_file():
     catalog_inputs = []
+    catalog_inputs_names = []
 
     # get repo name
     path = pathlib.PurePath(terraformDocsUtils.get_module_url())
@@ -141,21 +148,31 @@ def check_ibm_catalog_file():
 
                     # get input variable names of a solution
                     da_inputs = get_inputs(da_path)
+                    da_inputs_names = [item["name"] for item in da_inputs]
 
                     # get inputs defined in ibm_catalog.json for working_directory
                     if "configuration" in flavor and flavor["configuration"]:
                         catalog_inputs = [
-                            x["key"]
+                            {
+                                "name": x["key"],
+                                "config": (
+                                    isinstance(x.get("custom_config"), dict)
+                                    and x["custom_config"].get("type") == "code_editor"
+                                ),
+                            }
                             for x in flavor["configuration"]
                             if not x.get("virtual", False)
                         ]
+                        catalog_inputs_names = [item["name"] for item in catalog_inputs]
 
                     # compare input variables defined in a solution with the one's defined in ibm_catalog.json
                     inputs_not_in_catalog = check_inputs_missing(
-                        da_inputs, catalog_inputs
+                        da_inputs_names, catalog_inputs_names
                     )
-                    inputs_not_in_da = check_inputs_extra(da_inputs, catalog_inputs)
-                    duplicates = find_duplicates(catalog_inputs)
+                    inputs_not_in_da = check_inputs_extra(
+                        da_inputs_names, catalog_inputs_names
+                    )
+                    duplicates = find_duplicates(catalog_inputs_names)
 
                     # check terraform_version if:
                     # - repo does not have 'stack-' in the name
@@ -172,6 +189,11 @@ def check_ibm_catalog_file():
                             version = flavor["terraform_version"]
                             terraform_version_error = f"- key 'terraform_version': '{version}' not the right format. Should be locked to a version and have MAJOR.MINOR.PATCH format."
 
+                    # check whether the HCL editor is used for input variables of type list(object) or map
+                    inputs_not_have_hcl_editor = check_hcl_editor(
+                        da_inputs, catalog_inputs
+                    )
+
                     check_errors(
                         inputs_not_in_catalog,
                         inputs_not_in_da,
@@ -180,6 +202,7 @@ def check_ibm_catalog_file():
                         flavor_label,
                         product_label,
                         terraform_version_error,
+                        inputs_not_have_hcl_editor,
                     )
 
 
@@ -196,7 +219,7 @@ def get_inputs(da_path):
         sys.exit(proc.returncode)
 
     json_object = json.loads(output)
-    inputs = [x["name"] for x in json_object["inputs"]]
+    inputs = [{"name": x["name"], "type": x["type"]} for x in json_object["inputs"]]
     return inputs
 
 
@@ -216,6 +239,22 @@ def check_inputs_extra(da_inputs, catalog_inputs):
         if catalog_input not in da_inputs:
             inputs_not_in_da.append(catalog_input)
     return inputs_not_in_da
+
+
+# check whether the HCL editor is used for input variables of type list(object) or map
+def check_hcl_editor(da_inputs, catalog_inputs):
+    inputs_not_have_hcl_editor = []
+    for da_input in da_inputs:
+        if da_input["type"].startswith("list(object") or da_input["type"].startswith(
+            "map"
+        ):
+            catalog_input = next(
+                (item for item in catalog_inputs if item["name"] == da_input["name"]),
+                None,
+            )
+            if not (catalog_input and catalog_input["config"]):
+                inputs_not_have_hcl_editor.append(da_input["name"])
+    return inputs_not_have_hcl_editor
 
 
 if __name__ == "__main__":
