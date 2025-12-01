@@ -77,7 +77,7 @@ def check_errors(
             f'"custom_config": {{\n'
             f'  "type": "code_editor",\n'
             f'  "grouping": "<grouping>",\n'
-            f'  "original_grouping": "<original_grouping>",\n'
+            f'  "original_grouping": "deployment",\n'
             f'  "config_constraints": {{\n'
             f'    "supportedLanguages": ["hcl"]\n'
             f"  }}\n"
