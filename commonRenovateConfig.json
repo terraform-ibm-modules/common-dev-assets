@@ -70,6 +70,16 @@
       "description": "Custom regex required to bump IBM detect secrets",
       "matchPackageNames": ["ibm/detect-secrets"],
       "versioning": "regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$"
+    },
+    {
+      "description": "Manage bumping the version of the common bash library",
+      "fileMatch": ["**/scripts/install-binaries.sh"],
+      "matchStrings": [
+        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?TAG=(?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+      "rangeStrategy": "bump",
+      "semanticCommitType": "fix"
     }
   ]
 }
