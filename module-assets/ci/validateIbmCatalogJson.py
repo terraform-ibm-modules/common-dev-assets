@@ -218,7 +218,7 @@ def check_ibm_catalog_file():
                         "short_description" in flavor and flavor["short_description"]
                     ):
                         terraform_short_description_error = (
-                            "- key 'short_description' is missing"
+                            "- key 'flavors.short_description' is missing"
                         )
 
                     check_errors(
