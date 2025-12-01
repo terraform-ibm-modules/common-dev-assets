@@ -252,12 +252,14 @@ def check_inputs_extra(da_inputs, catalog_inputs):
     return inputs_not_in_da
 
 
-# check whether the HCL editor is used for input variables of type list(object) or map
+# check whether the HCL editor is used for input variables of type list(object), map or any
 def check_hcl_editor(da_inputs, catalog_inputs):
     inputs_not_have_hcl_editor = []
     for da_input in da_inputs:
-        if da_input["type"].startswith("list(object") or da_input["type"].startswith(
-            "map"
+        if (
+            da_input["type"].startswith("list(object")
+            or da_input["type"].startswith("map")
+            or da_input["type"] == "any"
         ):
             catalog_input = next(
                 (item for item in catalog_inputs if item["name"] == da_input["name"]),
