@@ -42,6 +42,9 @@ def find_duplicates(array):
 # - DA's input variable is not defined in ibm_catalog.json
 # - ibm_catalog.json has extra (not needed) input variables
 # - any duplicates exists in ibm_catalog.json
+# - terraform_version is missing or not strictly defined
+# - input variables of type list(object), map or any do not have HCL editor defined in ibm_catalog.json
+# - short_description is missing
 def check_errors(
     inputs_not_in_catalog,
     inputs_not_in_da,
@@ -51,6 +54,7 @@ def check_errors(
     product_label,
     terraform_version_error,
     inputs_not_have_hcl_editor,
+    terraform_short_description_error,
 ):
     error = False
     errors = []
@@ -69,6 +73,9 @@ def check_errors(
         error = True
     if terraform_version_error:
         errors.append(terraform_version_error)
+        error = True
+    if terraform_short_description_error:
+        errors.append(terraform_short_description_error)
         error = True
     if len(inputs_not_have_hcl_editor) > 0:
         errors.append(
@@ -132,6 +139,7 @@ def check_ibm_catalog_file():
 
                 for flavor in product["flavors"]:
                     terraform_version_error = None
+                    terraform_short_description_error = None
                     flavor_label = ""
                     if "label" in flavor and flavor["label"]:
                         flavor_label = flavor["label"]
@@ -205,6 +213,14 @@ def check_ibm_catalog_file():
                         da_inputs, catalog_inputs
                     )
 
+                    # check whether short_description is defined
+                    if not (
+                        "short_description" in flavor and flavor["short_description"]
+                    ):
+                        terraform_short_description_error = (
+                            "- key 'short_description' is missing"
+                        )
+
                     check_errors(
                         inputs_not_in_catalog,
                         inputs_not_in_da,
@@ -214,6 +230,7 @@ def check_ibm_catalog_file():
                         product_label,
                         terraform_version_error,
                         inputs_not_have_hcl_editor,
+                        terraform_short_description_error,
                     )
 
 
