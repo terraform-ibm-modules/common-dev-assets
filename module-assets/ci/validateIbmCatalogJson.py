@@ -73,6 +73,15 @@ def check_errors(
     if len(inputs_not_have_hcl_editor) > 0:
         errors.append(
             f"- the following inputs should have HCL editor in ibm_catalog.json: {inputs_not_have_hcl_editor}"
+            f"\n\n******* HCL editor syntax is: *******\n\n"
+            f'"custom_config": {{\n'
+            f'  "type": "code_editor",\n'
+            f'  "grouping": "<grouping>",\n'
+            f'  "original_grouping": "<original_grouping>",\n'
+            f'  "config_constraints": {{\n'
+            f'    "supportedLanguages": ["hcl"]\n'
+            f"  }}\n"
+            f"}}"
         )
         error = True
     if error:
@@ -99,17 +108,13 @@ def check_ibm_catalog_file():
     catalog_inputs = []
     catalog_inputs_names = []
 
-    # get repo name
-    path = pathlib.PurePath(terraformDocsUtils.get_module_url())
-    repo_name = path.name
-
-    # Do not check if repo has 'stack-' in the name (do not run against stack repos)
-    if repo_name.startswith("stack-"):
-        return
-
     # read ibm_catalog.json content
     with open(IBM_CATALOG_FILE) as f:
         ibm_catalog = json.load(f)
+
+    # get repo name
+    path = pathlib.PurePath(terraformDocsUtils.get_module_url())
+    repo_name = path.name
 
     # loop through flavors and check inputs for each solution defined in working_directory. Check only for "product_kind": "solution".
     if ibm_catalog and "products" in ibm_catalog and ibm_catalog["products"]:
@@ -151,14 +156,20 @@ def check_ibm_catalog_file():
                     da_inputs_names = [item["name"] for item in da_inputs]
 
                     # get inputs defined in ibm_catalog.json for working_directory
+                    # inputs are needed for comparison with DA inputs
+                    catalog_inputs = []
+                    catalog_inputs_names = []
                     if "configuration" in flavor and flavor["configuration"]:
                         catalog_inputs = [
                             {
                                 "name": x["key"],
-                                "config": (
+                                # check whether custom_config is defined and is of type code_editor
+                                "is_custom_config": (
                                     isinstance(x.get("custom_config"), dict)
                                     and x["custom_config"].get("type") == "code_editor"
                                 ),
+                                # include the whole custom_config for further checks
+                                "custom_config": x.get("custom_config", {}),
                             }
                             for x in flavor["configuration"]
                             if not x.get("virtual", False)
@@ -252,7 +263,17 @@ def check_hcl_editor(da_inputs, catalog_inputs):
                 (item for item in catalog_inputs if item["name"] == da_input["name"]),
                 None,
             )
-            if not (catalog_input and catalog_input["config"]):
+            # check whether HCL editor is used
+            # if custom_config is not defined or is_custom_config is False or supportedLanguages does not have hcl then add to inputs_not_have_hcl_editor
+            if catalog_input and catalog_input["is_custom_config"]:
+                supported_languages = (
+                    catalog_input["custom_config"]
+                    .get("config_constraints", {})
+                    .get("supportedLanguages", [])
+                )
+                if "hcl" not in supported_languages:
+                    inputs_not_have_hcl_editor.append(da_input["name"])
+            else:
                 inputs_not_have_hcl_editor.append(da_input["name"])
     return inputs_not_have_hcl_editor
 
