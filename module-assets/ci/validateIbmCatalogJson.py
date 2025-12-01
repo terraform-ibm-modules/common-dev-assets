@@ -76,7 +76,7 @@ def check_errors(
             f"\n\n******* HCL editor syntax is: *******\n\n"
             f'"custom_config": {{\n'
             f'  "type": "code_editor",\n'
-            f'  "grouping": "<grouping>",\n'
+            f'  "grouping": "deployment",\n'
             f'  "original_grouping": "deployment",\n'
             f'  "config_constraints": {{\n'
             f'    "supportedLanguages": ["hcl"]\n'
