@@ -209,7 +209,7 @@ fi
 # use --global option to place binaries in /usr/local/bin
 # NB: This will be override by the value of $CUSTOM_DIRECTORY if passed when running this script
 permission_check
-pipx ensurepath --global
+${ARG} pipx ensurepath --global
 echo "COMPLETE"
 
 #######################################
