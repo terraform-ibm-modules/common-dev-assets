@@ -184,11 +184,11 @@ else
 fi
 
 # Check existing apikeys
+reset=true
 fetch_data
 
 attempt=0
 retry_wait_time=5
-reset=true
 if [ "${reset}" == true ]; then
     while [ $attempt -lt $MAX_ATTEMPTS ]; do
         if [ "$IBMCLOUD_CS_API_ENDPOINT" = "containers.cloud.ibm.com" ]; then
