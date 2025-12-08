@@ -67,6 +67,7 @@ if [ ${IS_PR} == true ]; then
                          "Makefile"
                          "renovate.json"
                          "catalogValidationValues.json.template"
+                         "ibm_catalog.json"
                          ".one-pipeline.yaml"
                          "module-metadata.json"
                          "pvs.preset.json"
