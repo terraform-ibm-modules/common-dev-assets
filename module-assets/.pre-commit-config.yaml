@@ -110,8 +110,6 @@ repos:
     rev: 3.2.495
     hooks:
       - id: checkov
-        # workaround for https://github.com/bridgecrewio/checkov/issues/7398
-        additional_dependencies: [pycares<5]
         args:
           # ignore files in test samples directory
           - --skip-path=tests/samples
