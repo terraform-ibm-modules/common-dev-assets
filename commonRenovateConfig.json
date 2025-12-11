@@ -13,10 +13,10 @@
   "labels": ["renovate"],
   "rangeStrategy": "pin",
   "forkProcessing": "enabled",
-  "lockFileMaintenance": { 
+  "lockFileMaintenance": {
     "enabled": true,
     "description": "see https://docs.renovatebot.com/configuration-options/#lockfilemaintenance"
-  }
+  },
   "git-submodules": {
     "enabled": false,
     "description": "workaround for https://github.com/renovatebot/renovate/issues/30279"
