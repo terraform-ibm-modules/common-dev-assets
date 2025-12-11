@@ -188,7 +188,6 @@ def check_ibm_catalog_file():
 
                     # - repo does not have 'stack-' in the name
                     if "stack-" not in repo_name:
-
                         # compare input variables defined in a solution with the one's defined in ibm_catalog.json
                         inputs_not_in_catalog = check_inputs_missing(
                             da_inputs_names, catalog_inputs_names
