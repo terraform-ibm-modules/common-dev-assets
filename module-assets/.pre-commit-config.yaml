@@ -108,6 +108,8 @@ repos:
   # checkov (does not require checkov to be installed locally to run)
   - repo: https://github.com/bridgecrewio/checkov.git
     rev: 3.2.495
+    # workaround for https://github.com/bridgecrewio/checkov/issues/7398
+    additional_dependencies: [pycares<5]
     hooks:
       - id: checkov
         args:
