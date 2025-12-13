@@ -332,7 +332,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=terraform-docs/terraform-docs
-TERRAFORM_DOCS_VERSION=v0.20.0
+TERRAFORM_DOCS_VERSION=v0.21.0
 BINARY=terraform-docs
 set +e
 INSTALLED_TERRADOCS_VERSION="$(terraform-docs --version | head -1 | cut -d' ' -f3)"
@@ -425,7 +425,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=securego/gosec
-GOSEC_VERSION=v2.22.10
+GOSEC_VERSION=v2.22.11
 BINARY=gosec
 set +e
 INSTALLED_GOSEC_VERSION="$(gosec --version | head -1 | cut -d' ' -f2)"
@@ -481,7 +481,7 @@ fi
 #######################################
 
 # renovate: datasource=github-releases depName=rust-lang/rust
-RUST_VERSION=1.91.1
+RUST_VERSION=1.92.0
 BINARY=rustc
 set +e
 INSTALLED_RUST_VERSION="$(rustc --version 2>/dev/null | cut -d' ' -f2)"
@@ -643,7 +643,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v4.0.1
+HELM_VERSION=v4.0.2
 BINARY=helm
 set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"
@@ -670,7 +670,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.34.2
+KUBECTL_VERSION=v1.34.3
 BINARY=kubectl
 set +e
 INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml --client | grep "gitVersion" | cut -d' ' -f4)"
