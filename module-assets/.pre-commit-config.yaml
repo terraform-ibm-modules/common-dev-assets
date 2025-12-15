@@ -51,6 +51,10 @@ repos:
           - high
           - -confidence
           - medium
+          - -exclude-dir
+          - existing-resources
+          - -exclude-dir
+          - resources
           - -fmt
           - text
           - -tests
@@ -242,3 +246,4 @@ repos:
           )$
         entry: bash -c 'typos --format=brief --config=ci/.typos.toml "$@" | sed "s/\`//g" || true'
         verbose: true
+
