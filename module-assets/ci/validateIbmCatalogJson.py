@@ -140,6 +140,8 @@ def check_ibm_catalog_file():
                 for flavor in product["flavors"]:
                     terraform_version_error = None
                     terraform_short_description_error = None
+                    inputs_not_in_catalog = []
+                    inputs_not_in_da = []
                     flavor_label = ""
                     if "label" in flavor and flavor["label"]:
                         flavor_label = flavor["label"]
@@ -184,18 +186,15 @@ def check_ibm_catalog_file():
                         ]
                         catalog_inputs_names = [item["name"] for item in catalog_inputs]
 
-                    # compare input variables defined in a solution with the one's defined in ibm_catalog.json
-                    inputs_not_in_catalog = check_inputs_missing(
-                        da_inputs_names, catalog_inputs_names
-                    )
-                    inputs_not_in_da = check_inputs_extra(
-                        da_inputs_names, catalog_inputs_names
-                    )
-                    duplicates = find_duplicates(catalog_inputs_names)
-
-                    # check terraform_version if:
                     # - repo does not have 'stack-' in the name
                     if "stack-" not in repo_name:
+                        # compare input variables defined in a solution with the one's defined in ibm_catalog.json
+                        inputs_not_in_catalog = check_inputs_missing(
+                            da_inputs_names, catalog_inputs_names
+                        )
+                        inputs_not_in_da = check_inputs_extra(
+                            da_inputs_names, catalog_inputs_names
+                        )
                         # if terraform_version is not defined inside flavor then add an error
                         if not (
                             "terraform_version" in flavor
@@ -207,6 +206,9 @@ def check_ibm_catalog_file():
                         elif not is_strict_version(flavor["terraform_version"]):
                             version = flavor["terraform_version"]
                             terraform_version_error = f"- key 'terraform_version': '{version}' not the right format. Should be locked to a version and have MAJOR.MINOR.PATCH format."
+
+                    # Find duplicates
+                    duplicates = find_duplicates(catalog_inputs_names)
 
                     # check whether the HCL editor is used for input variables of type list(object) or map
                     inputs_not_have_hcl_editor = check_hcl_editor(
