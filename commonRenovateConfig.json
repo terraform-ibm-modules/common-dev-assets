@@ -34,6 +34,18 @@
     "fileFilters": ["**/*.md", "**/*.py", "**/*.toml", "**/*.json", ".secrets.baseline", "**/*.tf", "**/*.go", "go.mod", "go.sum", "common-dev-assets", "armada-csutil", "modules/supertenant-logs-routing-and-icl-agent/helm-charts", "modules/supertenant-logs-routing-agent/helm-charts", "modules/atracker-agent/helm-charts", "modules/logs-routing-module/helm-charts", "modules/prometheus-module/helm-charts"],
     "executionMode": "branch"
   },
+  "regexManagers": [
+    {
+      "description": "Manage bumping the version of the common bash library",
+      "fileMatch": ["**/scripts/install-binaries.sh"],
+      "matchStrings": [
+        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?TAG=(?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
+      "rangeStrategy": "bump",
+      "semanticCommitType": "fix"
+    }
+  ],
   "packageRules": [
     {
       "description": "Group all dependencies into a single PR",
@@ -74,16 +86,6 @@
       "description": "Custom regex required to bump IBM detect secrets",
       "matchPackageNames": ["ibm/detect-secrets"],
       "versioning": "regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$"
-    },
-    {
-      "description": "Manage bumping the version of the common bash library",
-      "fileMatch": ["**/scripts/install-binaries.sh"],
-      "matchStrings": [
-        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?TAG=(?<currentValue>.*)\\s"
-      ],
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
-      "rangeStrategy": "bump",
-      "semanticCommitType": "fix"
     }
   ]
 }
