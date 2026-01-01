@@ -99,12 +99,12 @@ pre-commit: ghe-netrc
 	@terraform init
 	@echo
 	@echo "Running pre-commit hooks .."
-	@pre-commit run --all-files
+	@PIP_CONSTRAINT=$(CURDIR)/ci/pip-constraints.txt pre-commit run --all-files
 
 # pre-commit for non-terraform repos
 pre-commit-no-terraform:
 	@echo "Running pre-commit hooks .."
-	@pre-commit run --all-files
+	@PIP_CONSTRAINT=$(CURDIR)/ci/pip-constraints.txt pre-commit run --all-files
 
 # run pre-commit checks against renovate PRs, and commit back any changes to the PR (e.g. doc updates, secrets baseline etc)
 renovate-sweeper: ghe-netrc
