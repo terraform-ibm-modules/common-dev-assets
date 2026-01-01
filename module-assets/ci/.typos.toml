@@ -5,11 +5,14 @@ extend-ignore-re = [
     "\\b[a-z0-9][-a-z0-9]*\\.(com)\\b", # If required we can add more top level domains like (com|org|dev)
 ]
 
+
 [default.extend-words]
 # Words to ignore
 # Format: "word" = "word" (keep as-is)
 
 "ODF" = "ODF"             # The Red Hat OpenShift Data Foundation (ODF)
+"SME" = "SME"             # Subject Matter Expert (SME)
+
 
 [default.extend-identifiers]
 # Define valid identifiers or specify corrections for misspelled identifiers

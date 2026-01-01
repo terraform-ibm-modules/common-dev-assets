@@ -144,7 +144,11 @@ else
   if [ "$OS" == "darwin" ]; then
     echo
     echo "-- Installing coreutils..."
-    brew install coreutils
+    if [[ "${ARCH}" == "arm64" ]]; then
+      arch -arm64 brew install coreutils
+    else
+      brew install coreutils
+    fi
     SHA256_CMD="gsha256sum"
   else
     echo "sha256sum must be installed to verify downloads. Please install and retry."
@@ -158,13 +162,11 @@ echo "Using SHA256 command: ${SHA256_CMD}"
 # python
 #######################################
 
-if python3 --version &> /dev/null; then
-  PYTHON=python3
-elif python --version &> /dev/null; then
-  PYTHON=python
-else
-  echo "python or python3 not detected. Please install python, ensure it is on your \$PATH, and retry."
-  exit 1
+if ! python3 --version &> /dev/null; then
+  if ! python --version &> /dev/null; then
+    echo "python or python3 not detected. Please install python, ensure it is on your \$PATH, and retry."
+    exit 1
+  fi
 fi
 
 #######################################
@@ -177,44 +179,45 @@ if ! go version &> /dev/null; then
 fi
 
 #######################################
-# pip
-#######################################
-
-if ! ${PYTHON} -m pip &> /dev/null; then
-  echo "Unable to detect pip after running: ${PYTHON} -m pip. Please ensure pip is installed and try again."
-  exit 1
-fi
-
-#######################################
 # pipx
 #######################################
 
- # renovate: datasource=github-tags depName=pypa/pipx
-PIPX_VERSION=1.8.0
 PACKAGE=pipx
-set +e
-INSTALLED_PIPX_VERSION="$(${PYTHON} -m pipx --version)"
-set -e
-echo
-if [[ "$INSTALLED_PIPX_VERSION" != "$PIPX_VERSION" ]]; then
-  echo "-- Installing ${PACKAGE}..."
-  ${PYTHON} -m pip install -q --upgrade ${PACKAGE}==${PIPX_VERSION}
-
-  # use --global option to place binaries in /usr/local/bin
-  # NB: This will be override by the value of $CUSTOM_DIRECTORY if passed when running this script
-  permission_check
-  ${ARG} ${PYTHON} -m pipx ensurepath --global
-  echo "COMPLETE"
+echo "-- Installing ${PACKAGE}..."
+# always attempt to install / upgrade pipx on mac
+if [[ $OSTYPE == 'darwin'* ]]; then
+  if [[ "${ARCH}" == "arm64" ]]; then
+    arch -arm64 brew install "${PACKAGE}"
+  else
+    brew install "${PACKAGE}"
+  fi
 else
-  echo "${PACKAGE} ${PIPX_VERSION} already installed - skipping install"
+  # if pipx is not found but apt is, attempt to install using apt
+  if ! pipx --version &> /dev/null; then
+    if apt --version &> /dev/null; then
+      permission_check
+      ${ARG} apt install ${PACKAGE} -y
+    else
+      echo "${PACKAGE} install is only supported for operating systems which support the apt or brew package installer. Please install ${PACKAGE} outside of this script and try again."
+      exit 1
+    fi
+  else
+    echo "${PACKAGE} already installed"
+  fi
 fi
+
+# use --global option to place binaries in /usr/local/bin
+# NB: This will be override by the value of $CUSTOM_DIRECTORY if passed when running this script
+permission_check
+${ARG} pipx ensurepath --global
+echo "COMPLETE"
 
 #######################################
 # pre-commit
 #######################################
 
  # renovate: datasource=github-tags depName=pre-commit/pre-commit
-PRE_COMMIT_VERSION=v4.4.0
+PRE_COMMIT_VERSION=v4.5.1
 PACKAGE=pre-commit
 set +e
 INSTALLED_PRE_COMMIT_VERSION="$(pipx list --global | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
@@ -270,7 +273,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=warrensbox/terraform-switcher
-TFSWITCH_VERSION=v1.9.0
+TFSWITCH_VERSION=v1.13.0
 BINARY=tfswitch
 set +e
 INSTALLED_TFSWITCH_VERSION="$(tfswitch --version | grep Version | awk '{ print $2 }')"
@@ -329,7 +332,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=terraform-docs/terraform-docs
-TERRAFORM_DOCS_VERSION=v0.20.0
+TERRAFORM_DOCS_VERSION=v0.21.0
 BINARY=terraform-docs
 set +e
 INSTALLED_TERRADOCS_VERSION="$(terraform-docs --version | head -1 | cut -d' ' -f3)"
@@ -393,7 +396,7 @@ if [[ $OSTYPE == 'darwin'* ]]; then
 fi
 
 # renovate: datasource=github-releases depName=aquasecurity/trivy
-TRIVY_VERSION=v0.67.2
+TRIVY_VERSION=v0.68.2
 BINARY=trivy
 set +e
 INSTALLED_TRIVY_VERSION="$(trivy version | grep "Version:" | cut -d' ' -f2)"
@@ -422,7 +425,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=securego/gosec
-GOSEC_VERSION=v2.22.10
+GOSEC_VERSION=v2.22.11
 BINARY=gosec
 set +e
 INSTALLED_GOSEC_VERSION="$(gosec --version | head -1 | cut -d' ' -f2)"
@@ -450,7 +453,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v2.6.2
+GOLANGCI_LINT_VERSION=v2.7.2
 BINARY=golangci-lint
 set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"
@@ -478,7 +481,7 @@ fi
 #######################################
 
 # renovate: datasource=github-releases depName=rust-lang/rust
-RUST_VERSION=1.91.1
+RUST_VERSION=1.92.0
 BINARY=rustc
 set +e
 INSTALLED_RUST_VERSION="$(rustc --version 2>/dev/null | cut -d' ' -f2)"
@@ -640,7 +643,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v4.0.0
+HELM_VERSION=v4.0.4
 BINARY=helm
 set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"
@@ -667,7 +670,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.34.2
+KUBECTL_VERSION=v1.35.0
 BINARY=kubectl
 set +e
 INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml --client | grep "gitVersion" | cut -d' ' -f4)"
@@ -732,7 +735,7 @@ if [[ $OSTYPE == 'darwin'* ]]; then
 fi
 
  # renovate: datasource=github-releases depName=jqlang/jq
-JQ_VERSION=1.7.1
+JQ_VERSION=1.8.1
 BINARY=jq
 set +e
 INSTALLED_JQ_VERSION="$(jq --version | cut -c4-)"
