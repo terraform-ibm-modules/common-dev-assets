@@ -1,0 +1,3 @@
+# Constraint file to avoid ruamel.yaml 0.19.0 breaking change
+# See: https://github.com/pre-commit/pre-commit-hooks/issues/1229
+ruamel.yaml<0.19.0

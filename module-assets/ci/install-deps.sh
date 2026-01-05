@@ -217,7 +217,7 @@ echo "COMPLETE"
 #######################################
 
  # renovate: datasource=github-tags depName=pre-commit/pre-commit
-PRE_COMMIT_VERSION=v4.5.0
+PRE_COMMIT_VERSION=v4.5.1
 PACKAGE=pre-commit
 set +e
 INSTALLED_PRE_COMMIT_VERSION="$(pipx list --global | grep "package $PACKAGE " | sed -E "s/^.*package $PACKAGE ([^,]+),.*/\1/")"
@@ -273,7 +273,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=warrensbox/terraform-switcher
-TFSWITCH_VERSION=v1.11.0
+TFSWITCH_VERSION=v1.13.0
 BINARY=tfswitch
 set +e
 INSTALLED_TFSWITCH_VERSION="$(tfswitch --version | grep Version | awk '{ print $2 }')"
@@ -396,7 +396,7 @@ if [[ $OSTYPE == 'darwin'* ]]; then
 fi
 
 # renovate: datasource=github-releases depName=aquasecurity/trivy
-TRIVY_VERSION=v0.68.1
+TRIVY_VERSION=v0.68.2
 BINARY=trivy
 set +e
 INSTALLED_TRIVY_VERSION="$(trivy version | grep "Version:" | cut -d' ' -f2)"
@@ -670,7 +670,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.34.3
+KUBECTL_VERSION=v1.35.0
 BINARY=kubectl
 set +e
 INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml --client | grep "gitVersion" | cut -d' ' -f4)"
