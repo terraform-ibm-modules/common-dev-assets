@@ -99,12 +99,11 @@ def generate_deploy_tip():
 
 
 def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
-    """Add deploy button to example's README.md using hooks."""
     readme_path = os.path.join(example_path, "README.md")
-
     if not os.path.exists(readme_path):
         return
 
+    # Read existing README content
     with open(readme_path) as f:
         content = f.read()
 
@@ -112,20 +111,49 @@ def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
     deploy_url = generate_deploy_url(repo_url, module_name, example_name)
     deploy_button = generate_deploy_button_html(deploy_url)
 
-    deploy_with_tip = f"{deploy_button}\n\n{generate_deploy_tip()}"
-
     hook_begin = "<!-- BEGIN SCHEMATICS DEPLOY HOOK -->"
     hook_end = "<!-- END SCHEMATICS DEPLOY HOOK -->"
+    tip_hook_begin = "<!-- BEGIN SCHEMATICS DEPLOY TIP HOOK -->"
+    tip_hook_end = "<!-- END SCHEMATICS DEPLOY TIP HOOK -->"
 
-    # Check if hooks exist
+    # Handle deploy button at the top
     if hook_begin in content and hook_end in content:
+        # Replace content between hooks
         pattern = r"<!-- BEGIN SCHEMATICS DEPLOY HOOK -->.*?<!-- END SCHEMATICS DEPLOY HOOK -->"
-        new_content = f"{hook_begin}\n{deploy_with_tip}\n{hook_end}"
+        new_content = f"{hook_begin}\n{deploy_button}\n{hook_end}"
         content = re.sub(pattern, new_content, content, flags=re.DOTALL)
     else:
-        deploy_section = f"\n\n{hook_begin}\n{deploy_with_tip}\n{hook_end}\n"
-        content = content.rstrip() + deploy_section
+        # Find the position after the first heading (title)
+        lines = content.split("\n")
+        insert_position = 0
 
+        # Find first heading (starts with #)
+        for i, line in enumerate(lines):
+            if line.strip().startswith("#"):
+                insert_position = i + 1
+                break
+
+        # Create deploy section to insert at top
+        deploy_section = f"\n{hook_begin}\n{deploy_button}\n{hook_end}\n"
+
+        # Insert after the first heading
+        lines.insert(insert_position, deploy_section)
+        content = "\n".join(lines)
+
+    # Handle deploy tip at the bottom
+    deploy_tip = generate_deploy_tip()
+
+    if tip_hook_begin in content and tip_hook_end in content:
+        # Replace tip content between hooks
+        pattern = r"<!-- BEGIN SCHEMATICS DEPLOY TIP HOOK -->.*?<!-- END SCHEMATICS DEPLOY TIP HOOK -->"
+        new_tip_content = f"{tip_hook_begin}\n{deploy_tip}\n{tip_hook_end}"
+        content = re.sub(pattern, new_tip_content, content, flags=re.DOTALL)
+    else:
+        # Add tip section at the bottom
+        tip_section = f"\n\n{tip_hook_begin}\n{deploy_tip}\n{tip_hook_end}\n"
+        content = content.rstrip() + tip_section
+
+    # Write back to README
     with open(readme_path, "w") as f:
         f.write(content)
 
@@ -134,15 +162,19 @@ def update_all_example_readmes(repo_url, module_name):
     if not os.path.isdir("examples"):
         return
 
+    # Find all example directories
     for example_dir in os.listdir("examples"):
         example_path = os.path.join("examples", example_dir)
 
+        # Skip if not a directory or starts with dot
         if not os.path.isdir(example_path) or example_dir.startswith("."):
             continue
 
+        # Check if directory has terraform files
         if not terraformDocsUtils.has_tf_files(example_path):
             continue
 
+        # Add deploy button to this example's README
         add_deploy_button_to_example_readme(example_path, repo_url, module_name)
 
 
