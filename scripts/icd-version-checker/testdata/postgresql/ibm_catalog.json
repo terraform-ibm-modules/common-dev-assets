@@ -1,0 +1,87 @@
+{
+  "products": [
+    {
+      "name": "deploy-arch-ibm-icd-postgresql",
+      "label": "Cloud automation for Databases for PostgreSQL",
+      "flavors": [
+        {
+          "label": "Fully configurable",
+          "name": "fully-configurable",
+          "configuration": [
+            {
+              "key": "ibmcloud_api_key",
+              "required": true
+            },
+            {
+              "key": "postgresql_version",
+              "required": true,
+              "default_value": "17",
+              "options": [
+                {
+                  "displayname": "13",
+                  "value": "13"
+                },
+                {
+                  "displayname": "14",
+                  "value": "14"
+                },
+                {
+                  "displayname": "15",
+                  "value": "15"
+                },
+                {
+                  "displayname": "16",
+                  "value": "16"
+                },
+                {
+                  "displayname": "17",
+                  "value": "17"
+                }
+              ]
+            },
+            {
+              "key": "name"
+            }
+          ]
+        },
+        {
+          "label": "Security enforced",
+          "name": "security-enforced",
+          "configuration": [
+            {
+              "key": "ibmcloud_api_key",
+              "required": true
+            },
+            {
+              "key": "postgresql_version",
+              "required": true,
+              "default_value": "17",
+              "options": [
+                {
+                  "displayname": "13",
+                  "value": "13"
+                },
+                {
+                  "displayname": "14",
+                  "value": "14"
+                },
+                {
+                  "displayname": "15",
+                  "value": "15"
+                },
+                {
+                  "displayname": "16",
+                  "value": "16"
+                },
+                {
+                  "displayname": "17",
+                  "value": "17"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
