@@ -93,9 +93,7 @@ def generate_deploy_url(repo_url, module_name, example_name):
 
 
 def generate_deploy_tip():
-    return (
-        ":exclamation: Ctrl/Cmd+Click or right-click to open deploy button in a new tab"
-    )
+    return ":information_source: Ctrl/Cmd+Click or right-click to open deploy button in a new tab"
 
 
 def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
