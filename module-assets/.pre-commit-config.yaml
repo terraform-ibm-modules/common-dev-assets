@@ -230,6 +230,7 @@ repos:
           )$
         entry: bash -c 'typos --format=brief --config=ci/.typos.toml "$@" | sed "s/\`//g" || true'
         verbose: true
+  # NB: Always run this hook last (see https://github.com/terraform-ibm-modules/common-dev-assets/issues/1333)
   - repo: https://github.com/ibm/detect-secrets
     rev: 0.13.1+ibm.64.dss
     hooks:
