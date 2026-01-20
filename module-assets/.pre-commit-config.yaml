@@ -51,6 +51,10 @@ repos:
           - high
           - -confidence
           - medium
+          - -exclude-dir
+          - existing-resources
+          - -exclude-dir
+          - resources
           - -fmt
           - text
           - -tests
