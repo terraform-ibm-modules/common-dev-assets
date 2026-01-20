@@ -29,8 +29,8 @@
   ],
   "postUpdateOptions": ["gomodTidy", "gomodUpdateImportPaths"],
   "postUpgradeTasks": {
-    "description": "The below commands will run on the renovate branch code before pushing it. This ensures correct dependency versions are used for pre-commit hooks. NOTE: currently installing pipx with pip until the image supports it natively: https://github.com/renovatebot/renovate/discussions/39510",
-    "commands": ["git submodule update --remote --merge && export CUSTOM_DIRECTORY=/tmp && export PIPX_GLOBAL_HOME=/tmp && export PATH=$PATH:/tmp && python3 -m pip install -q --upgrade pipx && pipx ensurepath --global && make dependency-install-darwin-linux && cp /opt/containerbase/tools/golang/*/bin/gofmt /tmp", "export PATH=$PATH:/tmp && pre-commit run --all-files || true"],
+    "description": "The below commands will run on the renovate branch code before pushing it. This ensures correct dependency versions are used for pre-commit hooks. NOTE: currently installing pipx here until the image supports it natively: https://github.com/renovatebot/renovate/discussions/39510",
+    "commands": ["git submodule update --remote --merge && export CUSTOM_DIRECTORY=/tmp && export PIPX_GLOBAL_HOME=/tmp && export PATH=$PATH:/tmp && install-pip pipx && pipx ensurepath --global --force && make dependency-install-darwin-linux && cp /opt/containerbase/tools/golang/*/bin/gofmt /tmp", "export PATH=$PATH:/tmp && pre-commit run --all-files || true"],
     "fileFilters": ["**/*.md", "**/*.py", "**/*.toml", "**/*.json", ".secrets.baseline", "**/*.tf", "**/*.go", "go.mod", "go.sum", "common-dev-assets", "armada-csutil", "modules/supertenant-logs-routing-and-icl-agent/helm-charts", "modules/supertenant-logs-routing-agent/helm-charts", "modules/atracker-agent/helm-charts", "modules/logs-routing-module/helm-charts", "modules/prometheus-module/helm-charts"],
     "executionMode": "branch"
   },
@@ -39,7 +39,7 @@
       "description": "Manage bumping the version of the common bash library",
       "fileMatch": ["**/scripts/install-binaries.sh"],
       "matchStrings": [
-        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?TAG=(?<currentValue>.*)\\s"
+        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s^TAG=(?<currentValue>.*)\\s"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
       "rangeStrategy": "bump",

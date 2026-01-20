@@ -62,11 +62,11 @@ repos:
     hooks:
       - id: trivy
         name: Trivy scan
-        entry: trivy fs . --severity CRITICAL,HIGH --exit-code 1 --skip-files="**/.terraform/**/*" --skip-files="common-dev-assets/**/*" --skip-files "**/terraform.tfstate*"
+        entry: trivy fs . --severity CRITICAL,HIGH --exit-code 1 --skip-files="**/.terraform/**/*" --skip-files="common-dev-assets/**/*" --skip-files="**/terraform.tfstate*" --skip-files="**/kubeconfig/**/*"
         language: system
         pass_filenames: false
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.104.1
+    rev: v1.105.0
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
@@ -133,21 +133,9 @@ repos:
         exclude: .png|.jpg|.pdf|.sdumodel|.tar.gz
       - id: shellcheck
       - id: go-fmt
-  - repo: https://github.com/ibm/detect-secrets
-    rev: 0.13.1+ibm.64.dss
-    hooks:
-      - id: detect-secrets
-        args:
-          [
-            "--baseline",
-            ".secrets.baseline",
-            "--fail-on-unaudited",
-            "--use-all-plugins",
-          ]
-        exclude: go.sum
   # ruff - replaces flake8, isort, and black
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.10
+    rev: v0.14.13
     hooks:
       - id: ruff
         args:
@@ -228,7 +216,7 @@ repos:
             "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.100/ibm_catalog-schema.json",
           ]
   - repo: https://github.com/crate-ci/typos
-    rev: v1.41.0
+    rev: v1.42.0
     hooks:
       - id: typos
         name: typos (warning only)
@@ -246,3 +234,16 @@ repos:
           )$
         entry: bash -c 'typos --format=brief --config=ci/.typos.toml "$@" | sed "s/\`//g" || true'
         verbose: true
+  # NB: Always run this hook last (see https://github.com/terraform-ibm-modules/common-dev-assets/issues/1333)
+  - repo: https://github.com/ibm/detect-secrets
+    rev: 0.13.1+ibm.64.dss
+    hooks:
+      - id: detect-secrets
+        args:
+          [
+            "--baseline",
+            ".secrets.baseline",
+            "--fail-on-unaudited",
+            "--use-all-plugins",
+          ]
+        exclude: go.sum

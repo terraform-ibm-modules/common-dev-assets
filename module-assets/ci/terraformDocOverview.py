@@ -65,26 +65,119 @@ def get_main_readme_headings():
 
 def get_repo_info():
     module_url = terraformDocsUtils.get_module_url()
-
     module_url = terraformDocGoMod.change_module_url(module_url)
-
     full_module_url = f"https://{module_url}"
-
     repo_name = pathlib.PurePath(module_url).name
     module_name = repo_name.replace("terraform-ibm-", "")
-    words = module_name.split("-")
 
-    if len(words) == 1:
-        short_name = module_name
+    return full_module_url, module_name
+
+
+def generate_deploy_button_html(deploy_url, margin_left=0, height=16):
+    margin_style = f" margin-left: {margin_left}px;" if margin_left > 0 else ""
+    return (
+        f'<a href="{deploy_url}">'
+        f'<img src="https://img.shields.io/badge/Deploy%20with IBM%20Cloud%20Schematics-0f62fe?logo=ibm&logoColor=white&labelColor=0f62fe" '
+        f'alt="Deploy with IBM Cloud Schematics" style="height: {height}px; vertical-align: text-bottom;{margin_style}">'
+        f"</a>"
+    )
+
+
+def generate_deploy_url(repo_url, module_name, example_name):
+    workspace_name = f"{module_name}-{example_name}-example"
+    return (
+        f"https://cloud.ibm.com/schematics/workspaces/create?"
+        f"workspace_name={workspace_name}&"
+        f"repository={repo_url}/tree/main/examples/{example_name}"
+    )
+
+
+def generate_deploy_tip():
+    return ":information_source: Ctrl/Cmd+Click or right-click on the Schematics deploy button to open in a new tab"
+
+
+def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
+    readme_path = os.path.join(example_path, "README.md")
+    if not os.path.exists(readme_path):
+        return
+
+    # Read existing README content
+    with open(readme_path) as f:
+        content = f.read()
+
+    example_name = os.path.basename(example_path)
+    deploy_url = generate_deploy_url(repo_url, module_name, example_name)
+    deploy_button = generate_deploy_button_html(deploy_url)
+
+    hook_begin = "<!-- BEGIN SCHEMATICS DEPLOY HOOK -->"
+    hook_end = "<!-- END SCHEMATICS DEPLOY HOOK -->"
+    tip_hook_begin = "<!-- BEGIN SCHEMATICS DEPLOY TIP HOOK -->"
+    tip_hook_end = "<!-- END SCHEMATICS DEPLOY TIP HOOK -->"
+
+    # Handle deploy button at the top
+    if hook_begin in content and hook_end in content:
+        # Replace content between hooks
+        pattern = r"<!-- BEGIN SCHEMATICS DEPLOY HOOK -->.*?<!-- END SCHEMATICS DEPLOY HOOK -->"
+        new_content = f"{hook_begin}\n{deploy_button}\n{hook_end}"
+        content = re.sub(pattern, new_content, content, flags=re.DOTALL)
     else:
-        short_name = "".join([word[0] for word in words])
+        # Find the position after the first heading (title)
+        lines = content.split("\n")
+        insert_position = 0
 
-    return full_module_url, short_name
+        # Find first heading (starts with #)
+        for i, line in enumerate(lines):
+            if line.strip().startswith("#"):
+                insert_position = i + 1
+                break
+
+        # Create deploy section to insert at top
+        deploy_section = f"\n{hook_begin}\n{deploy_button}\n{hook_end}\n"
+
+        # Insert after the first heading
+        lines.insert(insert_position, deploy_section)
+        content = "\n".join(lines)
+
+    # Handle deploy tip at the bottom
+    deploy_tip = generate_deploy_tip()
+
+    if tip_hook_begin in content and tip_hook_end in content:
+        # Replace tip content between hooks
+        pattern = r"<!-- BEGIN SCHEMATICS DEPLOY TIP HOOK -->.*?<!-- END SCHEMATICS DEPLOY TIP HOOK -->"
+        new_tip_content = f"{tip_hook_begin}\n{deploy_tip}\n{tip_hook_end}"
+        content = re.sub(pattern, new_tip_content, content, flags=re.DOTALL)
+    else:
+        # Add tip section at the bottom
+        tip_section = f"\n\n{tip_hook_begin}\n{deploy_tip}\n{tip_hook_end}\n"
+        content = content.rstrip() + tip_section
+
+    # Write back to README
+    with open(readme_path, "w") as f:
+        f.write(content)
 
 
-def get_headings(folder_name):
+def update_all_example_readmes(repo_url, module_name):
+    if not os.path.isdir("examples"):
+        return
+
+    # Find all example directories
+    for example_dir in os.listdir("examples"):
+        example_path = os.path.join("examples", example_dir)
+
+        # Skip if not a directory or starts with dot
+        if not os.path.isdir(example_path) or example_dir.startswith("."):
+            continue
+
+        # Check if directory has terraform files
+        if not terraformDocsUtils.has_tf_files(example_path):
+            continue
+
+        # Add deploy button to this example's README
+        add_deploy_button_to_example_readme(example_path, repo_url, module_name)
+
+
+def get_headings(folder_name, repo_url, module_name):
     readme_headings: list[str] = []
-    repo_url, module_short_name = get_repo_info()
 
     if os.path.isdir(folder_name.lower()):
         for readme_file_path in Path(folder_name.lower()).rglob("*"):
@@ -123,25 +216,21 @@ def get_headings(folder_name):
                         )
                         example_name = os.path.basename(example_path)
 
-                        deploy_url = (
-                            f"https://cloud.ibm.com/schematics/workspaces/create?"
-                            f"workspace_name={module_short_name}-{example_name}-example&"
-                            f"repository={repo_url}/tree/main/{example_path}"
+                        # Generate deploy URL and button
+                        deploy_url = generate_deploy_url(
+                            repo_url, module_name, example_name
+                        )
+                        deploy_button = generate_deploy_button_html(
+                            deploy_url, margin_left=5
                         )
 
-                        data = (
-                            f'    * <div style="display: inline-block;"><a href="./{example_path}">'
-                            f"{title}</a></div> "
-                            f'<div style="display: inline-block; vertical-align: middle;">'
-                            f'<a href="{deploy_url}" target="_blank">'
-                            f'<img src="https://cloud.ibm.com/media/docs/images/icons/Deploy_to_cloud.svg" '
-                            f'alt="Deploy to IBM Cloud button"></a></div>'
-                        )
+                        data = f'    * <a href="./{example_path}">{title}</a> {deploy_button}'
+
                 readme_headings.append(data)
     return sorted(readme_headings)
 
 
-def add_to_overview(overview, folder_name):
+def add_to_overview(overview, folder_name, repo_url, module_name):
     if os.path.isdir(folder_name.lower()):
         # add lvl 1 bullet point to an overview
         bullet_point = "* [{}](./{})".format(
@@ -151,15 +240,24 @@ def add_to_overview(overview, folder_name):
         overview.append(bullet_point)
         bullet_point_index = overview.index(bullet_point)
 
+        if folder_name == "Examples":
+            tip = generate_deploy_tip()
+            overview.insert(bullet_point_index + 1, tip)
+
         # get headings
-        readme_titles = get_headings(folder_name.lower())
+        readme_titles = get_headings(folder_name.lower(), repo_url, module_name)
+
+        # Calculate offset: +2 for Examples (bullet + tip), +1 for others (just bullet)
+        offset = 2 if folder_name == "Examples" else 1
 
         for index, readme_file_path in enumerate(readme_titles):
             # we need to add examples under Examples lvl 1 bullet point
-            overview.insert(index + bullet_point_index + 1, readme_file_path)
+            overview.insert(index + bullet_point_index + offset, readme_file_path)
 
 
 def main():
+    repo_url, module_name = get_repo_info()
+
     if terraformDocsUtils.is_hook_exists("<!-- BEGIN OVERVIEW HOOK -->"):
         overview: list[str] = []
         overview_markdown = "overview.md"
@@ -170,10 +268,10 @@ def main():
         overview.append(f"* [{repo_name}](#{repo_name})")
 
         # add modules to "overview"
-        add_to_overview(overview, "Modules")
+        add_to_overview(overview, "Modules", repo_url, module_name)
 
         # add examples to "overview"
-        add_to_overview(overview, "Examples")
+        add_to_overview(overview, "Examples", repo_url, module_name)
 
         # add last heading of README (contributing (external) or developing (internal)) to overview
         overview.append(get_main_readme_headings())
@@ -187,6 +285,8 @@ def main():
         )
 
         terraformDocsUtils.remove_markdown(overview_markdown)
+
+    update_all_example_readmes(repo_url, module_name)
 
 
 main()

@@ -81,6 +81,11 @@ mongodbCrn: "crn:v1:bluemix:public:databases-for-mongodb:us-south:a/abac0df06b64
 mongodbVersion: 7.0
 mongodbRegion: "us-south"
 
+# mongoDB enterprise instance crn for PITR test
+mongodbEnterpriseCrn: "crn:v1:bluemix:public:databases-for-mongodb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:76d124e8-c8b7-4379-a5d9-10af2bb32d9c::"
+mongodbEnterpriseVersion: 8.0
+mongodbEnterpriseRegion: "us-south"
+
 # ElasticSearch instance crn for backup-restore test
 elasticsearchCrn: "crn:v1:bluemix:public:databases-for-elasticsearch:us-south:a/abac0df06b644a9cabc6e44f55b3880e:4359af05-ff0c-4c94-b965-91d2f95bd90c::"
 elasticsearchVersion: 8.15
@@ -192,3 +197,6 @@ daf_enterprise_id: "3e4723f82d754ef493651d63bc897ea4"
 # Terraform Enterprise
 terraform_enterprise_license_secret_id: "7dd643f8-4f3c-882a-ba55-287952757b15"
 terraform_enterprise_license_secret_crn: "crn:v1:bluemix:public:secrets-manager:us-south:a/abac0df06b644a9cabc6e44f55b3880e:79c6d411-c18f-4670-b009-b0044a238667:secret:7dd643f8-4f3c-882a-ba55-287952757b15"
+
+# OCP ServiceMesh v3
+geretain-dn-ocpsmv3-mirror-registry-pullsecret: "crn:v1:bluemix:public:secrets-manager:us-south:a/abac0df06b644a9cabc6e44f55b3880e:79c6d411-c18f-4670-b009-b0044a238667:secret:2b2a6173-054d-95fd-6fb4-c293b8916002" # pragma: allowlist secret

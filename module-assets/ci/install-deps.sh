@@ -209,7 +209,7 @@ fi
 # use --global option to place binaries in /usr/local/bin
 # NB: This will be override by the value of $CUSTOM_DIRECTORY if passed when running this script
 permission_check
-${ARG} pipx ensurepath --global
+${ARG} pipx ensurepath --global --force
 echo "COMPLETE"
 
 #######################################
@@ -453,7 +453,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v2.7.2
+GOLANGCI_LINT_VERSION=v2.8.0
 BINARY=golangci-lint
 set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"
@@ -643,7 +643,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v4.0.4
+HELM_VERSION=v4.0.5
 BINARY=helm
 set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"
