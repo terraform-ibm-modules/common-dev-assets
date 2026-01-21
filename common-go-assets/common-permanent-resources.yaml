@@ -81,11 +81,6 @@ mongodbCrn: "crn:v1:bluemix:public:databases-for-mongodb:us-south:a/abac0df06b64
 mongodbVersion: 7.0
 mongodbRegion: "us-south"
 
-# mongoDB enterprise instance crn for PITR test
-mongodbEnterpriseCrn: "crn:v1:bluemix:public:databases-for-mongodb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:76d124e8-c8b7-4379-a5d9-10af2bb32d9c::"
-mongodbEnterpriseVersion: 8.0
-mongodbEnterpriseRegion: "us-south"
-
 # ElasticSearch instance crn for backup-restore test
 elasticsearchCrn: "crn:v1:bluemix:public:databases-for-elasticsearch:us-south:a/abac0df06b644a9cabc6e44f55b3880e:4359af05-ff0c-4c94-b965-91d2f95bd90c::"
 elasticsearchVersion: 8.15
