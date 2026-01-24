@@ -135,7 +135,7 @@ repos:
       - id: go-fmt
   # ruff - replaces flake8, isort, and black
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.13
+    rev: v0.14.14
     hooks:
       - id: ruff
         args:
@@ -216,7 +216,7 @@ repos:
             "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.100/ibm_catalog-schema.json",
           ]
   - repo: https://github.com/crate-ci/typos
-    rev: v1.42.0
+    rev: v1.42.1
     hooks:
       - id: typos
         name: typos (warning only)

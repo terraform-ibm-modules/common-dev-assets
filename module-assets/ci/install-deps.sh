@@ -481,7 +481,7 @@ fi
 #######################################
 
 # renovate: datasource=github-releases depName=rust-lang/rust
-RUST_VERSION=1.92.0
+RUST_VERSION=1.93.0
 BINARY=rustc
 set +e
 INSTALLED_RUST_VERSION="$(rustc --version 2>/dev/null | cut -d' ' -f2)"
@@ -643,7 +643,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v4.0.5
+HELM_VERSION=v4.1.0
 BINARY=helm
 set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"
