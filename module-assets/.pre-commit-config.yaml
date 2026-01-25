@@ -111,7 +111,7 @@ repos:
           - --hook-config=--parallelism-limit=1
   # checkov (does not require checkov to be installed locally to run)
   - repo: https://github.com/bridgecrewio/checkov.git
-    rev: 3.2.497
+    rev: 3.2.499
     hooks:
       - id: checkov
         args:
