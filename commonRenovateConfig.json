@@ -84,6 +84,12 @@
       "description": "Custom regex required to bump IBM detect secrets",
       "matchPackageNames": ["ibm/detect-secrets"],
       "versioning": "regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$"
+    },
+    {
+      "description": "Ignore requires-python updates in **/pyproject.toml",
+      "matchFileNames": ["**/pyproject.toml"],
+      "matchDepTypes": ["requires-python"],
+      "enabled": false
     }
   ]
 }
