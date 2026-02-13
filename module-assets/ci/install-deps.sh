@@ -359,7 +359,7 @@ fi
 # tflint
 #######################################
  # renovate: datasource=github-releases depName=terraform-linters/tflint
-TFLINT_VERSION=v0.60.0
+TFLINT_VERSION=v0.61.0
 BINARY=tflint
 set +e
 INSTALLED_TFLINT_VERSION="$(tflint --version | grep "TFLint version " |cut -d' ' -f3)"
@@ -396,7 +396,7 @@ if [[ $OSTYPE == 'darwin'* ]]; then
 fi
 
 # renovate: datasource=github-releases depName=aquasecurity/trivy
-TRIVY_VERSION=v0.69.0
+TRIVY_VERSION=v0.69.1
 BINARY=trivy
 set +e
 INSTALLED_TRIVY_VERSION="$(trivy version | grep "Version:" | cut -d' ' -f2)"
@@ -425,7 +425,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=securego/gosec
-GOSEC_VERSION=v2.22.11
+GOSEC_VERSION=v2.23.0
 BINARY=gosec
 set +e
 INSTALLED_GOSEC_VERSION="$(gosec --version | head -1 | cut -d' ' -f2)"
@@ -453,7 +453,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v2.8.0
+GOLANGCI_LINT_VERSION=v2.9.0
 BINARY=golangci-lint
 set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"
@@ -481,7 +481,7 @@ fi
 #######################################
 
 # renovate: datasource=github-releases depName=rust-lang/rust
-RUST_VERSION=1.93.0
+RUST_VERSION=1.93.1
 BINARY=rustc
 set +e
 INSTALLED_RUST_VERSION="$(rustc --version 2>/dev/null | cut -d' ' -f2)"
@@ -643,7 +643,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=helm/helm
-HELM_VERSION=v4.1.0
+HELM_VERSION=v4.1.1
 BINARY=helm
 set +e
 INSTALLED_HELM_VERSION="$(helm version | cut -d':' -f2 | cut -d'"' -f2)"
@@ -670,7 +670,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.35.0
+KUBECTL_VERSION=v1.35.1
 BINARY=kubectl
 set +e
 INSTALLED_KUBECTL_VERSION="$(kubectl version --output yaml --client | grep "gitVersion" | cut -d' ' -f4)"

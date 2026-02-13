@@ -111,7 +111,7 @@ repos:
           - --hook-config=--parallelism-limit=1
   # checkov (does not require checkov to be installed locally to run)
   - repo: https://github.com/bridgecrewio/checkov.git
-    rev: 3.2.500
+    rev: 3.2.501
     hooks:
       - id: checkov
         args:
@@ -135,7 +135,7 @@ repos:
       - id: go-fmt
   # ruff - replaces flake8, isort, and black
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.14
+    rev: v0.15.1
     hooks:
       - id: ruff
         args:
@@ -216,7 +216,7 @@ repos:
             "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.100/ibm_catalog-schema.json",
           ]
   - repo: https://github.com/crate-ci/typos
-    rev: v1.42.3
+    rev: v1.43.4
     hooks:
       - id: typos
         name: typos (warning only)
