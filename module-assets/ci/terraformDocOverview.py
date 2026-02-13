@@ -229,7 +229,7 @@ def get_headings(folder_name, repo_url, module_name):
             ):
                 regex_pattern = r"/README.md"
                 data = None
-                if "modules" == folder_name:
+                if "modules" == folder_name.lower():
                     # for modules bullet point name is folder name
                     data = "    * [{}](./{})".format(
                         re.sub(
