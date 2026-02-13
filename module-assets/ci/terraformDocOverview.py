@@ -43,7 +43,7 @@ def get_title(
 
 # get main readme headings
 def get_main_readme_headings():
-    data = ""
+    data = []
     with open("./README.md") as f:
         code_block = False
         comment_block = False
@@ -54,13 +54,39 @@ def get_main_readme_headings():
             code_block = code_block
             comment_block = comment_block
 
-            # developing and contributing must be added to overview at level 0
-            if "developing" == title.lower() or "contributing" == title.lower():
+            # known issues, developing and contributing must be added to overview at level 0
+            if (
+                "known issues" == title.lower()
+                or "developing" == title.lower()
+                or "contributing" == title.lower()
+            ):
                 level = 0
-                data = "    " * (level) + "* [{}](#{})".format(
+                heading = "    " * (level) + "* [{}](#{})".format(
                     title, title.replace(" ", "-").lower()
                 )
+                data.append(heading)
     return data
+
+
+def has_compliance_and_security_section():
+    """Check if README.md contains a 'Compliance and security' header"""
+    try:
+        with open("./README.md") as f:
+            code_block = False
+            comment_block = False
+            for line in f.readlines():
+                level, title, code_block, comment_block = get_title(
+                    line, code_block, comment_block
+                )
+                code_block = code_block
+                comment_block = comment_block
+
+                # Check if this is a level 2 heading (##) with the title "Compliance and security"
+                if level == 2 and title.lower() == "compliance and security":
+                    return True
+        return False
+    except FileNotFoundError:
+        return False
 
 
 def get_repo_info():
@@ -179,8 +205,15 @@ def update_all_example_readmes(repo_url, module_name):
 def get_headings(folder_name, repo_url, module_name):
     readme_headings: list[str] = []
 
-    if os.path.isdir(folder_name.lower()):
-        for readme_file_path in Path(folder_name.lower()).rglob("*"):
+    # Map "Deployable Architectures" to "solutions" directory
+    directory_name = (
+        "solutions"
+        if folder_name == "Deployable Architectures"
+        else folder_name.lower()
+    )
+
+    if os.path.isdir(directory_name):
+        for readme_file_path in Path(directory_name).rglob("*"):
             path = str(readme_file_path)
             regex_pattern = r"README.md"
 
@@ -195,7 +228,8 @@ def get_headings(folder_name, repo_url, module_name):
                 readme_file_path.parent
             ):
                 regex_pattern = r"/README.md"
-                if "modules" == folder_name:
+                data = None
+                if "modules" == folder_name.lower():
                     # for modules bullet point name is folder name
                     data = "    * [{}](./{})".format(
                         re.sub(
@@ -206,6 +240,15 @@ def get_headings(folder_name, repo_url, module_name):
                         ),
                         re.sub(regex_pattern, "", path, flags=re.IGNORECASE),
                     )
+                elif folder_name == "Deployable Architectures":
+                    # for deployable architectures bullet point name is title in solution's README
+                    readme_title = terraformDocsUtils.get_readme_title(path)
+                    if readme_title:
+                        title = readme_title.strip().replace("\n", "").replace("# ", "")
+                        solution_path = re.sub(
+                            regex_pattern, "", path, flags=re.IGNORECASE
+                        )
+                        data = f'    * <a href="./{solution_path}">{title}</a>'
                 else:
                     # for examples bullet point name is title in example's README
                     readme_title = terraformDocsUtils.get_readme_title(path)
@@ -226,16 +269,24 @@ def get_headings(folder_name, repo_url, module_name):
 
                         data = f'    * <a href="./{example_path}">{title}</a> {deploy_button}'
 
-                readme_headings.append(data)
+                if data is not None:
+                    readme_headings.append(data)
     return sorted(readme_headings)
 
 
 def add_to_overview(overview, folder_name, repo_url, module_name):
-    if os.path.isdir(folder_name.lower()):
+    # Map "Deployable Architectures" to "solutions" directory
+    directory_name = (
+        "solutions"
+        if folder_name == "Deployable Architectures"
+        else folder_name.lower()
+    )
+
+    if os.path.isdir(directory_name):
         # add lvl 1 bullet point to an overview
         bullet_point = "* [{}](./{})".format(
             "Submodules" if folder_name == "Modules" else folder_name,
-            folder_name.lower(),
+            directory_name,
         )
         overview.append(bullet_point)
         bullet_point_index = overview.index(bullet_point)
@@ -245,7 +296,7 @@ def add_to_overview(overview, folder_name, repo_url, module_name):
             overview.insert(bullet_point_index + 1, tip)
 
         # get headings
-        readme_titles = get_headings(folder_name.lower(), repo_url, module_name)
+        readme_titles = get_headings(folder_name, repo_url, module_name)
 
         # Calculate offset: +2 for Examples (bullet + tip), +1 for others (just bullet)
         offset = 2 if folder_name == "Examples" else 1
@@ -270,11 +321,21 @@ def main():
         # add modules to "overview"
         add_to_overview(overview, "Modules", repo_url, module_name)
 
+        # add compliance and security section if it exists in README
+        if has_compliance_and_security_section():
+            compliance_link = "* [Compliance and security](#compliance-and-security)"
+            overview.append(compliance_link)
+
         # add examples to "overview"
         add_to_overview(overview, "Examples", repo_url, module_name)
 
-        # add last heading of README (contributing (external) or developing (internal)) to overview
-        overview.append(get_main_readme_headings())
+        # add deployable architectures (solutions) to "overview"
+        add_to_overview(overview, "Deployable Architectures", repo_url, module_name)
+
+        # add headings from README (known issues, contributing, or developing) to overview
+        readme_headings = get_main_readme_headings()
+        for heading in readme_headings:
+            overview.append(heading)
 
         # create markdown
         terraformDocsUtils.create_markdown(overview, overview_markdown)
