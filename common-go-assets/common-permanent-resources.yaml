@@ -2,7 +2,7 @@
 secretsManagerGuid: 79c6d411-c18f-4670-b009-b0044a238667
 secretsManagerCRN: "crn:v1:bluemix:public:secrets-manager:us-south:a/abac0df06b644a9cabc6e44f55b3880e:79c6d411-c18f-4670-b009-b0044a238667::"
 secretsManagerRegion: us-south
-secretsManagerResourceGroup: "geretain-test-permanent"
+secretsManagerResourceGroup: "geretain-test-permanent" #checkov:skip=CKV_SECRET_6
 
 # secrets-manager geretain-private-only-permanent-sec-mgr
 privateOnlySecMgrGuid: 69252e61-187a-46e0-a4aa-ed2c1863f93c
