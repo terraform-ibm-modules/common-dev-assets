@@ -14,5 +14,17 @@
       "matchStrings": ["\\s+image: (?<depName>.*?)(?::(?<currentValue>.*?))?@(?<currentDigest>sha256:[a-f0-9]+)\\s"],
       "datasourceTemplate": "docker"
     }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Special rule for JQ to remove the 'jq-' prefix it adds to its git tags",
+      "fileMatch": ["^module-assets/ci/install-deps.sh$"],
+      "matchStrings": [
+        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?JQ_VERSION=(?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+      "extractVersionTemplate": "^jq-(?<version>\\d+\\.\\d+\\.\\d+)$"
+    }
   ]
 }
