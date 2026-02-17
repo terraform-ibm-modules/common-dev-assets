@@ -13,6 +13,15 @@
       "fileMatch": ["^.github/workflows/.*.yml$"],
       "matchStrings": ["\\s+image: (?<depName>.*?)(?::(?<currentValue>.*?))?@(?<currentDigest>sha256:[a-f0-9]+)\\s"],
       "datasourceTemplate": "docker"
+    },
+    {
+      "fileMatch": ["^module-assets/.pre-commit-config.yaml$"],
+      "matchStrings": [
+        "https://raw\\.githubusercontent\\.com/IBM/customized-deployable-architecture/refs/tags/(?<currentValue>\\d+\\.\\d+\\.\\d+)/ibm_catalog-schema\\.json"
+      ],
+      "depNameTemplate": "IBM/customized-deployable-architecture",
+      "datasourceTemplate": "github-tags",
+      "versioningTemplate": "semver"
     }
   ],
   "customManagers": [
