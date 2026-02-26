@@ -114,7 +114,7 @@ def generate_deploy_url(repo_url, module_name, example_name):
 
 
 def generate_deploy_tip():
-    return "ℹ️ Ctrl/Cmd+Click or right-click on the Schematics deploy button to open in a new tab"
+    return "ℹ️ Ctrl/Cmd+Click or right-click on the Schematics deploy button to open in a new tab."
 
 
 def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
@@ -139,9 +139,9 @@ def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
     deploy_tip = generate_deploy_tip()
 
     if hook_begin in content and hook_end in content:
-        # Replace content between hooks - include button and tip together
+        # Replace content between hooks
         pattern = r"<!-- BEGIN SCHEMATICS DEPLOY HOOK -->.*?<!-- END SCHEMATICS DEPLOY HOOK -->"
-        new_content = f"{hook_begin}\n{deploy_button}\n\n{deploy_tip}\n{hook_end}"
+        new_content = f"{hook_begin}\n{deploy_button}  \n{deploy_tip}\n# \n{hook_end}"
         content = re.sub(pattern, new_content, content, flags=re.DOTALL)
     else:
         # Find the position after the first heading (title)
@@ -156,7 +156,7 @@ def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
 
         # Create deploy section to insert at top
         deploy_section = (
-            f"\n{hook_begin}\n{deploy_button}\n\n{deploy_tip}\n{hook_end}\n"
+            f"\n{hook_begin}\n{deploy_button}  \n{deploy_tip}\n# \n{hook_end}\n"
         )
 
         # Insert after the first heading
