@@ -200,3 +200,7 @@ terraform_enterprise_license_secret_crn: "crn:v1:bluemix:public:secrets-manager:
 
 # OCP ServiceMesh v3
 geretain-dn-ocpsmv3-mirror-registry-pullsecret: "crn:v1:bluemix:public:secrets-manager:us-south:a/abac0df06b644a9cabc6e44f55b3880e:79c6d411-c18f-4670-b009-b0044a238667:secret:2b2a6173-054d-95fd-6fb4-c293b8916002" # pragma: allowlist secret
+
+# cluster docker config
+serviceid-entitled-mirror-registry: "ServiceId-05a1cfa1-1d8f-4c6e-9fbf-3b35aeb24b82"
+serviceid-entitled-mirror-registry-trusted-profile: "Profile-d5897364-4657-43f0-afb9-3ee769cf9a3a"
