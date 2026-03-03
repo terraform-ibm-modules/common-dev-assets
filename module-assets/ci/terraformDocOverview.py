@@ -99,14 +99,9 @@ def get_repo_info():
     return full_module_url, module_name
 
 
-def generate_deploy_button_html(deploy_url, margin_left=0, height=16):
-    margin_style = f" margin-left: {margin_left}px;" if margin_left > 0 else ""
-    return (
-        f'<a href="{deploy_url}">'
-        f'<img src="https://img.shields.io/badge/Deploy%20with IBM%20Cloud%20Schematics-0f62fe?logo=ibm&logoColor=white&labelColor=0f62fe" '
-        f'alt="Deploy with IBM Cloud Schematics" style="height: {height}px; vertical-align: text-bottom;{margin_style}">'
-        f"</a>"
-    )
+def generate_deploy_button(deploy_url):
+    badge_url = "https://img.shields.io/badge/Deploy%20with%20IBM%20Cloud%20Schematics-0f62fe?style=flat&logo=ibm&logoColor=white&labelColor=0f62fe"
+    return f"[![Deploy with IBM Cloud Schematics]({badge_url})]({deploy_url})"
 
 
 def generate_deploy_url(repo_url, module_name, example_name):
@@ -119,7 +114,7 @@ def generate_deploy_url(repo_url, module_name, example_name):
 
 
 def generate_deploy_tip():
-    return ":information_source: Ctrl/Cmd+Click or right-click on the Schematics deploy button to open in a new tab"
+    return "ℹ️ Ctrl/Cmd+Click or right-click on the Schematics deploy button to open in a new tab."
 
 
 def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
@@ -133,7 +128,7 @@ def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
 
     example_name = os.path.basename(example_path)
     deploy_url = generate_deploy_url(repo_url, module_name, example_name)
-    deploy_button = generate_deploy_button_html(deploy_url)
+    deploy_button = generate_deploy_button(deploy_url)
 
     hook_begin = "<!-- BEGIN SCHEMATICS DEPLOY HOOK -->"
     hook_end = "<!-- END SCHEMATICS DEPLOY HOOK -->"
@@ -141,10 +136,12 @@ def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
     tip_hook_end = "<!-- END SCHEMATICS DEPLOY TIP HOOK -->"
 
     # Handle deploy button at the top
+    deploy_tip = generate_deploy_tip()
+
     if hook_begin in content and hook_end in content:
         # Replace content between hooks
         pattern = r"<!-- BEGIN SCHEMATICS DEPLOY HOOK -->.*?<!-- END SCHEMATICS DEPLOY HOOK -->"
-        new_content = f"{hook_begin}\n{deploy_button}\n{hook_end}"
+        new_content = f"{hook_begin}\n{deploy_button}  \n{deploy_tip}\n# \n{hook_end}"
         content = re.sub(pattern, new_content, content, flags=re.DOTALL)
     else:
         # Find the position after the first heading (title)
@@ -158,24 +155,19 @@ def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
                 break
 
         # Create deploy section to insert at top
-        deploy_section = f"\n{hook_begin}\n{deploy_button}\n{hook_end}\n"
+        deploy_section = (
+            f"\n{hook_begin}\n{deploy_button}  \n{deploy_tip}\n# \n{hook_end}\n"
+        )
 
         # Insert after the first heading
         lines.insert(insert_position, deploy_section)
         content = "\n".join(lines)
 
-    # Handle deploy tip at the bottom
-    deploy_tip = generate_deploy_tip()
-
+    # Remove old tip hook if it exists
     if tip_hook_begin in content and tip_hook_end in content:
-        # Replace tip content between hooks
         pattern = r"<!-- BEGIN SCHEMATICS DEPLOY TIP HOOK -->.*?<!-- END SCHEMATICS DEPLOY TIP HOOK -->"
-        new_tip_content = f"{tip_hook_begin}\n{deploy_tip}\n{tip_hook_end}"
-        content = re.sub(pattern, new_tip_content, content, flags=re.DOTALL)
-    else:
-        # Add tip section at the bottom
-        tip_section = f"\n\n{tip_hook_begin}\n{deploy_tip}\n{tip_hook_end}\n"
-        content = content.rstrip() + tip_section
+        content = re.sub(pattern, "", content, flags=re.DOTALL)
+        content = content.replace("\n\n\n", "\n\n")  # Clean up extra newlines
 
     # Write back to README
     with open(readme_path, "w") as f:
@@ -263,11 +255,9 @@ def get_headings(folder_name, repo_url, module_name):
                         deploy_url = generate_deploy_url(
                             repo_url, module_name, example_name
                         )
-                        deploy_button = generate_deploy_button_html(
-                            deploy_url, margin_left=5
-                        )
+                        deploy_button = generate_deploy_button(deploy_url)
 
-                        data = f'    * <a href="./{example_path}">{title}</a> {deploy_button}'
+                        data = f"    * [{title}](./{example_path}) {deploy_button}"
 
                 if data is not None:
                     readme_headings.append(data)
@@ -291,19 +281,18 @@ def add_to_overview(overview, folder_name, repo_url, module_name):
         overview.append(bullet_point)
         bullet_point_index = overview.index(bullet_point)
 
-        if folder_name == "Examples":
-            tip = generate_deploy_tip()
-            overview.insert(bullet_point_index + 1, tip)
-
         # get headings
         readme_titles = get_headings(folder_name, repo_url, module_name)
 
-        # Calculate offset: +2 for Examples (bullet + tip), +1 for others (just bullet)
-        offset = 2 if folder_name == "Examples" else 1
-
+        # Add examples under Examples lvl 1 bullet point
         for index, readme_file_path in enumerate(readme_titles):
-            # we need to add examples under Examples lvl 1 bullet point
-            overview.insert(index + bullet_point_index + offset, readme_file_path)
+            overview.insert(index + bullet_point_index + 1, readme_file_path)
+
+        # Add tip on a new line after all examples
+        if folder_name == "Examples" and readme_titles:
+            tip = "    " + generate_deploy_tip()
+            # Insert tip after the last example
+            overview.insert(bullet_point_index + 1 + len(readme_titles), "\n" + tip)
 
 
 def main():
