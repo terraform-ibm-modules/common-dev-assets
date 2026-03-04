@@ -247,3 +247,7 @@ repos:
             "--use-all-plugins",
           ]
         exclude: go.sum
+        # Temp workaround by adding additional_dependencies for detect-secrets 0.13.1+ibm.64.dss, see https://github.com/IBM/detect-secrets/issues/182
+        additional_dependencies:
+            - boxsdk<4 # https://github.com/IBM/detect-secrets/issues/173
+            - chardet<7 # https://github.com/IBM/detect-secrets/issues/182
