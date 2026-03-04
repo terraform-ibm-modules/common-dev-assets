@@ -139,9 +139,9 @@ def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
     deploy_tip = generate_deploy_tip()
 
     if hook_begin in content and hook_end in content:
-        # Replace content between hooks
+        # Replace content between hooks - button with 2 trailing spaces for line break
         pattern = r"<!-- BEGIN SCHEMATICS DEPLOY HOOK -->.*?<!-- END SCHEMATICS DEPLOY HOOK -->"
-        new_content = f"{hook_begin}\n{deploy_button}  \n{deploy_tip}\n# \n{hook_end}"
+        new_content = f"{hook_begin}\n{deploy_button}  \n{deploy_tip}\n#  \n{hook_end}"
         content = re.sub(pattern, new_content, content, flags=re.DOTALL)
     else:
         # Find the position after the first heading (title)
@@ -154,9 +154,9 @@ def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
                 insert_position = i + 1
                 break
 
-        # Create deploy section to insert at top
+        # Create deploy section to insert at top - button with 2 trailing spaces for line break
         deploy_section = (
-            f"\n{hook_begin}\n{deploy_button}  \n{deploy_tip}\n# \n{hook_end}\n"
+            f"\n{hook_begin}\n{deploy_button}  \n{deploy_tip}\n#  \n{hook_end}\n"
         )
 
         # Insert after the first heading
