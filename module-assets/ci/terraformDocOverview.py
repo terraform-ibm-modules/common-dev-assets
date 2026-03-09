@@ -60,10 +60,8 @@ def get_main_readme_headings():
                 or "developing" == title.lower()
                 or "contributing" == title.lower()
             ):
-                level = 0
-                heading = "    " * (level) + "* [{}](#{})".format(
-                    title, title.replace(" ", "-").lower()
-                )
+                anchor = title.replace(" ", "-").lower()
+                heading = f'  <li><a href="#{anchor}">{title}</a></li>'
                 data.append(heading)
     return data
 
@@ -99,9 +97,26 @@ def get_repo_info():
     return full_module_url, module_name
 
 
-def generate_deploy_button(deploy_url):
+def generate_deploy_button_html(deploy_url, inline=False):
+
     badge_url = "https://img.shields.io/badge/Deploy%20with%20IBM%20Cloud%20Schematics-0f62fe?style=flat&logo=ibm&logoColor=white&labelColor=0f62fe"
-    return f"[![Deploy with IBM Cloud Schematics]({badge_url})]({deploy_url})"
+
+    if inline:
+        return (
+            f'<a href="{deploy_url}">'
+            f'<img src="{badge_url}" alt="Deploy with IBM Cloud Schematics" '
+            f'style="height: 16px; vertical-align: text-bottom; margin-left: 5px;">'
+            f"</a>"
+        )
+    else:
+        return (
+            f"<p>\n"
+            f'  <a href="{deploy_url}">\n'
+            f'    <img src="{badge_url}" alt="Deploy with IBM Cloud Schematics">\n'
+            f"  </a><br>\n"
+            f"  ℹ️ Ctrl/Cmd+Click or right-click on the Schematics deploy button to open in a new tab.\n"
+            f"</p>"
+        )
 
 
 def generate_deploy_url(repo_url, module_name, example_name):
@@ -128,20 +143,19 @@ def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
 
     example_name = os.path.basename(example_path)
     deploy_url = generate_deploy_url(repo_url, module_name, example_name)
-    deploy_button = generate_deploy_button(deploy_url)
 
     hook_begin = "<!-- BEGIN SCHEMATICS DEPLOY HOOK -->"
     hook_end = "<!-- END SCHEMATICS DEPLOY HOOK -->"
     tip_hook_begin = "<!-- BEGIN SCHEMATICS DEPLOY TIP HOOK -->"
     tip_hook_end = "<!-- END SCHEMATICS DEPLOY TIP HOOK -->"
 
-    # Handle deploy button at the top
-    deploy_tip = generate_deploy_tip()
+    # Generate HTML button with tip included
+    deploy_button_html = generate_deploy_button_html(deploy_url, inline=False)
 
     if hook_begin in content and hook_end in content:
-        # Replace content between hooks - button with 2 trailing spaces for line break
+        # Replace content between hooks with HTML version
         pattern = r"<!-- BEGIN SCHEMATICS DEPLOY HOOK -->.*?<!-- END SCHEMATICS DEPLOY HOOK -->"
-        new_content = f"{hook_begin}\n{deploy_button}  \n{deploy_tip}\n#  \n{hook_end}"
+        new_content = f"{hook_begin}\n{deploy_button_html}\n{hook_end}"
         content = re.sub(pattern, new_content, content, flags=re.DOTALL)
     else:
         # Find the position after the first heading (title)
@@ -154,10 +168,8 @@ def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
                 insert_position = i + 1
                 break
 
-        # Create deploy section to insert at top - button with 2 trailing spaces for line break
-        deploy_section = (
-            f"\n{hook_begin}\n{deploy_button}  \n{deploy_tip}\n#  \n{hook_end}\n"
-        )
+        # Create deploy section to insert at top
+        deploy_section = f"\n{hook_begin}\n{deploy_button_html}\n{hook_end}\n"
 
         # Insert after the first heading
         lines.insert(insert_position, deploy_section)
@@ -168,6 +180,8 @@ def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
         pattern = r"<!-- BEGIN SCHEMATICS DEPLOY TIP HOOK -->.*?<!-- END SCHEMATICS DEPLOY TIP HOOK -->"
         content = re.sub(pattern, "", content, flags=re.DOTALL)
         content = content.replace("\n\n\n", "\n\n")  # Clean up extra newlines
+
+    content = content.rstrip() + "\n"
 
     # Write back to README
     with open(readme_path, "w") as f:
@@ -222,16 +236,14 @@ def get_headings(folder_name, repo_url, module_name):
                 regex_pattern = r"/README.md"
                 data = None
                 if "modules" == folder_name.lower():
-                    # for modules bullet point name is folder name
-                    data = "    * [{}](./{})".format(
-                        re.sub(
-                            regex_pattern,
-                            "",
-                            path.replace("modules/", ""),
-                            flags=re.IGNORECASE,
-                        ),
-                        re.sub(regex_pattern, "", path, flags=re.IGNORECASE),
+                    module_name_display = re.sub(
+                        regex_pattern,
+                        "",
+                        path.replace("modules/", ""),
+                        flags=re.IGNORECASE,
                     )
+                    module_path = re.sub(regex_pattern, "", path, flags=re.IGNORECASE)
+                    data = f'      <li><a href="./{module_path}">{module_name_display}</a></li>'
                 elif folder_name == "Deployable Architectures":
                     # for deployable architectures bullet point name is title in solution's README
                     readme_title = terraformDocsUtils.get_readme_title(path)
@@ -240,7 +252,7 @@ def get_headings(folder_name, repo_url, module_name):
                         solution_path = re.sub(
                             regex_pattern, "", path, flags=re.IGNORECASE
                         )
-                        data = f'    * <a href="./{solution_path}">{title}</a>'
+                        data = f'      <li><a href="./{solution_path}">{title}</a></li>'
                 else:
                     # for examples bullet point name is title in example's README
                     readme_title = terraformDocsUtils.get_readme_title(path)
@@ -255,9 +267,16 @@ def get_headings(folder_name, repo_url, module_name):
                         deploy_url = generate_deploy_url(
                             repo_url, module_name, example_name
                         )
-                        deploy_button = generate_deploy_button(deploy_url)
+                        deploy_button_html = generate_deploy_button_html(
+                            deploy_url, inline=True
+                        )
 
-                        data = f"    * [{title}](./{example_path}) {deploy_button}"
+                        data = (
+                            f"      <li>\n"
+                            f'        <a href="./{example_path}">{title}</a>\n'
+                            f"        {deploy_button_html}\n"
+                            f"      </li>"
+                        )
 
                 if data is not None:
                     readme_headings.append(data)
@@ -273,26 +292,42 @@ def add_to_overview(overview, folder_name, repo_url, module_name):
     )
 
     if os.path.isdir(directory_name):
-        # add lvl 1 bullet point to an overview
-        bullet_point = "* [{}](./{})".format(
-            "Submodules" if folder_name == "Modules" else folder_name,
-            directory_name,
-        )
-        overview.append(bullet_point)
-        bullet_point_index = overview.index(bullet_point)
-
         # get headings
         readme_titles = get_headings(folder_name, repo_url, module_name)
 
-        # Add examples under Examples lvl 1 bullet point
-        for index, readme_file_path in enumerate(readme_titles):
-            overview.insert(index + bullet_point_index + 1, readme_file_path)
-
-        # Add tip on a new line after all examples
         if folder_name == "Examples" and readme_titles:
+            # Use HTML format for Examples section
+            display_name = "Submodules" if folder_name == "Modules" else folder_name
+            bullet_point = f'  <li><a href="./{directory_name}">{display_name}</a>'
+            overview.append(bullet_point)
+            bullet_point_index = overview.index(bullet_point)
+            overview.insert(bullet_point_index + 1, "    <ul>")
+            for index, readme_file_path in enumerate(readme_titles):
+                overview.insert(index + bullet_point_index + 2, readme_file_path)
+
+            overview.insert(bullet_point_index + 2 + len(readme_titles), "    </ul>")
+
             tip = "    " + generate_deploy_tip()
-            # Insert tip after the last example
-            overview.insert(bullet_point_index + 1 + len(readme_titles), "\n" + tip)
+            overview.insert(bullet_point_index + 3 + len(readme_titles), tip)
+            overview.insert(bullet_point_index + 4 + len(readme_titles), "  </li>")
+        else:
+            display_name = "Submodules" if folder_name == "Modules" else folder_name
+            bullet_point = f'  <li><a href="./{directory_name}">{display_name}</a>'
+            overview.append(bullet_point)
+            bullet_point_index = overview.index(bullet_point)
+
+            if readme_titles:
+                overview.insert(bullet_point_index + 1, "    <ul>")
+
+                for index, readme_file_path in enumerate(readme_titles):
+                    overview.insert(index + bullet_point_index + 2, readme_file_path)
+
+                overview.insert(
+                    bullet_point_index + 2 + len(readme_titles), "    </ul>"
+                )
+                overview.insert(bullet_point_index + 3 + len(readme_titles), "  </li>")
+            else:
+                overview.insert(bullet_point_index + 1, "  </li>")
 
 
 def main():
@@ -302,17 +337,19 @@ def main():
         overview: list[str] = []
         overview_markdown = "overview.md"
 
-        # add module name to an overview as a first element
+        overview.append("<ul>")
+
+        # add module name to an overview as a first element (HTML format)
         path = pathlib.PurePath(terraformDocsUtils.get_module_url())
         repo_name = path.name
-        overview.append(f"* [{repo_name}](#{repo_name})")
+        overview.append(f'  <li><a href="#{repo_name}">{repo_name}</a></li>')
 
         # add modules to "overview"
         add_to_overview(overview, "Modules", repo_url, module_name)
 
         # add compliance and security section if it exists in README
         if has_compliance_and_security_section():
-            compliance_link = "* [Compliance and security](#compliance-and-security)"
+            compliance_link = '  <li><a href="#compliance-and-security">Compliance and security</a></li>'
             overview.append(compliance_link)
 
         # add examples to "overview"
@@ -325,6 +362,8 @@ def main():
         readme_headings = get_main_readme_headings()
         for heading in readme_headings:
             overview.append(heading)
+
+        overview.append("</ul>")
 
         # create markdown
         terraformDocsUtils.create_markdown(overview, overview_markdown)
