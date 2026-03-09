@@ -16,59 +16,6 @@ repos:
         require_serial: true
         pass_filenames: false
         description: This hook ensures that a file named LICENSE exists for any repo (on github.com) which contains .tf files in the root directory of the repo
-      - id: golangci-lint
-        name: golangci-lint
-        description: Fast linters runner for Go.
-        entry: bash ci/golangci-lint.sh
-        types: [go]
-        language: system # see https://github.com/pre-commit/pre-commit/issues/3219#issuecomment-2152312215
-        pass_filenames: false
-        # This will be going away once the metadata for the "add_overview" hook is rolled out to all repos
-      - id: add_examples_modules
-        name: Add examples section to README
-        description: Add examples section to README
-        entry: python3 ci/terraformDocExamples.py
-        language: python
-        files: "README.md"
-        pass_filenames: false
-      - id: terraform_docs
-        name: Add terraform docs section to README
-        description: Add terraform docs section to README
-        entry: python3 ci/terraformDocs.py
-        language: python
-        files: "README.md"
-        pass_filenames: false
-        always_run: true
-      - id: add_overview
-        name: Add overview section to README
-        description: Add overview section to README
-        entry: python3 ci/terraformDocOverview.py
-        language: python
-        pass_filenames: false
-      - id: json_template_lint
-        name: Validate catalogValidationValues.json.template file
-        description: Validate catalogValidationValues.json.template file
-        entry: python3 ci/validateJsonTemplate.py
-        language: python
-        pass_filenames: false
-      - id: go-mod-module-repository
-        name: Add module repository to go.mod
-        description: Adding module repository to go.mod file
-        entry: python3 ci/terraformDocGoMod.py
-        language: python
-        files: "tests/go.mod"
-        pass_filenames: false
-      - id: validate_ibm_catalog_json
-        name: Validate ibm_catalog.json file
-        description: Validate if input variables in ibm_catalog.json file are in sync with DA inputs
-        entry: python3 ci/validateIbmCatalogJson.py
-        language: python
-        pass_filenames: false
-      - id: trivy
-        name: Trivy scan
-        entry: trivy fs . --severity CRITICAL,HIGH --exit-code 1 --skip-files="**/.terraform/**/*" --skip-files="common-dev-assets/**/*" --skip-files="**/terraform.tfstate*" --skip-files="**/kubeconfig/**/*"
-        language: system
-        pass_filenames: false
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -82,7 +29,6 @@ repos:
       - id: end-of-file-fixer
         exclude: .svg
       - id: trailing-whitespace
-        exclude: examples/.*/README\.md
       - id: check-merge-conflict
       - id: detect-private-key
         exclude: ibm_catalog.json
@@ -112,6 +58,13 @@ repos:
           - -fmt
           - text
           - -tests
+  - repo: local
+    hooks:
+      - id: trivy
+        name: Trivy scan
+        entry: trivy fs . --severity CRITICAL,HIGH --exit-code 1 --skip-files="**/.terraform/**/*" --skip-files="common-dev-assets/**/*" --skip-files="**/terraform.tfstate*" --skip-files="**/kubeconfig/**/*"
+        language: system
+        pass_filenames: false
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.105.0
     hooks:
@@ -194,6 +147,56 @@ repos:
       - id: ruff-format
         args:
           - --line-length=88
+  - repo: local
+    hooks:
+      - id: golangci-lint
+        name: golangci-lint
+        description: Fast linters runner for Go.
+        entry: bash ci/golangci-lint.sh
+        types: [go]
+        language: system # see https://github.com/pre-commit/pre-commit/issues/3219#issuecomment-2152312215
+        pass_filenames: false
+        # This will be going away once the metadata for the "add_overview" hook is rolled out to all repos
+      - id: add_examples_modules
+        name: Add examples section to README
+        description: Add examples section to README
+        entry: python3 ci/terraformDocExamples.py
+        language: python
+        files: "README.md"
+        pass_filenames: false
+      - id: terraform_docs
+        name: Add terraform docs section to README
+        description: Add terraform docs section to README
+        entry: python3 ci/terraformDocs.py
+        language: python
+        files: "README.md"
+        pass_filenames: false
+        always_run: true
+      - id: add_overview
+        name: Add overview section to README
+        description: Add overview section to README
+        entry: python3 ci/terraformDocOverview.py
+        language: python
+        pass_filenames: false
+      - id: json_template_lint
+        name: Validate catalogValidationValues.json.template file
+        description: Validate catalogValidationValues.json.template file
+        entry: python3 ci/validateJsonTemplate.py
+        language: python
+        pass_filenames: false
+      - id: go-mod-module-repository
+        name: Add module repository to go.mod
+        description: Adding module repository to go.mod file
+        entry: python3 ci/terraformDocGoMod.py
+        language: python
+        files: "tests/go.mod"
+        pass_filenames: false
+      - id: validate_ibm_catalog_json
+        name: Validate ibm_catalog.json file
+        description: Validate if input variables in ibm_catalog.json file are in sync with DA inputs
+        entry: python3 ci/validateIbmCatalogJson.py
+        language: python
+        pass_filenames: false
   # helm lint
   - repo: https://github.com/gruntwork-io/pre-commit
     rev: v0.1.30
