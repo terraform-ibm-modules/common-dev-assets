@@ -1,9 +1,9 @@
 # Primary owner should be listed first in list of global owners, follwed by any secondary owners
-*       @ocofaigh
+*       @maheshwarishikha
 
 # Order is important; the last matching pattern takes the most precedence. When someone opens a
 # pull request that only modifies files in the below specified folders, only the listed owners
 # and not the global owners will be requested for a review.
-common-go-assets/ @whoffler @daniel-butler-irl
-pipeline-assets/ @daniel-butler-irl @ocofaigh
-scripts/update-multiple-repos/ @akocbek
+common-go-assets/ @Ak-sky @piyush117
+pipeline-assets/ @mukulpalit-ibm @vkuma17
+scripts/update-multiple-repos/ @Aashiq-J
