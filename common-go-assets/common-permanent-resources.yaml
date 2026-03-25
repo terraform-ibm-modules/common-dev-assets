@@ -207,3 +207,6 @@ brs_us_east_public_endpoint: "https://24e20e7d-def0-46ed-8527-a37ce3ae7b61.us-ea
 brs_us_east_private_endpoint: "https://24e20e7d-def0-46ed-8527-a37ce3ae7b61.private.us-east.backup-recovery.cloud.ibm.com"
 brs_us_east_connection_name: "geretain-instance"
 brs_us_east_guid: "24e20e7d-def0-46ed-8527-a37ce3ae7b61"
+
+# Direct link
+directlink_crn: "crn:v1:bluemix:public:directlink:dal13:a/abac0df06b644a9cabc6e44f55b3880e::connect:c7cce2c7-f2f7-4dbd-8ef9-44c848115f2b"
