@@ -88,8 +88,8 @@ elasticsearchVersion: 8.15
 elasticsearchRegion: "us-south"
 
 # rabbitMQ instance crn for backup-restore test
-rabbitmqCrn: "crn:v1:bluemix:public:messages-for-rabbitmq:us-south:a/abac0df06b644a9cabc6e44f55b3880e:956e6e71-2655-49a1-a367-abf009cf1901::"
-rabbitmqVersion: 3.13
+rabbitmqCrn: "crn:v1:bluemix:public:messages-for-rabbitmq:us-south:a/abac0df06b644a9cabc6e44f55b3880e:48011f58-bed0-42ad-bc38-114e7014e6e2::"
+rabbitmqVersion: 4.2
 rabbitmqRegion: "us-south"
 
 # redis instance crn for backup-restore test
