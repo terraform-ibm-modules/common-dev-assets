@@ -72,6 +72,12 @@
       "enabled": false
     },
     {
+      "description": "Disable Mastercard/restapi provider updates.",
+      "matchDatasources": ["terraform-provider"],
+      "matchPackageNames": ["Mastercard/restapi"],
+      "enabled": false
+    },
+    {
       "description": "Allow the locked in provider version to be updated to the latest for deployable architectures",
       "enabled": true,
       "matchFileNames": ["solutions/**"],
