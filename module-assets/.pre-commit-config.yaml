@@ -111,7 +111,7 @@ repos:
           - --hook-config=--parallelism-limit=1
   # checkov (does not require checkov to be installed locally to run)
   - repo: https://github.com/bridgecrewio/checkov.git
-    rev: 3.2.510
+    rev: 3.2.513
     hooks:
       - id: checkov
         args:
@@ -135,7 +135,7 @@ repos:
       - id: go-fmt
   # ruff - replaces flake8, isort, and black
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.7
+    rev: v0.15.8
     hooks:
       - id: ruff
         args:
@@ -205,7 +205,7 @@ repos:
   # ibm_catalog.json lint
   # TODO https://github.ibm.com/GoldenEye/issues/issues/11524
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.37.0
+    rev: 0.37.1
     hooks:
       - id: check-jsonschema
         name: Validate ibm_catalog.json schema
