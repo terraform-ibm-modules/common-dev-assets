@@ -4,6 +4,6 @@
 # Order is important; the last matching pattern takes the most precedence. When someone opens a
 # pull request that only modifies files in the below specified folders, only the listed owners
 # and not the global owners will be requested for a review.
-common-go-assets/ @Ak-sky @piyush117
+common-go-assets/ @zikra-iqbal @piyush117
 pipeline-assets/ @mukulpalit-ibm @vkuma17
 scripts/update-multiple-repos/ @Aashiq-J
