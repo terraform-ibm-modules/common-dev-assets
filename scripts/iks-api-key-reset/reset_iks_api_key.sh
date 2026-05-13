@@ -114,6 +114,9 @@ fetch_data() {
 
 get_resource_group_id() {
     local rg_name="$1"
+    local max_retries=3
+    local retry_delay=10
+    local attempt=1
 
     # Determine the Resource Manager API endpoint
     rc_api_endpoint="${IBMCLOUD_RESOURCE_CONTROLLER_API_ENDPOINT:-"resource-controller.cloud.ibm.com"}"
@@ -125,28 +128,37 @@ get_resource_group_id() {
         RC_URL="https://$rc_api_endpoint/v2/resource_groups?account_id=$ACCOUNT_ID"
     fi
 
-    echo "Looking up resource group ID for name: $rg_name" >&2
+    while [ $attempt -le $max_retries ]; do
+        echo "Looking up resource group ID for name: $rg_name (attempt $attempt/$max_retries)" >&2
 
-    # Fetch resource groups from the API
-    RC_RESPONSE=$(curl -s "$RC_URL" --header "Authorization: Bearer $IAM_TOKEN" --header "Content-Type: application/json")
+        # Fetch resource groups from the API
+        RC_RESPONSE=$(curl -s "$RC_URL" --header "Authorization: Bearer $IAM_TOKEN" --header "Content-Type: application/json")
 
-    ERROR_MESSAGE=$(echo "${RC_RESPONSE}" | jq 'has("errors")')
-    if [[ "${ERROR_MESSAGE}" != false ]]; then
-        echo "${RC_RESPONSE}" | jq '.errors' >&2
-        echo "Could not obtain resource groups" >&2
-        exit 1
-    fi
+        ERROR_MESSAGE=$(echo "${RC_RESPONSE}" | jq 'has("errors")')
+        if [[ "${ERROR_MESSAGE}" != false ]]; then
+            echo "${RC_RESPONSE}" | jq '.errors' >&2
+            echo "Could not obtain resource groups" >&2
+            exit 1
+        fi
 
-    # Extract the resource group ID for the given name
-    RESOURCE_GROUP_ID=$(echo "$RC_RESPONSE" | jq -r --arg name "$rg_name" '.resources[] | select(.name == $name) | .id')
+        # Extract the resource group ID for the given name
+        RESOURCE_GROUP_ID=$(echo "$RC_RESPONSE" | jq -r --arg name "$rg_name" '.resources[] | select(.name == $name) | .id')
 
-    if [[ -z "${RESOURCE_GROUP_ID}" ]] || [[ "${RESOURCE_GROUP_ID}" == "null" ]]; then
-        echo "Resource group with name '$rg_name' not found" >&2
-        exit 1
-    fi
+        if [[ -n "${RESOURCE_GROUP_ID}" ]] && [[ "${RESOURCE_GROUP_ID}" != "null" ]]; then
+            echo "Found resource group ID: $RESOURCE_GROUP_ID" >&2
+            echo "$RESOURCE_GROUP_ID"
+            return 0
+        fi
 
-    echo "Found resource group ID: $RESOURCE_GROUP_ID" >&2
-    echo "$RESOURCE_GROUP_ID"
+        if [ $attempt -lt $max_retries ]; then
+            echo "Resource group with name '$rg_name' not found, retrying in $retry_delay seconds..." >&2
+            sleep $retry_delay
+            ((attempt++))
+        else
+            echo "Resource group with name '$rg_name' not found after $max_retries attempts" >&2
+            exit 1
+        fi
+    done
 }
 
 #######################################################
