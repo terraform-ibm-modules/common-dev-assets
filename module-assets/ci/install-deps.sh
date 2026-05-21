@@ -170,6 +170,14 @@ if ! python3 --version &> /dev/null; then
 fi
 
 #######################################
+# Python requests library for ICD versions module
+#######################################
+
+echo "-- Installing Python requests library..."
+python3 -m pip install 'requests>=2.31.0'
+echo "COMPLETE"
+
+#######################################
 # golang
 #######################################
 
