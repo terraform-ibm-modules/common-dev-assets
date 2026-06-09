@@ -243,7 +243,7 @@ def get_headings(folder_name, repo_url, module_name):
                         flags=re.IGNORECASE,
                     )
                     module_path = re.sub(regex_pattern, "", path, flags=re.IGNORECASE)
-                    data = f'      <li><a href="./{module_path}">{module_name_display}</a></li>'
+                    data = f'      <li><a href="{repo_url}/tree/main/{module_path}">{module_name_display}</a></li>'
                 elif folder_name == "Deployable Architectures":
                     # for deployable architectures bullet point name is title in solution's README
                     readme_title = terraformDocsUtils.get_readme_title(path)
@@ -252,7 +252,7 @@ def get_headings(folder_name, repo_url, module_name):
                         solution_path = re.sub(
                             regex_pattern, "", path, flags=re.IGNORECASE
                         )
-                        data = f'      <li><a href="./{solution_path}">{title}</a></li>'
+                        data = f'      <li><a href="{repo_url}/tree/main/{solution_path}">{title}</a></li>'
                 else:
                     # for examples bullet point name is title in example's README
                     readme_title = terraformDocsUtils.get_readme_title(path)
@@ -273,7 +273,7 @@ def get_headings(folder_name, repo_url, module_name):
 
                         data = (
                             f"      <li>\n"
-                            f'        <a href="./{example_path}">{title}</a>\n'
+                            f'        <a href="{repo_url}/tree/main/{example_path}">{title}</a>\n'
                             f"        {deploy_button_html}\n"
                             f"      </li>"
                         )
@@ -298,7 +298,7 @@ def add_to_overview(overview, folder_name, repo_url, module_name):
         if folder_name == "Examples" and readme_titles:
             # Use HTML format for Examples section
             display_name = "Submodules" if folder_name == "Modules" else folder_name
-            bullet_point = f'  <li><a href="./{directory_name}">{display_name}</a>'
+            bullet_point = f'  <li><a href="{repo_url}/tree/main/{directory_name}">{display_name}</a>'
             overview.append(bullet_point)
             bullet_point_index = overview.index(bullet_point)
             overview.insert(bullet_point_index + 1, "    <ul>")
@@ -312,7 +312,7 @@ def add_to_overview(overview, folder_name, repo_url, module_name):
             overview.insert(bullet_point_index + 4 + len(readme_titles), "  </li>")
         else:
             display_name = "Submodules" if folder_name == "Modules" else folder_name
-            bullet_point = f'  <li><a href="./{directory_name}">{display_name}</a>'
+            bullet_point = f'  <li><a href="{repo_url}/tree/main/{directory_name}">{display_name}</a>'
             overview.append(bullet_point)
             bullet_point_index = overview.index(bullet_point)
 
