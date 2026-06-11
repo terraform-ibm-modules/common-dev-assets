@@ -73,8 +73,8 @@ postgresqlPITRVersion: 14
 postgresqlPITRRegion: "us-south"
 
 # mysql instance crn for PITR test
-mysqlPITRCrn: "crn:v1:bluemix:public:databases-for-mysql:us-south:a/abac0df06b644a9cabc6e44f55b3880e:0493008d-1399-440f-ba1a-89bb00e3ac10::"
-mysqlPITRVersion: "8.0"
+mysqlPITRCrn: "crn:v1:bluemix:public:databases-for-mysql:us-south:a/abac0df06b644a9cabc6e44f55b3880e:3cc9df2e-114d-4e2a-8bfb-37606c5ff057::"
+mysqlPITRVersion: "8.4"
 mysqlPITRRegion: "us-south"
 
 # mongoDB instance crn for backup-restore test
