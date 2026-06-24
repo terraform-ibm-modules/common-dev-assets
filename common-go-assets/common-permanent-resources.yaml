@@ -210,3 +210,13 @@ brs_us_east_guid: "24e20e7d-def0-46ed-8527-a37ce3ae7b61"
 
 # Direct link
 directlink_crn: "crn:v1:bluemix:public:directlink:dal13:a/abac0df06b644a9cabc6e44f55b3880e::connect:c7cce2c7-f2f7-4dbd-8ef9-44c848115f2b"
+
+# KP Dedicated Permanent Instance and Root Keys for Gen2 ICD Testing
+kp_dedicated_us_south_instance_id: "9e43127c-2e36-47a8-ada9-cdfe71a729fc"
+kp_dedicated_us_south_instance_name: "geretain-permanent-kp-dedicated"
+kp_dedicated_us_south_resource_group: "geretain-test-permanent"
+kp_dedicated_us_south_crn: "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:9e43127c-2e36-47a8-ada9-cdfe71a729fc::"
+kp_dedicated_us_south_public_endpoint: "https://9e43127c-2e36-47a8-ada9-cdfe71a729fc.api.us-south.kms.appdomain.cloud"
+kp_dedicated_us_south_private_endpoint: "https://9e43127c-2e36-47a8-ada9-cdfe71a729fc.api.private.us-south.kms.appdomain.cloud"
+kp_dedicated_us_south_root_key_id: "9e491c43-bfde-4595-966e-4f2ecb640ebb"
+kp_dedicated_us_south_root_key_crn: "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:9e43127c-2e36-47a8-ada9-cdfe71a729fc:key:9e491c43-bfde-4595-966e-4f2ecb640ebb"
