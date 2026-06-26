@@ -1,5 +1,5 @@
 requests==2.34.2
 ibm-cloud-sdk-core==3.25.0
-ibm-platform-services==0.75.2
+ibm-platform-services==0.76.0
 semver==3.0.4
 pytest==9.1.1
