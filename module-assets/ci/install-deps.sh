@@ -328,6 +328,65 @@ else
 fi
 
 #######################################
+# Terraform Stacks plugin
+#######################################
+
+echo
+
+echo "-- Pre-initializing Terraform Stacks plugin..."
+
+STACKS_INIT_DIR=$(mktemp -d /tmp/stacks-init-XXXXX)
+STACKS_INIT_LOG=$(mktemp /tmp/stacks-init-log-XXXXX)
+CURRENT_DIR=$(pwd)
+
+cat > "${STACKS_INIT_DIR}/deployments.tfdeploy.hcl" <<'EOF'
+deployment "example" {
+  inputs = {}
+}
+EOF
+
+cat > "${STACKS_INIT_DIR}/components.tfcomponent.hcl" <<'EOF'
+component "example" {
+  source = "./component"
+}
+EOF
+
+mkdir -p "${STACKS_INIT_DIR}/component"
+cat > "${STACKS_INIT_DIR}/component/main.tf" <<'EOF'
+terraform {
+  required_providers {
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.6.0"
+    }
+  }
+}
+
+resource "random_id" "example" {
+  byte_length = 2
+}
+EOF
+
+cd "${STACKS_INIT_DIR}"
+
+set +e
+terraform stacks init > "${STACKS_INIT_LOG}" 2>&1
+STACKS_INIT_EXIT_CODE=$?
+set -e
+
+cd "${CURRENT_DIR}"
+rm -rf "${STACKS_INIT_DIR}"
+
+if [ ${STACKS_INIT_EXIT_CODE} -ne 0 ]; then
+  cat "${STACKS_INIT_LOG}"
+  rm -f "${STACKS_INIT_LOG}"
+  exit ${STACKS_INIT_EXIT_CODE}
+fi
+
+echo "Terraform Stacks plugin cached successfully"
+rm -f "${STACKS_INIT_LOG}"
+
+#######################################
 # terraform-docs
 #######################################
 
