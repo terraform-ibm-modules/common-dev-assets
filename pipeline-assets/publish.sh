@@ -39,7 +39,7 @@ if [ "$ONE_PIPELINE_STATUS" -eq 0 ]; then
     "docker://$(get_env PROD_REPO)/$(get_env IMAGE_NAME):${tag}"
   done
   save_artifact "$(get_env IMAGE_NAME)" "name=$(get_env PROD_REPO)/$(get_env IMAGE_NAME):$(get_env IMAGE_TAG)" "digest=$(get_env IMAGE_DIGEST)" "type=image" "tags=$(get_env IMAGE_TAG),${EXTRA_TAGS}"
-  
+
   echo "Sign entire OCI Index structure (including attestations and child manifests)"
   /opt/commons/ciso/sign_icr.sh
 else
