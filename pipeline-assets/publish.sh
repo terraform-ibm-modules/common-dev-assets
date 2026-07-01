@@ -24,21 +24,23 @@ if [ "$ONE_PIPELINE_STATUS" -eq 0 ]; then
     ibmcloud_api_key=$(get_env ibmcloud-api-key)
   fi
 
-  echo "Copying image to production registry"
-  skopeo copy --remove-signatures \
+  echo "Copying multi-arch OCI index to production registry"
+  skopeo copy --all --remove-signatures \
   --dest-creds iamapikey:"${ibmcloud_api_key}" --src-creds iamapikey:"${ibmcloud_api_key}" \
   "docker://$(get_env DEV_REPO)/$(get_env IMAGE_NAME):$(get_env IMAGE_TAG)" \
   "docker://$(get_env PROD_REPO)/$(get_env IMAGE_NAME):$(get_env IMAGE_TAG)"
 
   IFS=" " read -r -a tags_array <<< "${EXTRA_TAGS//,/ }"
   for tag in "${tags_array[@]}"; do
-    skopeo copy --remove-signatures \
+    echo "Applying extra tag: ${tag} to the production OCI index"
+    skopeo copy --all --remove-signatures \
     --dest-creds iamapikey:"${ibmcloud_api_key}" --src-creds iamapikey:"${ibmcloud_api_key}" \
     "docker://$(get_env PROD_REPO)/$(get_env IMAGE_NAME):$(get_env IMAGE_TAG)" \
     "docker://$(get_env PROD_REPO)/$(get_env IMAGE_NAME):${tag}"
   done
   save_artifact "$(get_env IMAGE_NAME)" "name=$(get_env PROD_REPO)/$(get_env IMAGE_NAME):$(get_env IMAGE_TAG)" "digest=$(get_env IMAGE_DIGEST)" "type=image" "tags=$(get_env IMAGE_TAG),${EXTRA_TAGS}"
-  echo "Sign image"
+
+  echo "Sign entire OCI Index structure (including attestations and child manifests)"
   /opt/commons/ciso/sign_icr.sh
 else
   echo "Failed checks not publishing"
