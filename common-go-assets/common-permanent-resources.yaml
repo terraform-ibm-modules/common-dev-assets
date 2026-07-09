@@ -220,3 +220,7 @@ kp_dedicated_us_south_public_endpoint: "https://9e43127c-2e36-47a8-ada9-cdfe71a7
 kp_dedicated_us_south_private_endpoint: "https://9e43127c-2e36-47a8-ada9-cdfe71a729fc.api.private.us-south.kms.appdomain.cloud"
 kp_dedicated_us_south_root_key_id: "9e491c43-bfde-4595-966e-4f2ecb640ebb"
 kp_dedicated_us_south_root_key_crn: "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:9e43127c-2e36-47a8-ada9-cdfe71a729fc:key:9e491c43-bfde-4595-966e-4f2ecb640ebb"
+
+# SCC WP instance
+scc_wp_secure_api_url: "https://us-south.security-compliance-secure.cloud.ibm.com"
+scc_wp_instance_id: "3f0378fe-2582-49d6-84a5-3962228328a5"
