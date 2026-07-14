@@ -216,7 +216,7 @@ def extract_repo_details(store: list, repo_name) -> tuple:
     """extracts the repo name from local store of source references
 
     Args:
-       store(list): list of terrafrom-ibm-modules source references captured
+       store(list): list of terraform-ibm-modules source references captured
 
     Returns:
        tuple: id, repo name and version of the repository
@@ -237,7 +237,7 @@ def get_source_details(repo_name: str, store: list) -> list:
 
     Args:
        repo_name(str): name of referenced repo
-       store(list): list of terrafrom-ibm-modules source references captured
+       store(list): list of terraform-ibm-modules source references captured
 
     Returns:
        list: list of terraform-ibm-modules source references
