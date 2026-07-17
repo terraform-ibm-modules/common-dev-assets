@@ -223,3 +223,12 @@ kp_dedicated_us_south_root_key_crn: "crn:v1:bluemix:public:kms:us-south:a/abac0d
 # SCC WP instance
 scc_wp_secure_api_url: "https://us-south.security-compliance-secure.cloud.ibm.com"
 scc_wp_instance_id: "3f0378fe-2582-49d6-84a5-3962228328a5"
+
+# Gen2 ICD
+
+postgresqlGen2Crn: "crn:v1:bluemix:public:databases-for-postgresql:eu-de:a/abac0df06b644a9cabc6e44f55b3880e:45f52321-4877-404d-85fd-1442421a08af::"
+mongodbGen2Crn: "crn:v1:bluemix:public:databases-for-mongodb:eu-de:a/abac0df06b644a9cabc6e44f55b3880e:2897b5d4-5915-45b3-a6bf-92d3ca694e20::"
+redisGen2Crn: "crn:v1:bluemix:public:databases-for-redis:eu-de:a/abac0df06b644a9cabc6e44f55b3880e:3225b2a2-b6c7-4952-bd69-54707a720b10::"
+elasticGen2Crn: "crn:v1:bluemix:public:databases-for-elasticsearch:eu-de:a/abac0df06b644a9cabc6e44f55b3880e:d7867327-231a-41d7-91be-7f38ee6df5d7::"
+rabbitGen2Crn: "crn:v1:bluemix:public:messages-for-rabbitmq:eu-de:a/abac0df06b644a9cabc6e44f55b3880e:d2847d56-200e-4322-ba20-23a1c0302758::"
+mysqlGen2Crn: "crn:v1:bluemix:public:databases-for-mysql:eu-de:a/abac0df06b644a9cabc6e44f55b3880e:574ef8f3-30b1-440f-89a5-a80b9d1eda15::"
