@@ -19,9 +19,9 @@ fi
 ONE_PIPELINE_STATUS=$(get_env one-pipeline-status 0)
 if [ "$ONE_PIPELINE_STATUS" -eq 0 ]; then
 
-  ibmcloud_api_key=$(get_env ciso-ibmcloud-api-key "")
+  ibmcloud_api_key=$(get_secret ciso-ibmcloud-api-key "")
   if [[ -z "$ibmcloud_api_key" ]]; then
-    ibmcloud_api_key=$(get_env ibmcloud-api-key)
+    ibmcloud_api_key=$(get_secret ibmcloud-api-key)
   fi
 
   echo "Copying multi-arch OCI index to production registry"

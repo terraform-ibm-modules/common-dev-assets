@@ -10,9 +10,9 @@ exit_code=0
 # shellcheck disable=SC2155
 export ARTIFACTORY_USERNAME="$(get_env artifactory-user)"
 # shellcheck disable=SC2155
-export ARTIFACTORY_PASSWORD="$(get_env artifactory-password)"
+export ARTIFACTORY_PASSWORD="$(get_secret artifactory-password)" # pragma: allowlist secret
 # shellcheck disable=SC2155
-export IBMCLOUD_APIKEY="$(get_env ibmcloud-api-key)"
+export IBMCLOUD_APIKEY="$(get_secret ibmcloud-api-key)" # pragma: allowlist secret
 # shellcheck disable=SC2155
 export SCAN_ENGINES="$(get_env image-scan-engines ibm_va)" # default to 'ibm_va' but also supports 'ibm_va,prisma_cloud' if whitelisted for Prisma scanning
 

@@ -4,7 +4,7 @@
 set -e
 
 # shellcheck disable=SC2155
-export IBMCLOUD_APIKEY="$(get_env ibmcloud-api-key)"
+export IBMCLOUD_APIKEY="$(get_secret ibmcloud-api-key)" # pragma: allowlist secret
 
 if [ -z "$1" ];then
   EXTRA_TAG=""
