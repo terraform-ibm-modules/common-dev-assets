@@ -205,7 +205,7 @@ repos:
   # ibm_catalog.json lint
   # TODO https://github.ibm.com/GoldenEye/issues/issues/11524
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.37.4
+    rev: 0.38.0
     hooks:
       - id: check-jsonschema
         name: Validate ibm_catalog.json schema
