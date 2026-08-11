@@ -93,8 +93,8 @@ rabbitmqVersion: 4.2
 rabbitmqRegion: "us-south"
 
 # redis instance crn for backup-restore test
-redisCrn: "crn:v1:bluemix:public:databases-for-redis:us-south:a/abac0df06b644a9cabc6e44f55b3880e:b0bc0f9e-a688-408a-bf80-a51e6ee306e9::"
-redisVersion: 7.2
+redisCrn: "crn:v1:bluemix:public:databases-for-redis:us-south:a/abac0df06b644a9cabc6e44f55b3880e:67526019-4a14-4134-8947-23de3a07f452::"
+redisVersion: 8.2
 redisRegion: "us-south"
 
 # permanent resources for eso module tests
