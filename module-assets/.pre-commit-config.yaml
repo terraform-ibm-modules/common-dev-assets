@@ -98,16 +98,6 @@ repos:
         exclude: dynamic_values/ # Do not run tflint in dynamic_folders directory (temp solution for SLZ modules). Internal issue created to track better solution.
       - id: terraform_trivy
         args:
-          - --args=--skip-files="**/.terraform/**/*"
-          - --args=--skip-files="**/examples/**/*.yaml"
-          - --args=--skip-files="**/examples/**/*.yml"
-          - --args=--skip-files="**/helm-charts/**/*"
-          - --args=--skip-files="**/chart/**/*"
-          # workaround for https://github.com/antonbabenko/pre-commit-terraform/issues/833
-          - --args=--skip-files="**/scripts/*.yaml"
-          - --args=--skip-files="**/tests/**/*"
-          - --args=--skip-files="common-dev-assets/**/*"
-          # workaround for https://github.com/antonbabenko/pre-commit-terraform/issues/691
           - --hook-config=--parallelism-limit=1
   # checkov (does not require checkov to be installed locally to run)
   - repo: https://github.com/bridgecrewio/checkov.git
