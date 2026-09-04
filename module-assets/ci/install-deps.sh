@@ -429,7 +429,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=securego/gosec
-GOSEC_VERSION=v2.23.0
+GOSEC_VERSION=v2.29.0
 BINARY=gosec
 set +e
 INSTALLED_GOSEC_VERSION="$(gosec --version | head -1 | cut -d' ' -f2)"
@@ -457,7 +457,7 @@ fi
 #######################################
 
  # renovate: datasource=github-releases depName=golangci/golangci-lint
-GOLANGCI_LINT_VERSION=v2.9.0
+GOLANGCI_LINT_VERSION=v2.13.2
 BINARY=golangci-lint
 set +e
 INSTALLED_GOLANGCI_LINT_VERSION="$(golangci-lint --version | head -1 | cut -d' ' -f4)"

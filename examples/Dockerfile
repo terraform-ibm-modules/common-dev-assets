@@ -14,8 +14,8 @@ COPY . .
 
 EXPOSE 3000
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD curl -fs http://localhost:3000/ || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD ["sh", "-c", "curl -fs http://localhost:3000/ || exit 1"]
 
-USER test
+USER 1000
 
 CMD ["node", "app.js"]
