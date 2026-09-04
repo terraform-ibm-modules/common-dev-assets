@@ -60,7 +60,7 @@ function verify {
   tmp_dir=$3
 
   echo "Verifying.."
-  checksum=$(< "${tmp_dir}/${sumfile}" grep "${file}" | awk '{ print $1 }') 
+  checksum=$(< "${tmp_dir}/${sumfile}" grep "${file}" | awk '{ print $1 }')
   echo "${checksum}  ${tmp_dir}/${file}" | ${SHA256_CMD} -c
 }
 
