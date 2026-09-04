@@ -60,8 +60,8 @@ function verify {
   tmp_dir=$3
 
   echo "Verifying.."
-  checksum=$(< "${tmp_dir}/${sumfile}" grep "${file}" | awk '{ print $1 }')  echo "${checksum}  ${tmp_dir}/${file}" | ${SHA256_CMD} -c
-
+  checksum=$(< "${tmp_dir}/${sumfile}" grep "${file}" | awk '{ print $1 }') 
+  echo "${checksum}  ${tmp_dir}/${file}" | ${SHA256_CMD} -c
 }
 
 # Function to verify checksum of download file (when binary name not in sumfile)
