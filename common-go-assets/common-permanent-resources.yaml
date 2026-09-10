@@ -82,6 +82,12 @@ mongodbCrn: "crn:v1:bluemix:public:databases-for-mongodb:us-south:a/abac0df06b64
 mongodbVersion: 7.0
 mongodbRegion: "us-south"
 
+# mongoDB gen2 instance crn for backup-restore test
+mongodbGen2Crn: "crn:v1:bluemix:public:databases-for-mongodb:us-east:a/abac0df06b644a9cabc6e44f55b3880e:d0106ba5-4a9b-4246-8b3f-9a7298b85748::"
+mongodbGen2Version: 8.0
+mongodbGen2DiskMb: 12288
+mongodbGen2Region: "us-east"
+
 # ElasticSearch instance crn for backup-restore test
 elasticsearchCrn: "crn:v1:bluemix:public:databases-for-elasticsearch:us-south:a/abac0df06b644a9cabc6e44f55b3880e:4359af05-ff0c-4c94-b965-91d2f95bd90c::"
 elasticsearchVersion: 8.15
