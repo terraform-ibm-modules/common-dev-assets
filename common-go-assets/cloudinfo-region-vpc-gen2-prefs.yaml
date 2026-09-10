@@ -1,16 +1,16 @@
 ---
 - name: au-syd
-  useForTest: true
-  testPriority: 1
+  useForTest: false
+  testPriority: 4
 - name: br-sao
-  useForTest: true
+  useForTest: false
   testPriority: 3
 - name: ca-tor
   useForTest: true
   testPriority: 2
 - name: eu-de
   useForTest: true
-  testPriority: 4
+  testPriority: 1
 - name: eu-es
   useForTest: true
   testPriority: 5
@@ -18,10 +18,10 @@
   useForTest: true
   testPriority: 6
 - name: jp-osa
-  useForTest: true
+  useForTest: false
   testPriority: 9
 - name: jp-tok
-  useForTest: true
+  useForTest: false
   testPriority: 10
 - name: us-east
   useForTest: true
