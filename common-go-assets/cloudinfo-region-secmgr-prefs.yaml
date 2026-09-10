@@ -1,12 +1,12 @@
 ---
 - name: br-sao
-  useForTest: false
-  testPriority: 10
+  useForTest: false # we have been asked to not use these regions for test
+  testPriority: 8
 - name: ca-tor
-  useForTest: true
+  useForTest: false # we have been asked to not use these regions for test
   testPriority: 2
 - name: au-syd
-  useForTest: true
+  useForTest: false # we have been asked to not use these regions for test
   testPriority: 3
 - name: eu-de
   useForTest: true
@@ -15,17 +15,17 @@
   useForTest: false # we do not have an increased quota for trial SM instances in this region
   testPriority: 5
 - name: eu-gb
-  useForTest: true
+  useForTest: false # we have been asked to not use these regions for test
   testPriority: 6
 - name: us-east
   useForTest: false # we have been asked to not use us regions for test: https://ibm-cloudplatform.slack.com/archives/C010Z1DQ05N/p1724936766805639
   testPriority: 7
 - name: us-south
-  useForTest: false # we have been asked to not use us regions for test: https://ibm-cloudplatform.slack.com/archives/C010Z1DQ05N/p1724936766805639
-  testPriority: 8
-- name: jp-osa
   useForTest: true
+  testPriority: 10
+- name: jp-osa
+  useForTest: false # we have been asked to not use these regions for test
   testPriority: 9
 - name: jp-tok
-  useForTest: true
+  useForTest: false # we have been asked to not use these regions for test
   testPriority: 4
