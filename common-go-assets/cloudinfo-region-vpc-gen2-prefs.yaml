@@ -1,7 +1,7 @@
 ---
 - name: au-syd
-  useForTest: true
-  testPriority: 1
+  useForTest: false
+  testPriority: 4
 - name: br-sao
   useForTest: false
   testPriority: 3
@@ -10,7 +10,7 @@
   testPriority: 2
 - name: eu-de
   useForTest: true
-  testPriority: 4
+  testPriority: 1
 - name: eu-es
   useForTest: true
   testPriority: 5
