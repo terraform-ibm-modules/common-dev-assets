@@ -1,7 +1,7 @@
 ---
 - name: br-sao
-  useForTest: true
-  testPriority: 1
+  useForTest: false
+  testPriority: 10
 - name: ca-tor
   useForTest: true
   testPriority: 2
@@ -10,7 +10,7 @@
   testPriority: 3
 - name: eu-de
   useForTest: true
-  testPriority: 4
+  testPriority: 1
 - name: eu-es
   useForTest: false # we do not have an increased quota for trial SM instances in this region
   testPriority: 5
@@ -28,4 +28,4 @@
   testPriority: 9
 - name: jp-tok
   useForTest: true
-  testPriority: 10
+  testPriority: 4

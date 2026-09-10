@@ -3,7 +3,7 @@
   useForTest: true
   testPriority: 1
 - name: br-sao
-  useForTest: true
+  useForTest: false
   testPriority: 3
 - name: ca-tor
   useForTest: true
@@ -15,13 +15,13 @@
   useForTest: true
   testPriority: 5
 - name: eu-gb
-  useForTest: true
+  useForTest: false
   testPriority: 6
 - name: jp-osa
-  useForTest: true
+  useForTest: false
   testPriority: 9
 - name: jp-tok
-  useForTest: true
+  useForTest: false
   testPriority: 10
 - name: us-east
   useForTest: true
