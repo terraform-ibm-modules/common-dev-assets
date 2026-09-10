@@ -15,7 +15,7 @@
   useForTest: true
   testPriority: 5
 - name: eu-gb
-  useForTest: false
+  useForTest: true
   testPriority: 6
 - name: jp-osa
   useForTest: false
