@@ -229,3 +229,7 @@ kp_dedicated_us_south_root_key_crn: "crn:v1:bluemix:public:kms:us-south:a/abac0d
 # SCC WP instance
 scc_wp_secure_api_url: "https://us-south.security-compliance-secure.cloud.ibm.com"
 scc_wp_instance_id: "3f0378fe-2582-49d6-84a5-3962228328a5"
+
+# IBM MQ on Cloud capacity instance
+mq_capacity_crn: "crn:v1:bluemix:public:mqcloud:us-east:a/abac0df06b644a9cabc6e44f55b3880e:9d9a3c00-2097-4da4-a5e4-78e06514b342::"
+mq_capacity_guid: "9d9a3c00-2097-4da4-a5e4-78e06514b342"
