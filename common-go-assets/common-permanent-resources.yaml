@@ -231,5 +231,5 @@ scc_wp_secure_api_url: "https://us-south.security-compliance-secure.cloud.ibm.co
 scc_wp_instance_id: "3f0378fe-2582-49d6-84a5-3962228328a5"
 
 # IBM MQ on Cloud capacity instance
-mq_capacity_crn: "crn:v1:bluemix:public:mqcloud:us-east:a/abac0df06b644a9cabc6e44f55b3880e:9d9a3c00-2097-4da4-a5e4-78e06514b342::"
-mq_capacity_guid: "9d9a3c00-2097-4da4-a5e4-78e06514b342"
+mq_capacity_crn: "crn:v1:bluemix:public:mqcloud:eu-de:a/8db1f3817af9487892f9bd201fc15d55:2ad8a13c-3eae-42ac-a804-82cc8bef3117::"
+mq_capacity_guid: "2ad8a13c-3eae-42ac-a804-82cc8bef3117"
