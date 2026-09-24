@@ -226,6 +226,14 @@ kp_dedicated_us_south_private_endpoint: "https://9e43127c-2e36-47a8-ada9-cdfe71a
 kp_dedicated_us_south_root_key_id: "9e491c43-bfde-4595-966e-4f2ecb640ebb"
 kp_dedicated_us_south_root_key_crn: "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:9e43127c-2e36-47a8-ada9-cdfe71a729fc:key:9e491c43-bfde-4595-966e-4f2ecb640ebb"
 
+# KP Multitenant Permanent Instance and Root Keys for Gen2 ICD Testing
+kp_multitenant_us_south_instance_id: "f3ffe6e0-da33-4176-b080-5b30ee0b4496"
+kp_multitenant_us_south_instance_name: "geretain-permanent-kp-multitenant"
+kp_multitenant_us_south_resource_group: "geretain-test-permanent"
+kp_multitenant_us_south_crn: "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:f3ffe6e0-da33-4176-b080-5b30ee0b4496::"
+kp_multitenant_us_south_root_key_id: "c0360d6e-f2a4-494e-bc5e-65b171eb248d"
+kp_multitenant_us_south_root_key_crn: "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:f3ffe6e0-da33-4176-b080-5b30ee0b4496:key:c0360d6e-f2a4-494e-bc5e-65b171eb248d"
+
 # SCC WP instance
 scc_wp_secure_api_url: "https://us-south.security-compliance-secure.cloud.ibm.com"
 scc_wp_instance_id: "3f0378fe-2582-49d6-84a5-3962228328a5"
