@@ -88,8 +88,20 @@ def has_compliance_and_security_section():
 
 
 def get_default_branch():
-    """Detect the default branch from the git remote HEAD reference."""
+    """Detect the default branch from the git remote HEAD reference.
+
+    Runs 'git remote set-head origin --auto' first to ensure the remote
+    HEAD ref is always set, even on fresh or partial clones.
+    Falls back to 'main' if the ref cannot be resolved.
+    """
     from subprocess import PIPE, Popen
+
+    Popen(
+        "git remote set-head origin --auto",
+        stdout=PIPE,
+        stderr=PIPE,
+        shell=True,
+    ).communicate()
 
     proc = Popen(
         "git symbolic-ref refs/remotes/origin/HEAD",
