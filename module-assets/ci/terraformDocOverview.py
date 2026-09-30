@@ -87,11 +87,20 @@ def has_compliance_and_security_section():
         return False
 
 
-def get_default_branch(module_url):
-    """Return 'master' for GoldenEye (github.ibm.com) repos, 'main' for all others."""
-    if "github.ibm.com" in module_url:
-        return "master"
-    return "main"
+def get_default_branch():
+    """Detect the default branch from the git remote HEAD reference."""
+    from subprocess import PIPE, Popen
+
+    proc = Popen(
+        "git symbolic-ref refs/remotes/origin/HEAD",
+        stdout=PIPE,
+        stderr=PIPE,
+        shell=True,
+    )
+    output, _ = proc.communicate()
+    if proc.returncode == 0:
+        return output.decode("utf-8").strip().split("/")[-1]
+    return "main"  # fallback
 
 
 def get_repo_info():
@@ -100,7 +109,7 @@ def get_repo_info():
     full_module_url = f"https://{module_url}"
     repo_name = pathlib.PurePath(module_url).name
     module_name = repo_name.replace("terraform-ibm-", "")
-    default_branch = get_default_branch(module_url)
+    default_branch = get_default_branch()
 
     return full_module_url, module_name, default_branch
 
