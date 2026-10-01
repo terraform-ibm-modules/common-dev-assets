@@ -3,6 +3,8 @@
 import os
 import pathlib
 import re
+import subprocess
+import sys
 from pathlib import Path
 
 import terraformDocGoMod
@@ -87,14 +89,45 @@ def has_compliance_and_security_section():
         return False
 
 
+def get_default_branch():
+    """Detect the default branch from the git remote HEAD reference.
+
+    Runs 'git remote set-head origin --auto' first to ensure the remote
+    HEAD ref is always set, even on fresh or partial clones.
+    Falls back to 'main' if the ref cannot be resolved.
+    """
+    result = subprocess.run(
+        ["git", "remote", "set-head", "origin", "--auto"],
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        print(
+            f"[WARN] get_default_branch: 'git remote set-head origin --auto' failed "
+            f"(rc={result.returncode}): {result.stderr.decode().strip()}",
+            file=sys.stderr,
+        )
+
+    proc = subprocess.run(
+        ["git", "symbolic-ref", "refs/remotes/origin/HEAD"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+    if proc.returncode == 0:
+        return proc.stdout.decode("utf-8").strip().split("/")[-1]
+    return "main"  # fallback
+
+
 def get_repo_info():
     module_url = terraformDocsUtils.get_module_url()
     module_url = terraformDocGoMod.change_module_url(module_url)
     full_module_url = f"https://{module_url}"
     repo_name = pathlib.PurePath(module_url).name
     module_name = repo_name.replace("terraform-ibm-", "")
+    default_branch = get_default_branch()
 
-    return full_module_url, module_name
+    return full_module_url, module_name, default_branch
 
 
 def generate_deploy_button_html(deploy_url, inline=False):
@@ -119,12 +152,12 @@ def generate_deploy_button_html(deploy_url, inline=False):
         )
 
 
-def generate_deploy_url(repo_url, module_name, example_name):
+def generate_deploy_url(repo_url, module_name, example_name, default_branch="main"):
     workspace_name = f"{module_name}-{example_name}-example"
     return (
         f"https://cloud.ibm.com/schematics/workspaces/create?"
         f"workspace_name={workspace_name}&"
-        f"repository={repo_url}/tree/main/examples/{example_name}"
+        f"repository={repo_url}/tree/{default_branch}/examples/{example_name}"
     )
 
 
@@ -132,7 +165,9 @@ def generate_deploy_tip():
     return "ℹ️ Ctrl/Cmd+Click or right-click on the Schematics deploy button to open in a new tab."
 
 
-def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
+def add_deploy_button_to_example_readme(
+    example_path, repo_url, module_name, default_branch="main"
+):
     readme_path = os.path.join(example_path, "README.md")
     if not os.path.exists(readme_path):
         return
@@ -142,7 +177,9 @@ def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
         content = f.read()
 
     example_name = os.path.basename(example_path)
-    deploy_url = generate_deploy_url(repo_url, module_name, example_name)
+    deploy_url = generate_deploy_url(
+        repo_url, module_name, example_name, default_branch
+    )
 
     hook_begin = "<!-- BEGIN SCHEMATICS DEPLOY HOOK -->"
     hook_end = "<!-- END SCHEMATICS DEPLOY HOOK -->"
@@ -188,7 +225,7 @@ def add_deploy_button_to_example_readme(example_path, repo_url, module_name):
         f.write(content)
 
 
-def update_all_example_readmes(repo_url, module_name):
+def update_all_example_readmes(repo_url, module_name, default_branch="main"):
     if not os.path.isdir("examples"):
         return
 
@@ -205,10 +242,12 @@ def update_all_example_readmes(repo_url, module_name):
             continue
 
         # Add deploy button to this example's README
-        add_deploy_button_to_example_readme(example_path, repo_url, module_name)
+        add_deploy_button_to_example_readme(
+            example_path, repo_url, module_name, default_branch
+        )
 
 
-def get_headings(folder_name, repo_url, module_name):
+def get_headings(folder_name, repo_url, module_name, default_branch="main"):
     readme_headings: list[str] = []
 
     # Map "Deployable Architectures" to "solutions" directory
@@ -243,7 +282,7 @@ def get_headings(folder_name, repo_url, module_name):
                         flags=re.IGNORECASE,
                     )
                     module_path = re.sub(regex_pattern, "", path, flags=re.IGNORECASE)
-                    data = f'      <li><a href="{repo_url}/tree/main/{module_path}">{module_name_display}</a></li>'
+                    data = f'      <li><a href="{repo_url}/tree/{default_branch}/{module_path}">{module_name_display}</a></li>'
                 elif folder_name == "Deployable Architectures":
                     # for deployable architectures bullet point name is title in solution's README
                     readme_title = terraformDocsUtils.get_readme_title(path)
@@ -252,7 +291,7 @@ def get_headings(folder_name, repo_url, module_name):
                         solution_path = re.sub(
                             regex_pattern, "", path, flags=re.IGNORECASE
                         )
-                        data = f'      <li><a href="{repo_url}/tree/main/{solution_path}">{title}</a></li>'
+                        data = f'      <li><a href="{repo_url}/tree/{default_branch}/{solution_path}">{title}</a></li>'
                 else:
                     # for examples bullet point name is title in example's README
                     readme_title = terraformDocsUtils.get_readme_title(path)
@@ -265,7 +304,7 @@ def get_headings(folder_name, repo_url, module_name):
 
                         # Generate deploy URL and button
                         deploy_url = generate_deploy_url(
-                            repo_url, module_name, example_name
+                            repo_url, module_name, example_name, default_branch
                         )
                         deploy_button_html = generate_deploy_button_html(
                             deploy_url, inline=True
@@ -273,7 +312,7 @@ def get_headings(folder_name, repo_url, module_name):
 
                         data = (
                             f"      <li>\n"
-                            f'        <a href="{repo_url}/tree/main/{example_path}">{title}</a>\n'
+                            f'        <a href="{repo_url}/tree/{default_branch}/{example_path}">{title}</a>\n'
                             f"        {deploy_button_html}\n"
                             f"      </li>"
                         )
@@ -283,7 +322,9 @@ def get_headings(folder_name, repo_url, module_name):
     return sorted(readme_headings)
 
 
-def add_to_overview(overview, folder_name, repo_url, module_name):
+def add_to_overview(
+    overview, folder_name, repo_url, module_name, default_branch="main"
+):
     # Map "Deployable Architectures" to "solutions" directory
     directory_name = (
         "solutions"
@@ -293,12 +334,12 @@ def add_to_overview(overview, folder_name, repo_url, module_name):
 
     if os.path.isdir(directory_name):
         # get headings
-        readme_titles = get_headings(folder_name, repo_url, module_name)
+        readme_titles = get_headings(folder_name, repo_url, module_name, default_branch)
 
         if folder_name == "Examples" and readme_titles:
             # Use HTML format for Examples section
             display_name = "Submodules" if folder_name == "Modules" else folder_name
-            bullet_point = f'  <li><a href="{repo_url}/tree/main/{directory_name}">{display_name}</a>'
+            bullet_point = f'  <li><a href="{repo_url}/tree/{default_branch}/{directory_name}">{display_name}</a>'
             overview.append(bullet_point)
             bullet_point_index = overview.index(bullet_point)
             overview.insert(bullet_point_index + 1, "    <ul>")
@@ -312,7 +353,7 @@ def add_to_overview(overview, folder_name, repo_url, module_name):
             overview.insert(bullet_point_index + 4 + len(readme_titles), "  </li>")
         else:
             display_name = "Submodules" if folder_name == "Modules" else folder_name
-            bullet_point = f'  <li><a href="{repo_url}/tree/main/{directory_name}">{display_name}</a>'
+            bullet_point = f'  <li><a href="{repo_url}/tree/{default_branch}/{directory_name}">{display_name}</a>'
             overview.append(bullet_point)
             bullet_point_index = overview.index(bullet_point)
 
@@ -331,7 +372,7 @@ def add_to_overview(overview, folder_name, repo_url, module_name):
 
 
 def main():
-    repo_url, module_name = get_repo_info()
+    repo_url, module_name, default_branch = get_repo_info()
 
     if terraformDocsUtils.is_hook_exists("<!-- BEGIN OVERVIEW HOOK -->"):
         overview: list[str] = []
@@ -345,7 +386,7 @@ def main():
         overview.append(f'  <li><a href="#{repo_name}">{repo_name}</a></li>')
 
         # add modules to "overview"
-        add_to_overview(overview, "Modules", repo_url, module_name)
+        add_to_overview(overview, "Modules", repo_url, module_name, default_branch)
 
         # add compliance and security section if it exists in README
         if has_compliance_and_security_section():
@@ -353,10 +394,12 @@ def main():
             overview.append(compliance_link)
 
         # add examples to "overview"
-        add_to_overview(overview, "Examples", repo_url, module_name)
+        add_to_overview(overview, "Examples", repo_url, module_name, default_branch)
 
         # add deployable architectures (solutions) to "overview"
-        add_to_overview(overview, "Deployable Architectures", repo_url, module_name)
+        add_to_overview(
+            overview, "Deployable Architectures", repo_url, module_name, default_branch
+        )
 
         # add headings from README (known issues, contributing, or developing) to overview
         readme_headings = get_main_readme_headings()
@@ -375,7 +418,7 @@ def main():
 
         terraformDocsUtils.remove_markdown(overview_markdown)
 
-    update_all_example_readmes(repo_url, module_name)
+    update_all_example_readmes(repo_url, module_name, default_branch)
 
 
 main()
