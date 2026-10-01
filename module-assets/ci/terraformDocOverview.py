@@ -3,6 +3,8 @@
 import os
 import pathlib
 import re
+import subprocess
+import sys
 from pathlib import Path
 
 import terraformDocGoMod
@@ -94,24 +96,26 @@ def get_default_branch():
     HEAD ref is always set, even on fresh or partial clones.
     Falls back to 'main' if the ref cannot be resolved.
     """
-    from subprocess import PIPE, Popen
-
-    Popen(
-        "git remote set-head origin --auto",
-        stdout=PIPE,
-        stderr=PIPE,
-        shell=True,
-    ).communicate()
-
-    proc = Popen(
-        "git symbolic-ref refs/remotes/origin/HEAD",
-        stdout=PIPE,
-        stderr=PIPE,
-        shell=True,
+    result = subprocess.run(
+        ["git", "remote", "set-head", "origin", "--auto"],
+        capture_output=True,
+        check=False,
     )
-    output, _ = proc.communicate()
+    if result.returncode != 0:
+        print(
+            f"[WARN] get_default_branch: 'git remote set-head origin --auto' failed "
+            f"(rc={result.returncode}): {result.stderr.decode().strip()}",
+            file=sys.stderr,
+        )
+
+    proc = subprocess.run(
+        ["git", "symbolic-ref", "refs/remotes/origin/HEAD"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
     if proc.returncode == 0:
-        return output.decode("utf-8").strip().split("/")[-1]
+        return proc.stdout.decode("utf-8").strip().split("/")[-1]
     return "main"  # fallback
 
 
