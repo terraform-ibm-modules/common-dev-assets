@@ -68,8 +68,8 @@ accessTags:
   - geretain-dev-1:permanent-test-tag-4
 
 # postgresql instance crn for PITR test
-postgresqlPITRCrn: "crn:v1:bluemix:public:databases-for-postgresql:us-south:a/abac0df06b644a9cabc6e44f55b3880e:90adc2f3-cfbe-4f4e-b8aa-6d5a8bf458b9::"
-postgresqlPITRVersion: 14
+postgresqlPITRCrn: "crn:v1:bluemix:public:databases-for-postgresql:us-south:a/abac0df06b644a9cabc6e44f55b3880e:d1ae5026-f07c-4548-bc29-c39a9372361c::"
+postgresqlPITRVersion: 18
 postgresqlPITRRegion: "us-south"
 
 # mysql instance crn for PITR test
@@ -81,6 +81,12 @@ mysqlPITRRegion: "us-south"
 mongodbCrn: "crn:v1:bluemix:public:databases-for-mongodb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:f853baa5-fed4-4a30-95c9-87d8bb4362c6::"
 mongodbVersion: 8.0
 mongodbRegion: "us-south"
+
+# mongoDB gen2 instance crn for backup-restore test
+mongodbGen2Crn: "crn:v1:bluemix:public:databases-for-mongodb:us-east:a/abac0df06b644a9cabc6e44f55b3880e:d0106ba5-4a9b-4246-8b3f-9a7298b85748::"
+mongodbGen2Version: 8.0
+mongodbGen2DiskMb: 12288
+mongodbGen2Region: "us-east"
 
 # ElasticSearch instance crn for backup-restore test
 elasticsearchCrn: "crn:v1:bluemix:public:databases-for-elasticsearch:us-south:a/abac0df06b644a9cabc6e44f55b3880e:4359af05-ff0c-4c94-b965-91d2f95bd90c::"
@@ -210,7 +216,7 @@ brs_us_east_guid: "e3e98b75-6832-4694-8cbb-342eaf35401c"
 # Direct link
 directlink_crn: "crn:v1:bluemix:public:directlink:dal13:a/abac0df06b644a9cabc6e44f55b3880e::connect:c7cce2c7-f2f7-4dbd-8ef9-44c848115f2b"
 
-# KP Dedicated Permanent Instance and Root Keys for Gen2 ICD Testing
+# KP Dedicated Permanent Instance and Root Keys
 kp_dedicated_us_south_instance_id: "9e43127c-2e36-47a8-ada9-cdfe71a729fc"
 kp_dedicated_us_south_instance_name: "geretain-permanent-kp-dedicated"
 kp_dedicated_us_south_resource_group: "geretain-test-permanent"
@@ -220,6 +226,18 @@ kp_dedicated_us_south_private_endpoint: "https://9e43127c-2e36-47a8-ada9-cdfe71a
 kp_dedicated_us_south_root_key_id: "9e491c43-bfde-4595-966e-4f2ecb640ebb"
 kp_dedicated_us_south_root_key_crn: "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:9e43127c-2e36-47a8-ada9-cdfe71a729fc:key:9e491c43-bfde-4595-966e-4f2ecb640ebb"
 
+# KP Multitenant Permanent Instance and Root Keys
+kp_multitenant_us_south_instance_id: "f3ffe6e0-da33-4176-b080-5b30ee0b4496"
+kp_multitenant_us_south_instance_name: "geretain-permanent-kp-multitenant"
+kp_multitenant_us_south_resource_group: "geretain-test-permanent"
+kp_multitenant_us_south_crn: "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:f3ffe6e0-da33-4176-b080-5b30ee0b4496::"
+kp_multitenant_us_south_root_key_id: "c0360d6e-f2a4-494e-bc5e-65b171eb248d"
+kp_multitenant_us_south_root_key_crn: "crn:v1:bluemix:public:kms:us-south:a/abac0df06b644a9cabc6e44f55b3880e:f3ffe6e0-da33-4176-b080-5b30ee0b4496:key:c0360d6e-f2a4-494e-bc5e-65b171eb248d"
+
 # SCC WP instance
 scc_wp_secure_api_url: "https://us-south.security-compliance-secure.cloud.ibm.com"
 scc_wp_instance_id: "3f0378fe-2582-49d6-84a5-3962228328a5"
+
+# IBM MQ on Cloud capacity instance
+mq_capacity_crn: "crn:v1:bluemix:public:mqcloud:eu-de:a/8db1f3817af9487892f9bd201fc15d55:2ad8a13c-3eae-42ac-a804-82cc8bef3117::"
+mq_capacity_guid: "2ad8a13c-3eae-42ac-a804-82cc8bef3117"
