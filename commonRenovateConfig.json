@@ -34,10 +34,11 @@
     "fileFilters": ["**/*.md", "**/*.py", "**/*.toml", "**/*.json", ".secrets.baseline", "**/*.tf", "**/*.go", "go.mod", "go.sum", "common-dev-assets", "armada-csutil", "modules/supertenant-logs-routing-and-icl-agent/helm-charts", "modules/supertenant-logs-routing-agent/helm-charts", "modules/atracker-agent/helm-charts", "modules/logs-routing-module/helm-charts", "modules/prometheus-module/helm-charts"],
     "executionMode": "branch"
   },
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "description": "Manage bumping the version of the common bash library",
-      "fileMatch": ["scripts/install-binaries.sh$"],
+      "managerFilePatterns": ["^scripts/install-binaries.sh$"],
       "matchStrings": [
         "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?TAG=(?<currentValue>.*)\\s"
       ],
