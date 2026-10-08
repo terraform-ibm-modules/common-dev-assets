@@ -38,7 +38,7 @@
     {
       "customType": "regex",
       "description": "Manage bumping the version of the common bash library",
-      "managerFilePatterns": ["^scripts/install-binaries.sh$"],
+      "managerFilePatterns": ["/^scripts/install-binaries.sh$/"],
       "matchStrings": [
         "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?TAG=(?<currentValue>.*)\\s"
       ],
