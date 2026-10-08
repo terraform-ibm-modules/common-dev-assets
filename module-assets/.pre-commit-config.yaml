@@ -111,7 +111,7 @@ repos:
           - --hook-config=--parallelism-limit=1
   # checkov (does not require checkov to be installed locally to run)
   - repo: https://github.com/bridgecrewio/checkov.git
-    rev: 3.3.23
+    rev: 3.3.26
     hooks:
       - id: checkov
         args:
@@ -216,7 +216,7 @@ repos:
             "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/refs/tags/0.0.100/ibm_catalog-schema.json",
           ]
   - repo: https://github.com/crate-ci/typos
-    rev: v1.50.3
+    rev: v1.51.1
     hooks:
       - id: typos
         name: typos (warning only)
