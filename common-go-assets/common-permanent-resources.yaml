@@ -88,8 +88,8 @@ mysqlPITRVersion: "8.4"
 mysqlPITRRegion: "us-south"
 
 # mongoDB instance crn for backup-restore test
-mongodbCrn: "crn:v1:bluemix:public:databases-for-mongodb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:10e1efff-d5fa-4d83-adef-f47f81ac5f00::"
-mongodbVersion: 7.0
+mongodbCrn: "crn:v1:bluemix:public:databases-for-mongodb:us-south:a/abac0df06b644a9cabc6e44f55b3880e:f853baa5-fed4-4a30-95c9-87d8bb4362c6::"
+mongodbVersion: 8.0
 mongodbRegion: "us-south"
 
 # mongoDB gen2 instance crn for backup-restore test
