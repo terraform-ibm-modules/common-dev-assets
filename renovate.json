@@ -6,16 +6,16 @@
       "customType": "regex",
       "managerFilePatterns": ["^module-assets/ci/install-deps.sh$"],
       "matchStrings": [
-        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION=(?<currentValue>.*)\\s"
+        "datasource=(?<datasource>[^\\s]+) depName=(?<depName>[^\\s]+)( versioning=(?<versioning>[^\\s]+))?\\n[A-Z_]*VERSION=(?<currentValue>[^\\n]+)\\n"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     },
     {
       "customType": "regex",
       "description": "Special rule for JQ to remove the 'jq-' prefix it adds to its git tags",
-      "fileMatch": ["^module-assets/ci/install-deps.sh$"],
+      "managerFilePatterns": ["^module-assets/ci/install-deps.sh$"],
       "matchStrings": [
-        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?JQ_VERSION=(?<currentValue>.*)\\s"
+        "datasource=(?<datasource>[^\\s]+) depName=(?<depName>[^\\s]+)( versioning=(?<versioning>[^\\s]+))?\\nJQ_VERSION=(?<currentValue>[^\\n]+)\\n"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
       "extractVersionTemplate": "^jq-(?<version>\\d+\\.\\d+\\.\\d+)$"
