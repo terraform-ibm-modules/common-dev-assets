@@ -60,7 +60,7 @@ hpcs_south_public_endpoint: "https://e6dce284-e80f-46e1-a3c1-830f7adff7a9.api.us
 # HyperProtect Crypto Instance and Root Key in eu-fr2 region
 hpcs_eufr2: "a1dfee2d-7477-42ee-a91b-58bee312dd7a"
 hpcs_name_eufr2: "geretain-eu-fr2-hpcs"
-hpcs_rg_eufr2: "Default"
+hpcs_rg_eufr2: "geretain-hpcs"
 hpcs_eufr2_root_key_crn: "crn:v1:bluemix:public:hs-crypto:eu-fr2:a/abac0df06b644a9cabc6e44f55b3880e:a1dfee2d-7477-42ee-a91b-58bee312dd7a:key:9b405f97-1e8b-4557-a782-46049421ba7b"
 hpcs_eufr2_root_key_id: "9b405f97-1e8b-4557-a782-46049421ba7b"
 hpcs_eufr2_crn: "crn:v1:bluemix:public:hs-crypto:eu-fr2:a/abac0df06b644a9cabc6e44f55b3880e:a1dfee2d-7477-42ee-a91b-58bee312dd7a::"
