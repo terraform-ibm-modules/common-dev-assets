@@ -248,7 +248,7 @@ fi
 # detect-secrets
 #######################################
 
- # renovate: datasource=github-tags depName=ibm/detect-secrets versioning=regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$
+ # renovate: datasource=github-tags depName=ibm/detect-secrets versioning="regex:^(?<compatibility>.*)-?(?<major>\\d+)\\.(?<minor>\\d+)\\+ibm\\.(?<patch>\\d+)\\.dss$"
 DETECT_SECRETS_VERSION=0.13.1+ibm.64.dss
 PACKAGE=detect-secrets
 PIPX_PACKAGE_NAME=detect_secrets
