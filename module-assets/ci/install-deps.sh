@@ -761,3 +761,43 @@ if [[ "$JQ_VERSION" != "$INSTALLED_JQ_VERSION" ]]; then
 else
   echo "${BINARY} ${JQ_VERSION} already installed - skipping install"
 fi
+
+#######################################
+# uv
+#######################################
+
+# renovate: datasource=github-releases depName=astral-sh/uv
+UV_VERSION=0.12.24
+BINARY=uv
+set +e
+INSTALLED_UV_VERSION="$(uv --version 2>/dev/null | cut -d' ' -f2)"
+set -e
+if [[ "$UV_VERSION" != "$INSTALLED_UV_VERSION" ]]; then
+  if [[ $OSTYPE == 'darwin'* ]]; then
+    if [[ "${ARCH}" == "arm64" ]]; then
+      UV_TARGET="aarch64-apple-darwin"
+    else
+      UV_TARGET="x86_64-apple-darwin"
+    fi
+  else
+    UV_TARGET="x86_64-unknown-linux-gnu"
+  fi
+
+  FILE_NAME="uv-${UV_TARGET}.tar.gz"
+  URL="https://github.com/astral-sh/uv/releases/download/${UV_VERSION}"
+  SUMFILE="${FILE_NAME}.sha256"
+  TMP_DIR=$(mktemp -d /tmp/${BINARY}-XXXXX)
+
+  echo
+  echo "-- Installing ${BINARY} ${UV_VERSION}..."
+
+  download ${BINARY} ${UV_VERSION} ${URL} ${FILE_NAME} "${SUMFILE}" "${TMP_DIR}"
+  echo "Verifying.."
+  checksum=$(awk '{print $1}' "${TMP_DIR}/${SUMFILE}")
+  echo "${checksum}  ${TMP_DIR}/${FILE_NAME}" | ${SHA256_CMD} -c
+  tar -xzf "${TMP_DIR}/${FILE_NAME}" -C "${TMP_DIR}"
+  copy_replace_binary ${BINARY} "${TMP_DIR}/uv-${UV_TARGET}"
+  clean "${TMP_DIR}"
+else
+  echo "${BINARY} ${UV_VERSION} already installed - skipping install"
+fi
