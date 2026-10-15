@@ -767,7 +767,7 @@ fi
 #######################################
 
 # renovate: datasource=github-releases depName=astral-sh/uv
-UV_VERSION=0.12.24
+UV_VERSION=0.13.1
 BINARY=uv
 set +e
 INSTALLED_UV_VERSION="$(uv --version 2>/dev/null | cut -d' ' -f2)"
