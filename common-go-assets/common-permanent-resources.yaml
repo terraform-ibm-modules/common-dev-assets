@@ -251,3 +251,13 @@ scc_wp_instance_id: "3f0378fe-2582-49d6-84a5-3962228328a5"
 # IBM MQ on Cloud capacity instance
 mq_capacity_crn: "crn:v1:bluemix:public:mqcloud:eu-de:a/8db1f3817af9487892f9bd201fc15d55:2ad8a13c-3eae-42ac-a804-82cc8bef3117::"
 mq_capacity_guid: "2ad8a13c-3eae-42ac-a804-82cc8bef3117"
+
+# Permanent Schematics agent for private-only service tests (e.g. Event Streams gen2)
+schematics_agent_id: "geretain-schematics-agent.soA.d612"
+schematics_agent_name: "geretain-schematics-agent"
+schematics_agent_region: "us-south"
+schematics_agent_workspace_tag: "es-gen2-agent"
+schematics_agent_vpc_name: "geretain-agent-vpc"
+schematics_agent_cluster_id: "db89ao2d0am5f27ianm0"
+schematics_agent_resource_group: "geretain-test-schematics-agent"
+schematics_agent_cos_bucket: "geretain-schematics-agent-logs"
