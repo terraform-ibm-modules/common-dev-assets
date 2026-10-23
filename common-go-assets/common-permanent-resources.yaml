@@ -98,6 +98,12 @@ mongodbGen2Version: 8.0
 mongodbGen2DiskMb: 12288
 mongodbGen2Region: "us-east"
 
+# PostgreSQL gen2 instance CRN for backup-restore test
+postgresqlGen2Crn: ""
+postgresqlGen2Version: 18
+postgresqlGen2DiskMb: 10240
+postgresqlGen2Region: "us-east"
+
 # ElasticSearch instance crn for backup-restore test
 elasticsearchCrn: "crn:v1:bluemix:public:databases-for-elasticsearch:us-south:a/abac0df06b644a9cabc6e44f55b3880e:4359af05-ff0c-4c94-b965-91d2f95bd90c::"
 elasticsearchVersion: 8.15
