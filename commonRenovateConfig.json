@@ -67,6 +67,12 @@
       "semanticCommitType": "chore"
     },
     {
+      "description": "Renovate disables updates for indirect Go dependencies by default. Enable them so that go.mod is fully updated (go mod tidy is run via postUpdateOptions).",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["indirect"],
+      "enabled": true
+    },
+    {
       "description": "Disable terraform required_version and required_provider updates.",
       "matchManagers": ["terraform"],
       "matchDepTypes": ["required_version", "required_provider"],
