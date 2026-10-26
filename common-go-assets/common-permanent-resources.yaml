@@ -102,7 +102,7 @@ mongodbGen2Region: "us-east"
 postgresqlGen2Crn: "crn:v1:bluemix:public:databases-for-postgresql:us-south:a/abac0df06b644a9cabc6e44f55b3880e:92118e71-8050-4035-b40e-0f61ae51fb16::"
 postgresqlGen2Version: 18
 postgresqlGen2DiskMb: 12288
-postgresqlGen2Region: "us-east"
+postgresqlGen2Region: "us-south"
 
 # ElasticSearch instance crn for backup-restore test
 elasticsearchCrn: "crn:v1:bluemix:public:databases-for-elasticsearch:us-south:a/abac0df06b644a9cabc6e44f55b3880e:4359af05-ff0c-4c94-b965-91d2f95bd90c::"
