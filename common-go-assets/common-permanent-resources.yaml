@@ -104,6 +104,12 @@ postgresqlGen2Version: 18
 postgresqlGen2DiskMb: 12288
 postgresqlGen2Region: "us-south"
 
+# Redis gen2 instance CRN for backup-restore test
+redisGen2Crn: "crn:v1:bluemix:public:databases-for-redis:us-south:a/abac0df06b644a9cabc6e44f55b3880e:de082b9b-0f10-41c2-b145-8b605079180b::"
+redisGen2Version: 8.2
+redisGen2DiskMb: 15360
+redisGen2Region: "us-south"
+
 # ElasticSearch instance crn for backup-restore test
 elasticsearchCrn: "crn:v1:bluemix:public:databases-for-elasticsearch:us-south:a/abac0df06b644a9cabc6e44f55b3880e:4359af05-ff0c-4c94-b965-91d2f95bd90c::"
 elasticsearchVersion: 8.15
