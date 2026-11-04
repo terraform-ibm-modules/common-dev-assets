@@ -110,6 +110,18 @@ redisGen2Version: 8.2
 redisGen2DiskMb: 15360
 redisGen2Region: "us-south"
 
+# Elasticsearch gen2 instance CRN for backup-restore test
+elasticGen2Crn: "crn:v1:bluemix:public:databases-for-elasticsearch:us-south:a/abac0df06b644a9cabc6e44f55b3880e:4f848c8f-aced-49b3-984a-29a4e49ca6b6::"
+elasticGen2Version: 8.0
+elasticGen2DiskMb: 12288
+elasticGen2Region: "us-south"
+
+# MySQL gen2 instance CRN for backup-restore test
+mysqlGen2Crn: "crn:v1:bluemix:public:databases-for-mysql:us-south:a/abac0df06b644a9cabc6e44f55b3880e:f628d94d-4aac-4192-a805-1f1fb26055c2::"
+mysqlGen2Version: 8.4
+mysqlGen2DiskMb: 12288
+mysqlGen2Region: "us-south"
+
 # ElasticSearch instance crn for backup-restore test
 elasticsearchCrn: "crn:v1:bluemix:public:databases-for-elasticsearch:us-south:a/abac0df06b644a9cabc6e44f55b3880e:4359af05-ff0c-4c94-b965-91d2f95bd90c::"
 elasticsearchVersion: 8.15
