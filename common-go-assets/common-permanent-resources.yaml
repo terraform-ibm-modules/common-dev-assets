@@ -122,6 +122,12 @@ mysqlGen2Version: 8.4
 mysqlGen2DiskMb: 12288
 mysqlGen2Region: "us-south"
 
+# Valkey gen2 instance CRN for backup-restore test
+valkeyGen2Crn: "crn:v1:bluemix:public:databases-for-valkey:us-south:a/abac0df06b644a9cabc6e44f55b3880e:6382677d-da4f-4756-883b-8b3aa8c9533d::"
+valkeyGen2Version: 9.0
+valkeyGen2DiskMb: 12288
+valkeyGen2Region: "us-south"
+
 # ElasticSearch instance crn for backup-restore test
 elasticsearchCrn: "crn:v1:bluemix:public:databases-for-elasticsearch:us-south:a/abac0df06b644a9cabc6e44f55b3880e:4359af05-ff0c-4c94-b965-91d2f95bd90c::"
 elasticsearchVersion: 8.15
