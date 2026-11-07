@@ -400,7 +400,7 @@ if [[ $OSTYPE == 'darwin'* ]]; then
 fi
 
 # renovate: datasource=github-releases depName=aquasecurity/trivy
-TRIVY_VERSION=v0.76.1
+TRIVY_VERSION=v0.76.2
 BINARY=trivy
 set +e
 INSTALLED_TRIVY_VERSION="$(trivy version | grep "Version:" | cut -d' ' -f2)"
@@ -767,7 +767,7 @@ fi
 #######################################
 
 # renovate: datasource=github-releases depName=astral-sh/uv
-UV_VERSION=0.13.6
+UV_VERSION=0.13.7
 BINARY=uv
 set +e
 INSTALLED_UV_VERSION="$(uv --version 2>/dev/null | cut -d' ' -f2)"
