@@ -9,27 +9,30 @@
 - name: us-south
   useForTest: false # capacity issues, avoid provisioning new instances
   testPriority: 2
-- name: ca-tor
+- name: in-che
   useForTest: true
   testPriority: 3
-- name: eu-gb
+- name: ca-tor
   useForTest: true
   testPriority: 4
-- name: eu-es
+- name: eu-gb
   useForTest: true
   testPriority: 5
-- name: au-syd
+- name: eu-es
   useForTest: true
   testPriority: 6
-- name: eu-de
+- name: au-syd
   useForTest: true
   testPriority: 7
+- name: eu-de
+  useForTest: true
+  testPriority: 8
 - name: jp-osa
   useForTest: false # we have been asked to not use these regions for test
-  testPriority: 8
+  testPriority: 9
 - name: jp-tok
   useForTest: false # we have been asked to not use these regions for test
-  testPriority: 9
+  testPriority: 10
 - name: br-sao
   useForTest: true
-  testPriority: 10
+  testPriority: 11
