@@ -1,0 +1,31 @@
+# Regions used by ICD Gen2 instances in module PR-pipeline tests.
+# To switch the region of a test, flip `useForTest` and/or change `testPriority`.
+
+---
+- name: eu-gb
+  useForTest: true
+  testPriority: 1
+- name: eu-es
+  useForTest: true
+  testPriority: 2
+- name: ca-tor
+  useForTest: true
+  testPriority: 3
+- name: au-syd
+  useForTest: true
+  testPriority: 4
+- name: us-east
+  useForTest: false # capacity issues, avoid provisioning new instances
+  testPriority: 5
+- name: us-south
+  useForTest: false # capacity issues, avoid provisioning new instances
+  testPriority: 6
+- name: jp-osa
+  useForTest: false # we have been asked to not use these regions for test
+  testPriority: 7
+- name: jp-tok
+  useForTest: false # we have been asked to not use these regions for test
+  testPriority: 8
+- name: ca-mon
+  useForTest: false # no CSE endpoint support (nuke cannot delete resources) and most expensive region
+  testPriority: 9
