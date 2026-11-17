@@ -2,6 +2,7 @@
 # To switch the region of a test, flip `useForTest` and/or change `testPriority`.
 # testPriority is ordered by cost: the lowest priority number (least expensive region) is picked first.
 # Region list is based on the regions where Gen 2 is available in the IBM Cloud catalog (Chennai and Paris are Gen 1 only).
+# Single-campus MZR regions (ca-mon, in-che, in-mum) are intentionally not listed.
 ---
 - name: us-east
   useForTest: false # capacity issues, avoid provisioning new instances
@@ -15,24 +16,21 @@
 - name: eu-gb
   useForTest: true
   testPriority: 4
-- name: ca-mon
-  useForTest: false # no CSE endpoint support (nuke cannot delete resources)
-  testPriority: 5
 - name: eu-es
   useForTest: true
-  testPriority: 6
+  testPriority: 5
 - name: au-syd
   useForTest: true
-  testPriority: 7
+  testPriority: 6
 - name: eu-de
   useForTest: true
-  testPriority: 8
+  testPriority: 7
 - name: jp-osa
   useForTest: false # we have been asked to not use these regions for test
-  testPriority: 9
+  testPriority: 8
 - name: jp-tok
   useForTest: false # we have been asked to not use these regions for test
-  testPriority: 10
+  testPriority: 9
 - name: br-sao
   useForTest: true
-  testPriority: 11
+  testPriority: 10
