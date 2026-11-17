@@ -1,0 +1,36 @@
+# Regions used by ICD Gen2 instances in module PR-pipeline tests.
+# To switch the region of a test, flip `useForTest` and/or change `testPriority`.
+# testPriority is ordered by cost: the lowest priority number (least expensive region) is picked first.
+# Region list is based on the regions where Gen 2 is available in the IBM Cloud catalog (Chennai and Paris are Gen 1 only).
+# Single-campus MZR regions (ca-mon, in-che, in-mum) are intentionally not listed.
+---
+- name: us-east
+  useForTest: false # capacity issues, avoid provisioning new instances
+  testPriority: 1
+- name: us-south
+  useForTest: false # capacity issues, avoid provisioning new instances
+  testPriority: 2
+- name: ca-tor
+  useForTest: true
+  testPriority: 3
+- name: eu-gb
+  useForTest: true
+  testPriority: 4
+- name: eu-es
+  useForTest: true
+  testPriority: 5
+- name: au-syd
+  useForTest: true
+  testPriority: 6
+- name: eu-de
+  useForTest: true
+  testPriority: 7
+- name: jp-osa
+  useForTest: false # we have been asked to not use these regions for test
+  testPriority: 8
+- name: jp-tok
+  useForTest: false # we have been asked to not use these regions for test
+  testPriority: 9
+- name: br-sao
+  useForTest: true
+  testPriority: 10
