@@ -49,7 +49,7 @@ function clone_repo() {
     repo_name=$1
     if [ "${IS_PRIVATE_GH}" = true ]
     then
-        git clone git@github.ibm.com:"${GIT_ORG}"/"${repo_name}".git
+        gh repo clone "${GIT_ORG}/${repo_name}"
     else
         git clone https://github.com/"${GIT_ORG}"/"${repo_name}".git
     fi
