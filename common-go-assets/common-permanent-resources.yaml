@@ -283,7 +283,7 @@ mq_capacity_crn: "crn:v1:bluemix:public:mqcloud:eu-de:a/8db1f3817af9487892f9bd20
 mq_capacity_guid: "2ad8a13c-3eae-42ac-a804-82cc8bef3117"
 
 # Permanent Schematics agent for private-only service tests (e.g. Event Streams gen2)
-schematics_agent_name: "geretain-schematics-agent"
+schematics_agent_name: "geretain-schematic-agent"
 schematics_agent_workspace_tag: "es-gen2-agent"
 schematics_agent_vpc_id: "r006-2f5efe70-4770-418c-b203-abefb22687c3"
 schematics_agent_vpe_subnet_id: "0717-e340c94b-e4a1-47bf-b4f6-79ddcf7939f7"
